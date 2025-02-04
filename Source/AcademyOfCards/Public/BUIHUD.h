@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+//#include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include "BUIHUD.generated.h"
 
@@ -14,4 +14,17 @@ class ACADEMYOFCARDS_API ABUIHUD : public AHUD
 {
 	GENERATED_BODY()
 	
+public:
+	UFUNCTION(BlueprintCallable)
+	void ShowMainMenu();
+
+	UFUNCTION(BlueprintCallable)
+	void HideMainMenu();
+
+protected:
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UUserWidget> MainMenuClass;
+
+	UPROPERTY()
+	TObjectPtr<UUserWidget> MainMenu;
 };
