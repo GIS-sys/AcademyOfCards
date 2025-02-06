@@ -4,22 +4,29 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "BActorWalkingCard.generated.h"
+#include "BActorWalkingDealer.generated.h"
 
 UCLASS()
-class ACADEMYOFCARDS_API ABActorWalkingCard : public AActor
+class ACADEMYOFCARDS_API ABActorWalkingDealer : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ABActorWalkingCard();
+	ABActorWalkingDealer();
 
 protected:
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	TSubclassOf<AActor> ActorToSpawn;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable)
+	void DealCards();
 };
