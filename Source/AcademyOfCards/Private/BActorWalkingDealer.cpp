@@ -28,7 +28,7 @@ void ABActorWalkingDealer::Tick(float DeltaTime)
 void ABActorWalkingDealer::DealCards()
 {
 	for (int ix = 0; ix < 4; ++ix) {
-		for (int iy = 0; iy < 10; ++iy) {
+		for (int iy = 0; iy < 6; ++iy) {
 			AActor* actor = GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), GetActorRotation());
 			FVector size = actor->GetComponentsBoundingBox(false, true).GetSize();
 			float x = ix * size.X * 1.5;
