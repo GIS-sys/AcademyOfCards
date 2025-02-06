@@ -8,14 +8,14 @@ ABActorWalkingCard::ABActorWalkingCard()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
 }
 
 // Called when the game starts or when spawned
 void ABActorWalkingCard::BeginPlay()
 {
 	Super::BeginPlay();
-
-	StartingPosition = GetActorLocation();
+	
 }
 
 // Called every frame
@@ -23,7 +23,5 @@ void ABActorWalkingCard::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	TotalDeltaTime += DeltaTime;
-	SetActorLocation(StartingPosition + FVector(0.0, 0.0, 10.0) * (1 + cos(-PI + TotalDeltaTime * 2.0)));
 }
 

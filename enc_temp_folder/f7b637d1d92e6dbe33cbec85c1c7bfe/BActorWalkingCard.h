@@ -16,9 +16,6 @@ public:
 	ABActorWalkingCard();
 
 protected:
-	float TotalDeltaTime;
-	FVector StartingPosition;
-
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
