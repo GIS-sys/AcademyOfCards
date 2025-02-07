@@ -46,6 +46,7 @@ SourceArt/**/*.png
 SourceArt/**/*.tga
 
 Binaries/*
+enc_temp_folder/*
 
 # Builds
 Build/*
