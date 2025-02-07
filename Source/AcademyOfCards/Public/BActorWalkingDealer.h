@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
+class ABActorWalkingCard;
+
 #include "BActorWalkingDealer.generated.h"
 
 UCLASS()
@@ -23,6 +26,9 @@ protected:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	TSubclassOf<AActor> ActorToSpawn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+	TArray<UMaterialInterface*> MaterialArray;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

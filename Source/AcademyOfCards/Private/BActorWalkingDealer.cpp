@@ -2,6 +2,7 @@
 
 
 #include "BActorWalkingDealer.h"
+#include <BActorWalkingCard.h>
 
 // Sets default values
 ABActorWalkingDealer::ABActorWalkingDealer()
@@ -30,10 +31,13 @@ void ABActorWalkingDealer::DealCards()
 	for (int ix = 0; ix < 4; ++ix) {
 		for (int iy = 0; iy < 6; ++iy) {
 			AActor* actor = GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), GetActorRotation());
+			ABActorWalkingCard* actor_wc = dynamic_cast<ABActorWalkingCard*>(actor);
 			FVector size = actor->GetComponentsBoundingBox(false, true).GetSize();
 			float x = ix * size.X * 1.5;
 			float y = iy * size.Y * 1.5;
 			actor->SetActorLocation(GetActorLocation() + FVector(x, y, 0.0));
+
+			actor_wc->MainCardMaterial = MaterialArray[FMath::Rand() % MaterialArray.Num()];
 		}
 	}
 }

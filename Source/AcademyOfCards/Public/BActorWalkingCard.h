@@ -25,4 +25,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Hightlight();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+	UMaterialInterface* MainCardMaterial;
 };
