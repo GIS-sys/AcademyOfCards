@@ -22,3 +22,6 @@ void ABActorWalkingCard::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void ABActorWalkingCard::Hightlight() {
+	SetActorLocation(GetActorLocation() + FVector(10.0, 10.0, 10.0));
+}
