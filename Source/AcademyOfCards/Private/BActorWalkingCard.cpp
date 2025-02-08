@@ -14,14 +14,28 @@ ABActorWalkingCard::ABActorWalkingCard()
 void ABActorWalkingCard::BeginPlay()
 {
 	Super::BeginPlay();
+
+	LocationOriginal = GetActorLocation();
 }
 
 // Called every frame
 void ABActorWalkingCard::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	TicksNotHighlighted += 1;
+	if (TicksNotHighlighted > 1) {
+		LocationDelta = FVector(0.0);
+		ScaleRelative = FVector(1.0);
+	} else {
+		LocationDelta = FVector(10.0, 10.0, 10.0);
+		ScaleRelative = FVector(2.0, 2.0, 1.0);
+	}
+
+	SetActorLocation(LocationOriginal + LocationDelta);
+	SetActorRelativeScale3D(ScaleRelative);
 }
 
 void ABActorWalkingCard::Hightlight() {
-	SetActorLocation(GetActorLocation() + FVector(10.0, 10.0, 10.0));
+	TicksNotHighlighted = 0;
 }

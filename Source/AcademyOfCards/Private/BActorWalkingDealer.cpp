@@ -35,9 +35,10 @@ void ABActorWalkingDealer::DealCards()
 			FVector size = actor->GetComponentsBoundingBox(false, true).GetSize();
 			float x = ix * size.X * 1.5;
 			float y = iy * size.Y * 1.5;
-			actor->SetActorLocation(GetActorLocation() + FVector(x, y, 0.0));
 
 			actor_wc->MainCardMaterial = MaterialArray[FMath::Rand() % MaterialArray.Num()];
+			actor_wc->LocationOriginal = GetActorLocation() + FVector(x, y, 0.0);
+			actor->SetActorLocation(actor_wc->LocationOriginal);
 		}
 	}
 }
