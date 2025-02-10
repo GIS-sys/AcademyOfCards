@@ -1,0 +1,72 @@
+{
+  "random_encounter_wizard": {
+    "text": "Навстречу выбегает волшебник и начинает кричать 'Ю шэл нот пас!'",
+    "options": [
+      {
+        "name": "battle",
+        "text": "Прорваться силой",
+        "result": {
+          "fight": {
+            "who": "Gandalf",
+            "reward_win": {
+              "text": "Победа!",
+              "stats": {
+                "gold": 10
+              },
+              "card": {
+                "options": [
+                  "Blue Eyes Dragon",
+                  "Black Lotus",
+                  "Pikachu"
+                ]
+              }
+            },
+            "reward_loss": {
+              "text": "Поражение!",
+              "stats": {
+                "gold": -10
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "lie",
+        "text": "'Это я, Фродо!'",
+        "result": {
+          "probability": [
+            {
+              "probability": 0.6,
+              "text": "Вы успешно соврали!",
+              "alignment": {
+                "dark": 5
+              }
+            },
+            {
+              "probability": 0.4,
+              "text": "Вам не поверили!",
+              "alignment": {
+                "dark": 2
+              },
+              "fight": {"who": "MegaGandalf"}
+            }
+          ]
+        }
+      },
+      {
+        "name": "bribe",
+        "text": "Дать взятку",
+        "result": {
+          "text": "Вы отвлекли волшебника, бросив ему 10 золотых",
+          "stats": {
+            "gold": -10
+          }
+        }
+      }
+    ]
+  },
+  
+  "next event ...": {
+    "text": "..."
+  }
+}
