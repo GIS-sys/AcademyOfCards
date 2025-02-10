@@ -3,6 +3,8 @@
 
 #include "BActorWalkingDealer.h"
 #include <BActorWalkingCard.h>
+#include <WalkingEvent.h>
+#include "Serialization/JsonSerializer.h"
 
 // Sets default values
 ABActorWalkingDealer::ABActorWalkingDealer()
@@ -10,6 +12,27 @@ ABActorWalkingDealer::ABActorWalkingDealer()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	LoadConfigEvents();
+}
+
+void ABActorWalkingDealer::LoadConfigEvents() {
+	FString FilePath = FPaths::ProjectContentDir() / TEXT("WalkingStage/Configs/config_walking_events.json");
+	FString JsonString;
+	if (FFileHelper::LoadFileToString(JsonString, *FilePath))
+	{
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(*JsonString);
+		if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
+		{
+			for (const auto& [x, y] : JsonObject->Values) {
+				Events.Add(MakeShareable(new WalkingEvent(x, y->AsObject())));
+			}
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to load JSON file from path: %s"), *FilePath);
+	}
 }
 
 // Called when the game starts or when spawned

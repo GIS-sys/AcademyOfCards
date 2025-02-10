@@ -13,7 +13,5 @@ UCLASS()
 class ACADEMYOFCARDS_API ABUIGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
-public:
-	ABUIGameModeBase();
+
 };

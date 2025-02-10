@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 
 class ABActorWalkingCard;
+class WalkingEvent;
 
 #include "BActorWalkingDealer.generated.h"
 
@@ -22,6 +23,10 @@ protected:
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	void LoadConfigEvents();
+
+	TArray<TSharedPtr<WalkingEvent>> Events;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")

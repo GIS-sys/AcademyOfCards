@@ -3,13 +3,13 @@
     "text": "Навстречу выбегает волшебник и начинает кричать 'Ю шэл нот пас!'",
     "options": [
       {
-        "name": "battle",
         "text": "Прорваться силой",
         "result": {
+          "response": {"text": "Удачи в битве!"},
           "fight": {
             "who": "Gandalf",
             "reward_win": {
-              "text": "Победа!",
+              "response": {"text": "Победа!"},
               "stats": {
                 "gold": 10
               },
@@ -21,8 +21,8 @@
                 ]
               }
             },
-            "reward_loss": {
-              "text": "Поражение!",
+            "reward_lose": {
+              "response": {"text": "Поражение!"},
               "stats": {
                 "gold": -10
               }
@@ -31,33 +31,36 @@
         }
       },
       {
-        "name": "lie",
         "text": "'Это я, Фродо!'",
         "result": {
-          "probability": [
-            {
+          "response": {},
+          "probability": {
+            "success": {
               "probability": 0.6,
-              "text": "Вы успешно соврали!",
-              "alignment": {
-                "dark": 5
+              "result": {
+                "response": {"text": "Вы успешно соврали!"},
+                "alignment": {
+                  "dark": 5
+                }
               }
             },
-            {
+            "failure": {
               "probability": 0.4,
-              "text": "Вам не поверили!",
-              "alignment": {
-                "dark": 2
-              },
-              "fight": {"who": "MegaGandalf"}
+              "result": {
+                "response": {"text": "Вам не поверили!"},
+                "alignment": {
+                  "dark": 2
+                },
+                "fight": {"who": "MegaGandalf", "reward_win": {}, "reward_lose": {}}
+              }
             }
-          ]
+          }
         }
       },
       {
-        "name": "bribe",
         "text": "Дать взятку",
         "result": {
-          "text": "Вы отвлекли волшебника, бросив ему 10 золотых",
+          "response": {"text": "Вы отвлекли волшебника, бросив ему 10 золотых"},
           "stats": {
             "gold": -10
           }
@@ -67,6 +70,7 @@
   },
   
   "next event ...": {
-    "text": "..."
+    "text": "...",
+    "options": []
   }
 }
