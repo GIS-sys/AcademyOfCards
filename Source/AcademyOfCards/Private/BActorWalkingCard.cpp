@@ -2,6 +2,9 @@
 
 
 #include "BActorWalkingCard.h"
+#include <WalkingEvent.h>
+#include <BActorWalkingPlayerModel.h>
+#include <Kismet/GameplayStatics.h>
 
 // Sets default values
 ABActorWalkingCard::ABActorWalkingCard()
@@ -38,4 +41,12 @@ void ABActorWalkingCard::Tick(float DeltaTime)
 
 void ABActorWalkingCard::Hightlight() {
 	TicksNotHighlighted = 0;
+}
+
+void ABActorWalkingCard::MoveTo() {
+	Event->Fire();
+
+	AActor* FoundActor = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
+	ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(FoundActor);
+	PlayerModel->SetActorLocation(GetActorLocation());
 }

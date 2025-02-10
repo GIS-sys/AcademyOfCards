@@ -61,6 +61,7 @@ void ABActorWalkingDealer::DealCards()
 
 			actor_wc->MainCardMaterial = MaterialArray[FMath::Rand() % MaterialArray.Num()];
 			actor_wc->LocationOriginal = GetActorLocation() + FVector(x, y, 0.0);
+			actor_wc->Event = Events[FMath::Rand() % Events.Num()];
 			actor->SetActorLocation(actor_wc->LocationOriginal);
 		}
 	}

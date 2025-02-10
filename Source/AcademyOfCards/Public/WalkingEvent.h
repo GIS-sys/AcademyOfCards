@@ -15,8 +15,11 @@ public:
 	WalkingEvent(FString name, TSharedPtr<FJsonObject> data);
 	~WalkingEvent();
 
-protected:
+	void Fire();
+
 	FString Name;
+
+protected:
 	FString Text;
 	TArray<TSharedPtr<WalkingOption>> Options;
 };

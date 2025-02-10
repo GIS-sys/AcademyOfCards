@@ -16,3 +16,8 @@ WalkingEvent::WalkingEvent(FString name, TSharedPtr<FJsonObject> data)
 WalkingEvent::~WalkingEvent()
 {
 }
+
+void WalkingEvent::Fire()
+{
+	UE_LOG(LogTemp, Log, TEXT("MoveTo square with event: %s"), *Name);
+}

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "BActorWalkingCard.generated.h"
+class WalkingEvent;
 
 UCLASS()
 class ACADEMYOFCARDS_API ABActorWalkingCard : public AActor
@@ -31,8 +32,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Hightlight();
 
+	UFUNCTION(BlueprintCallable)
+	void MoveTo();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 	UMaterialInterface* MainCardMaterial;
 
 	FVector LocationOriginal;
+	TSharedPtr<WalkingEvent> Event;
 };
