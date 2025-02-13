@@ -3,7 +3,9 @@
 
 #include "BActorWalkingDealer.h"
 #include <BActorWalkingCard.h>
+#include <BActorWalkingPlayerModel.h>
 #include <WalkingEvent.h>
+#include <Kismet/GameplayStatics.h>
 #include "Serialization/JsonSerializer.h"
 
 // Sets default values
@@ -58,28 +60,51 @@ void ABActorWalkingDealer::Tick(float DeltaTime)
 	DealingCardSpawinRestTime = NewDealingCardSpawinRestTime;
 }
 
+FVector ABActorWalkingDealer::GetCenterCellPosition(int ix, int iy)
+{
+	float dx = ix * CardSize.X * (1.0 + SpacingBetweenTiles);
+	float dy = iy * CardSize.Y * (1.0 + SpacingBetweenTiles);
+	return GetActorLocation() + FVector(dx, dy, 0.0) + DealingOffset;
+}
+
 void ABActorWalkingDealer::DealCard(int ix, int iy)
 {
 	AActor* actor = GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), GetActorRotation());
 	ABActorWalkingCard* actor_wc = dynamic_cast<ABActorWalkingCard*>(actor);
-	FVector size = actor->GetComponentsBoundingBox(false, true).GetSize();
-	float dx = ix * size.X * (1.0 + SpacingBetweenTiles);
-	float dy = iy * size.Y * (1.0 + SpacingBetweenTiles);
 
+	actor_wc->BoardPositionX = ix;
+	actor_wc->BoardPositionY = iy;
+	actor_wc->DealerPtr = this;
 	actor_wc->MainCardMaterial = MaterialArray[FMath::Rand() % MaterialArray.Num()];
 	actor_wc->Event = Events[FMath::Rand() % Events.Num()];
 	//actor_wc->LocationOriginal = GetActorLocation() + FVector(dx, dy, 0.0) + DealingOffset;
 	//actor->SetActorLocation(actor_wc->LocationOriginal);
-	actor_wc->MoveOverTimeTo(GetActorLocation(), GetActorLocation() + FVector(dx, dy, 0.0) + DealingOffset, 1.0);
+
+	actor_wc->MoveOverTimeTo(GetActorLocation(), GetCenterCellPosition(ix, iy), 1.0);
+
+	CardsDealt.Add(TPair<int, int>(ix, iy), actor_wc);
+}
+
+void ABActorWalkingDealer::SetPlayerModel(int ix, int iy)
+{
+	AActor* FoundActor = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
+	ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(FoundActor);
+
+	PlayerModel->Move(GetCenterCellPosition(ix, iy), ix, iy, this);
 }
 
 void ABActorWalkingDealer::DealCards()
 {
-	for (int ix = 0; ix < 4; ++ix) {
-		for (int iy = 0; iy < 6; ++iy) {
-			DealingCardSpawinRestTime.Add({ ix, iy, (ix + (5 - iy)) * 10 });
+	SetPlayerModel(StartPosition.Get<1>(), StartPosition.Get<0>());
+	for (int ix = 0; ix < FieldHeight; ++ix) {
+		for (int iy = 0; iy < FieldWidth; ++iy) {
+			DealingCardSpawinRestTime.Add({ ix, iy, (ix + (FieldHeight - 1 - iy)) * 10 });
 		}
 	}
-	DealingCardSpawinRestTime.Add({ -1, 3, (4 + 6 + 5) * 10 });
-	DealingCardSpawinRestTime.Add({ 4, 2, (4 + 6 + 5) * 10 });
+	if (!(0 <= StartPosition.Get<1>() && StartPosition.Get<1>() < FieldHeight) || !(0 <= StartPosition.Get<0>() && StartPosition.Get<0>() < FieldWidth)) {
+		DealingCardSpawinRestTime.Add({ StartPosition.Get<1>(), StartPosition.Get<0>(), (FieldHeight + FieldWidth) * 10 });
+	}
+	if (!(0 <= FinishPosition.Get<1>() && FinishPosition.Get<1>() < FieldHeight) || !(0 <= FinishPosition.Get<0>() && FinishPosition.Get<0>() < FieldWidth)) {
+		DealingCardSpawinRestTime.Add({ FinishPosition.Get<1>(), FinishPosition.Get<0>(), (FieldHeight + FieldWidth) * 10 });
+	}
 }

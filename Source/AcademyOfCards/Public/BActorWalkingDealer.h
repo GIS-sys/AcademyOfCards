@@ -20,6 +20,10 @@ public:
 	ABActorWalkingDealer();
 
 protected:
+	const int FieldWidth = 8;
+	const int FieldHeight = 4;
+	const TPair<int, int> StartPosition = { 5, -1 };
+	const TPair<int, int> FinishPosition = { 2, 4 };
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -27,13 +31,18 @@ protected:
 	void LoadConfigEvents();
 
 	void DealCard(int ix, int iy);
+	void SetPlayerModel(int ix, int iy);
+
+	FVector GetCenterCellPosition(int ix, int iy);
 
 	TArray<TSharedPtr<WalkingEvent>> Events;
 
-	const FVector DealingOffset{ 50.0, -300.0, 10.0 };
+	const FVector DealingOffset{ 20.0, -440.0, 10.0 };
 	const float SpacingBetweenTiles = 0.0;
+	const FVector CardSize = FVector({ 50, 50, 1 });
 
 	TArray<TTuple<float, int, int>> DealingCardSpawinRestTime;
+	TMap<TPair<int, int>, ABActorWalkingCard*> CardsDealt;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")

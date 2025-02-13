@@ -17,19 +17,12 @@ ABActorWalkingCard::ABActorWalkingCard()
 void ABActorWalkingCard::BeginPlay()
 {
 	Super::BeginPlay();
-
-	LocationOriginal = GetActorLocation();
 }
 
 // Called every frame
 void ABActorWalkingCard::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (DeltaTimeMoveOver > 0 && DeltaTimeMoveOverSpent < DeltaTimeMoveOver) {
-		DeltaTimeMoveOverSpent += DeltaTime;
-		LocationOriginal = (FromLocationMovingTo * (DeltaTimeMoveOver - DeltaTimeMoveOverSpent) + NewLocationMovingTo * DeltaTimeMoveOverSpent) / DeltaTimeMoveOver;
-	}
 
 	TicksNotHighlighted += 1;
 	if (TicksNotHighlighted > 1) {
@@ -44,14 +37,6 @@ void ABActorWalkingCard::Tick(float DeltaTime)
 	SetActorRelativeScale3D(ScaleRelative);
 }
 
-void ABActorWalkingCard::MoveOverTimeTo(FVector FromLocation, FVector NewLocation, float DeltaTime)
-{
-	FromLocationMovingTo = FromLocation;
-	NewLocationMovingTo = NewLocation;
-	DeltaTimeMoveOver = DeltaTime;
-	DeltaTimeMoveOverSpent = 0;
-}
-
 void ABActorWalkingCard::Hightlight() {
 	TicksNotHighlighted = 0;
 }
@@ -61,5 +46,5 @@ void ABActorWalkingCard::MoveTo() {
 
 	AActor* FoundActor = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
 	ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(FoundActor);
-	PlayerModel->SetActorLocation(GetActorLocation());
+	PlayerModel->Move(GetActorLocation(), BoardPositionX, BoardPositionY, DealerPtr);
 }

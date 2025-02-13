@@ -4,29 +4,31 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "BActorEnhanced.h"
-#include "BActorWalkingPlayerModel.generated.h"
-class ABActorWalkingDealer;
+#include "BActorEnhanced.generated.h"
 
 UCLASS()
-class ACADEMYOFCARDS_API ABActorWalkingPlayerModel : public ABActorEnhanced
+class ACADEMYOFCARDS_API ABActorEnhanced : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ABActorWalkingPlayerModel();
+	ABActorEnhanced();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	int CurrentBoardPositionX = -1;
-	int CurrentBoardPositionY = -1;
+	FVector FromLocationMovingTo;
+	FVector NewLocationMovingTo;
+	float DeltaTimeMoveOver = 0;
+	float DeltaTimeMoveOverSpent = 0;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void Move(FVector LocationTo, int BoardPositionX, int BoardPositionY, ABActorWalkingDealer* DealerPtr);
+	void MoveOverTimeTo(FVector FromLocation, FVector NewLocation, float DeltaTime);
+
+	FVector LocationOriginal;
 };

@@ -4,11 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "BActorEnhanced.h"
 #include "BActorWalkingCard.generated.h"
 class WalkingEvent;
+class ABActorWalkingDealer;
 
 UCLASS()
-class ACADEMYOFCARDS_API ABActorWalkingCard : public AActor
+class ACADEMYOFCARDS_API ABActorWalkingCard : public ABActorEnhanced
 {
 	GENERATED_BODY()
 	
@@ -21,14 +23,8 @@ protected:
 	virtual void BeginPlay() override;
 
 	int TicksNotHighlighted = 1;
-	
-	FVector LocationDelta;
 	FVector ScaleRelative;
-
-	FVector FromLocationMovingTo;
-	FVector NewLocationMovingTo;
-	float DeltaTimeMoveOver = 0;
-	float DeltaTimeMoveOverSpent = 0;
+	FVector LocationDelta;
 
 public:	
 	// Called every frame
@@ -37,14 +33,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Hightlight();
 
-	void MoveOverTimeTo(FVector FromLocation, FVector NewLocation, float DeltaTime);
-
 	UFUNCTION(BlueprintCallable)
 	void MoveTo();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 	UMaterialInterface* MainCardMaterial;
 
-	FVector LocationOriginal;
 	TSharedPtr<WalkingEvent> Event;
+
+	float BoardPositionX;
+	float BoardPositionY;
+	ABActorWalkingDealer* DealerPtr;
 };

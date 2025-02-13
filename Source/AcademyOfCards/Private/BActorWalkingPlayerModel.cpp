@@ -2,6 +2,7 @@
 
 
 #include "BActorWalkingPlayerModel.h"
+#include "BActorWalkingdealer.h"
 
 // Sets default values
 ABActorWalkingPlayerModel::ABActorWalkingPlayerModel()
@@ -25,3 +26,17 @@ void ABActorWalkingPlayerModel::Tick(float DeltaTime)
 
 }
 
+void ABActorWalkingPlayerModel::Move(FVector LocationTo, int BoardPositionX, int BoardPositionY, ABActorWalkingDealer* DealerPtr)
+{
+	if (CurrentBoardPositionX != -1 || CurrentBoardPositionY != -1) {
+		if (!DealerPtr->CheckAbleToGo(CurrentBoardPositionX, CurrentBoardPositionY, BoardPositionX, BoardPositionY)) return;
+		int dx = CurrentBoardPositionX - BoardPositionX; // TODO delete this
+		int dy = CurrentBoardPositionY - BoardPositionY;
+		if (dx * dx + dy * dy > 1) {
+			return;
+		}
+	}
+	CurrentBoardPositionX = BoardPositionX;
+	CurrentBoardPositionY = BoardPositionY;
+	MoveOverTimeTo(GetActorLocation(), LocationTo, 1.0);
+}
