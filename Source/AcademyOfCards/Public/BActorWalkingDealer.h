@@ -26,10 +26,14 @@ protected:
 
 	void LoadConfigEvents();
 
+	void DealCard(int ix, int iy);
+
 	TArray<TSharedPtr<WalkingEvent>> Events;
 
-	const FVector DealingOffset{ 0.0, 150.0, 10.0 };
+	const FVector DealingOffset{ 50.0, -300.0, 10.0 };
 	const float SpacingBetweenTiles = 0.0;
+
+	TArray<TTuple<float, int, int>> DealingCardSpawinRestTime;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")

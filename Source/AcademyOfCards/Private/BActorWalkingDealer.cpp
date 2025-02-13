@@ -47,22 +47,39 @@ void ABActorWalkingDealer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	TArray<TTuple<float, int, int>> NewDealingCardSpawinRestTime;
+	for (int i = 0; i < DealingCardSpawinRestTime.Num(); ++i) {
+		if (DealingCardSpawinRestTime[i].Get<2>() <= DeltaTime) {
+			DealCard(DealingCardSpawinRestTime[i].Get<0>(), DealingCardSpawinRestTime[i].Get<1>());
+			continue;
+		}
+		NewDealingCardSpawinRestTime.Add({ DealingCardSpawinRestTime[i].Get<0>(), DealingCardSpawinRestTime[i].Get<1>(), DealingCardSpawinRestTime[i].Get<2>() - DeltaTime });
+	}
+	DealingCardSpawinRestTime = NewDealingCardSpawinRestTime;
+}
+
+void ABActorWalkingDealer::DealCard(int ix, int iy)
+{
+	AActor* actor = GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), GetActorRotation());
+	ABActorWalkingCard* actor_wc = dynamic_cast<ABActorWalkingCard*>(actor);
+	FVector size = actor->GetComponentsBoundingBox(false, true).GetSize();
+	float dx = ix * size.X * (1.0 + SpacingBetweenTiles);
+	float dy = iy * size.Y * (1.0 + SpacingBetweenTiles);
+
+	actor_wc->MainCardMaterial = MaterialArray[FMath::Rand() % MaterialArray.Num()];
+	actor_wc->Event = Events[FMath::Rand() % Events.Num()];
+	//actor_wc->LocationOriginal = GetActorLocation() + FVector(dx, dy, 0.0) + DealingOffset;
+	//actor->SetActorLocation(actor_wc->LocationOriginal);
+	actor_wc->MoveOverTimeTo(GetActorLocation(), GetActorLocation() + FVector(dx, dy, 0.0) + DealingOffset, 1.0);
 }
 
 void ABActorWalkingDealer::DealCards()
 {
 	for (int ix = 0; ix < 4; ++ix) {
 		for (int iy = 0; iy < 6; ++iy) {
-			AActor* actor = GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), GetActorRotation());
-			ABActorWalkingCard* actor_wc = dynamic_cast<ABActorWalkingCard*>(actor);
-			FVector size = actor->GetComponentsBoundingBox(false, true).GetSize();
-			float dx = ix * size.X * (1.0 + SpacingBetweenTiles);
-			float dy = iy * size.Y * (1.0 + SpacingBetweenTiles);
-
-			actor_wc->MainCardMaterial = MaterialArray[FMath::Rand() % MaterialArray.Num()];
-			actor_wc->LocationOriginal = GetActorLocation() + FVector(dx, dy, 0.0) + DealingOffset;
-			actor_wc->Event = Events[FMath::Rand() % Events.Num()];
-			actor->SetActorLocation(actor_wc->LocationOriginal);
+			DealingCardSpawinRestTime.Add({ ix, iy, (ix + (5 - iy)) * 10 });
 		}
 	}
+	DealingCardSpawinRestTime.Add({ -1, 3, (4 + 6 + 5) * 10 });
+	DealingCardSpawinRestTime.Add({ 4, 2, (4 + 6 + 5) * 10 });
 }

@@ -20,10 +20,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	int TicksNotHighlighted = 0;
+	int TicksNotHighlighted = 1;
 	
 	FVector LocationDelta;
 	FVector ScaleRelative;
+
+	FVector FromLocationMovingTo;
+	FVector NewLocationMovingTo;
+	float DeltaTimeMoveOver = 0;
+	float DeltaTimeMoveOverSpent = 0;
 
 public:	
 	// Called every frame
@@ -31,6 +36,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Hightlight();
+
+	void MoveOverTimeTo(FVector FromLocation, FVector NewLocation, float DeltaTime);
 
 	UFUNCTION(BlueprintCallable)
 	void MoveTo();
