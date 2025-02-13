@@ -56,11 +56,11 @@ void ABActorWalkingDealer::DealCards()
 			AActor* actor = GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), GetActorRotation());
 			ABActorWalkingCard* actor_wc = dynamic_cast<ABActorWalkingCard*>(actor);
 			FVector size = actor->GetComponentsBoundingBox(false, true).GetSize();
-			float x = ix * size.X * 1.5;
-			float y = iy * size.Y * 1.5;
+			float dx = ix * size.X * (1.0 + SpacingBetweenTiles);
+			float dy = iy * size.Y * (1.0 + SpacingBetweenTiles);
 
 			actor_wc->MainCardMaterial = MaterialArray[FMath::Rand() % MaterialArray.Num()];
-			actor_wc->LocationOriginal = GetActorLocation() + FVector(x, y, 0.0);
+			actor_wc->LocationOriginal = GetActorLocation() + FVector(dx, dy, 0.0) + DealingOffset;
 			actor_wc->Event = Events[FMath::Rand() % Events.Num()];
 			actor->SetActorLocation(actor_wc->LocationOriginal);
 		}

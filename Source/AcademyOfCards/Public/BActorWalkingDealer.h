@@ -28,6 +28,9 @@ protected:
 
 	TArray<TSharedPtr<WalkingEvent>> Events;
 
+	const FVector DealingOffset{ 0.0, 150.0, 10.0 };
+	const float SpacingBetweenTiles = 0.0;
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	TSubclassOf<AActor> ActorToSpawn;
