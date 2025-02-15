@@ -82,6 +82,11 @@ void ABActorWalkingDealer::DealCard(int ix, int iy)
 
 	actor_wc->MoveOverTimeTo(GetActorLocation(), GetCenterCellPosition(ix, iy), 1.0);
 
+	actor_wc->Walls.bottom = (bool)(std::rand() % 2); // TODO
+	actor_wc->Walls.top = (bool)(std::rand() % 2); // TODO
+	actor_wc->Walls.left = (bool)(std::rand() % 2); // TODO
+	actor_wc->Walls.right = (bool)(std::rand() % 2); // TODO
+
 	CardsDealt.Add(TPair<int, int>(ix, iy), actor_wc);
 }
 
@@ -93,8 +98,27 @@ void ABActorWalkingDealer::SetPlayerModel(int ix, int iy)
 	PlayerModel->Move(GetCenterCellPosition(ix, iy), ix, iy, this);
 }
 
+void ABActorWalkingDealer::CreateBoard()
+{
+	// TODO
+}
+
+bool ABActorWalkingDealer::CheckAbleToGo(int CurrentBoardPositionX, int CurrentBoardPositionY, int BoardPositionX, int BoardPositionY)
+{
+	int dx = CurrentBoardPositionX - BoardPositionX;
+	int dy = CurrentBoardPositionY - BoardPositionY;
+	if (dx * dx + dy * dy > 1) {
+		return false;
+	}
+	// TODO
+	return true;
+}
+
 void ABActorWalkingDealer::DealCards()
 {
+	CreateBoard();
+
+	// TODO
 	SetPlayerModel(StartPosition.Get<1>(), StartPosition.Get<0>());
 	for (int ix = 0; ix < FieldHeight; ++ix) {
 		for (int iy = 0; iy < FieldWidth; ++iy) {

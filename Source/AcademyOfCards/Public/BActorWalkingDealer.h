@@ -30,6 +30,7 @@ protected:
 
 	void LoadConfigEvents();
 
+	void CreateBoard();
 	void DealCard(int ix, int iy);
 	void SetPlayerModel(int ix, int iy);
 
@@ -56,4 +57,5 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void DealCards();
+	bool CheckAbleToGo(int CurrentBoardPositionX, int CurrentBoardPositionY, int BoardPositionX, int BoardPositionY);
 };

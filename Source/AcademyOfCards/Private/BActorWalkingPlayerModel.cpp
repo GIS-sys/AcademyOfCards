@@ -26,17 +26,13 @@ void ABActorWalkingPlayerModel::Tick(float DeltaTime)
 
 }
 
-void ABActorWalkingPlayerModel::Move(FVector LocationTo, int BoardPositionX, int BoardPositionY, ABActorWalkingDealer* DealerPtr)
+bool ABActorWalkingPlayerModel::Move(FVector LocationTo, int BoardPositionX, int BoardPositionY, ABActorWalkingDealer* DealerPtr)
 {
 	if (CurrentBoardPositionX != -1 || CurrentBoardPositionY != -1) {
-		if (!DealerPtr->CheckAbleToGo(CurrentBoardPositionX, CurrentBoardPositionY, BoardPositionX, BoardPositionY)) return;
-		int dx = CurrentBoardPositionX - BoardPositionX; // TODO delete this
-		int dy = CurrentBoardPositionY - BoardPositionY;
-		if (dx * dx + dy * dy > 1) {
-			return;
-		}
+		if (!DealerPtr->CheckAbleToGo(CurrentBoardPositionX, CurrentBoardPositionY, BoardPositionX, BoardPositionY)) return false;
 	}
 	CurrentBoardPositionX = BoardPositionX;
 	CurrentBoardPositionY = BoardPositionY;
 	MoveOverTimeTo(GetActorLocation(), LocationTo, 1.0);
+	return true;
 }

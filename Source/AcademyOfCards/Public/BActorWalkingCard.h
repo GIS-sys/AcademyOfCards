@@ -22,19 +22,36 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void AnimateHighlight();
+
 	int TicksNotHighlighted = 1;
 	FVector ScaleRelative;
 	FVector LocationDelta;
 
-public:	
+public:
+	struct WallsStruct {
+		bool left;
+		bool right;
+		bool top;
+		bool bottom;
+	};
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
-	void Hightlight();
+	void Highlight();
 
 	UFUNCTION(BlueprintCallable)
 	void MoveTo();
+
+	UFUNCTION(BlueprintCallable)
+	bool GetWallLeft() const { return Walls.left; };
+	UFUNCTION(BlueprintCallable)
+	bool GetWallRight() const { return Walls.right; };
+	UFUNCTION(BlueprintCallable)
+	bool GetWallTop() const { return Walls.top; };
+	UFUNCTION(BlueprintCallable)
+	bool GetWallBottom() const { return Walls.bottom; };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 	UMaterialInterface* MainCardMaterial;
@@ -43,5 +60,11 @@ public:
 
 	float BoardPositionX;
 	float BoardPositionY;
+
 	ABActorWalkingDealer* DealerPtr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")
+	bool IsDiscovered;
+
+	WallsStruct Walls;
 };
