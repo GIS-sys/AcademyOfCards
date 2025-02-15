@@ -34,6 +34,15 @@ public:
 		bool right;
 		bool top;
 		bool bottom;
+
+		bool IsAllowedMovement(int dx, int dy) {
+			if (dx == -1 && dy == 0) return !left;
+			if (dx == 1 && dy == 0) return !right;
+			if (dx == 0 && dy == -1) return !top;
+			if (dx == 0 && dy == 1) return !bottom;
+			// if movement is not single step - return false by default
+			return false;
+		}
 	};
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

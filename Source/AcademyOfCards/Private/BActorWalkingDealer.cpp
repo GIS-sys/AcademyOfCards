@@ -62,8 +62,8 @@ void ABActorWalkingDealer::Tick(float DeltaTime)
 
 FVector ABActorWalkingDealer::GetCenterCellPosition(int ix, int iy)
 {
-	float dx = ix * CardSize.X * (1.0 + SpacingBetweenTiles);
-	float dy = iy * CardSize.Y * (1.0 + SpacingBetweenTiles);
+	float dx = (FieldHeight - 1 - iy) * CardSize.Y * (1.0 + SpacingBetweenTiles);
+	float dy = ix * CardSize.X * (1.0 + SpacingBetweenTiles);
 	return GetActorLocation() + FVector(dx, dy, 0.0) + DealingOffset;
 }
 
@@ -82,10 +82,10 @@ void ABActorWalkingDealer::DealCard(int ix, int iy)
 
 	actor_wc->MoveOverTimeTo(GetActorLocation(), GetCenterCellPosition(ix, iy), 1.0);
 
-	actor_wc->Walls.bottom = (bool)(std::rand() % 2); // TODO
-	actor_wc->Walls.top = (bool)(std::rand() % 2); // TODO
-	actor_wc->Walls.left = (bool)(std::rand() % 2); // TODO
-	actor_wc->Walls.right = (bool)(std::rand() % 2); // TODO
+	actor_wc->Walls.bottom = !(bool)(std::rand() % 5); // TODO
+	actor_wc->Walls.top = !(bool)(std::rand() % 5); // TODO
+	actor_wc->Walls.left = !(bool)(std::rand() % 5); // TODO
+	actor_wc->Walls.right = !(bool)(std::rand() % 5); // TODO
 
 	CardsDealt.Add(TPair<int, int>(ix, iy), actor_wc);
 }
@@ -101,16 +101,29 @@ void ABActorWalkingDealer::SetPlayerModel(int ix, int iy)
 void ABActorWalkingDealer::CreateBoard()
 {
 	// TODO
+	//CardsDealt
 }
 
 bool ABActorWalkingDealer::CheckAbleToGo(int CurrentBoardPositionX, int CurrentBoardPositionY, int BoardPositionX, int BoardPositionY)
 {
-	int dx = CurrentBoardPositionX - BoardPositionX;
-	int dy = CurrentBoardPositionY - BoardPositionY;
+	// walk only 1 step
+	int dx = BoardPositionX - CurrentBoardPositionX;
+	int dy = BoardPositionY - CurrentBoardPositionY;
 	if (dx * dx + dy * dy > 1) {
 		return false;
 	}
-	// TODO
+	// don't go out of bounds
+	bool IsOutOfBounds = (BoardPositionX < 0 || BoardPositionX >= FieldWidth) || (BoardPositionY < 0 || BoardPositionY >= FieldHeight);
+	bool IsFinishPosition = (BoardPositionX == FinishPosition.Get<0>() && BoardPositionY == FinishPosition.Get<1>());
+	if (IsOutOfBounds && !IsFinishPosition) {
+		return false;
+	}
+	// don't walk through walls
+	auto CurrentCellWalls = CardsDealt[TPair<int, int>(CurrentBoardPositionX, CurrentBoardPositionY)]->Walls;
+	if (!CurrentCellWalls.IsAllowedMovement(dx, dy)) {
+		return false;
+	}
+	// by default return true
 	return true;
 }
 
@@ -119,16 +132,16 @@ void ABActorWalkingDealer::DealCards()
 	CreateBoard();
 
 	// TODO
-	SetPlayerModel(StartPosition.Get<1>(), StartPosition.Get<0>());
-	for (int ix = 0; ix < FieldHeight; ++ix) {
-		for (int iy = 0; iy < FieldWidth; ++iy) {
+	SetPlayerModel(StartPosition.Get<0>(), StartPosition.Get<1>());
+	for (int ix = 0; ix < FieldWidth; ++ix) {
+		for (int iy = 0; iy < FieldHeight; ++iy) {
 			DealingCardSpawinRestTime.Add({ ix, iy, (ix + (FieldHeight - 1 - iy)) * 10 });
 		}
 	}
-	if (!(0 <= StartPosition.Get<1>() && StartPosition.Get<1>() < FieldHeight) || !(0 <= StartPosition.Get<0>() && StartPosition.Get<0>() < FieldWidth)) {
-		DealingCardSpawinRestTime.Add({ StartPosition.Get<1>(), StartPosition.Get<0>(), (FieldHeight + FieldWidth) * 10 });
+	if (!(0 <= StartPosition.Get<0>() && StartPosition.Get<0>() < FieldWidth) || !(0 <= StartPosition.Get<1>() && StartPosition.Get<1>() < FieldHeight)) {
+		DealingCardSpawinRestTime.Add({ StartPosition.Get<0>(), StartPosition.Get<1>(), (FieldWidth + FieldHeight) * 10 });
 	}
-	if (!(0 <= FinishPosition.Get<1>() && FinishPosition.Get<1>() < FieldHeight) || !(0 <= FinishPosition.Get<0>() && FinishPosition.Get<0>() < FieldWidth)) {
-		DealingCardSpawinRestTime.Add({ FinishPosition.Get<1>(), FinishPosition.Get<0>(), (FieldHeight + FieldWidth) * 10 });
+	if (!(0 <= FinishPosition.Get<0>() && FinishPosition.Get<0>() < FieldWidth) || !(0 <= FinishPosition.Get<1>() && FinishPosition.Get<1>() < FieldHeight)) {
+		DealingCardSpawinRestTime.Add({ FinishPosition.Get<0>(), FinishPosition.Get<1>(), (FieldHeight + FieldWidth) * 10 });
 	}
 }
