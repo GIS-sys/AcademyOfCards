@@ -32,7 +32,9 @@ protected:
 
 	void CreateBoard();
 	void DealCard(int ix, int iy);
+	void SetTimersForCardDeal();
 	void SetPlayerModel(int ix, int iy);
+	ABActorWalkingCard* CreateRandomCardFullyBlocked();
 
 	FVector GetCenterCellPosition(int ix, int iy);
 

@@ -69,25 +69,10 @@ FVector ABActorWalkingDealer::GetCenterCellPosition(int ix, int iy)
 
 void ABActorWalkingDealer::DealCard(int ix, int iy)
 {
-	AActor* actor = GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), GetActorRotation());
-	ABActorWalkingCard* actor_wc = dynamic_cast<ABActorWalkingCard*>(actor);
-
+	ABActorWalkingCard* actor_wc = CardsDealt[TPair<int, int>(ix, iy)];
 	actor_wc->BoardPositionX = ix;
 	actor_wc->BoardPositionY = iy;
-	actor_wc->DealerPtr = this;
-	actor_wc->MainCardMaterial = MaterialArray[FMath::Rand() % MaterialArray.Num()];
-	actor_wc->Event = Events[FMath::Rand() % Events.Num()];
-	//actor_wc->LocationOriginal = GetActorLocation() + FVector(dx, dy, 0.0) + DealingOffset;
-	//actor->SetActorLocation(actor_wc->LocationOriginal);
-
 	actor_wc->MoveOverTimeTo(GetActorLocation(), GetCenterCellPosition(ix, iy), 1.0);
-
-	actor_wc->Walls.bottom = !(bool)(std::rand() % 5); // TODO
-	actor_wc->Walls.top = !(bool)(std::rand() % 5); // TODO
-	actor_wc->Walls.left = !(bool)(std::rand() % 5); // TODO
-	actor_wc->Walls.right = !(bool)(std::rand() % 5); // TODO
-
-	CardsDealt.Add(TPair<int, int>(ix, iy), actor_wc);
 }
 
 void ABActorWalkingDealer::SetPlayerModel(int ix, int iy)
@@ -98,10 +83,41 @@ void ABActorWalkingDealer::SetPlayerModel(int ix, int iy)
 	PlayerModel->Move(GetCenterCellPosition(ix, iy), ix, iy, this);
 }
 
-void ABActorWalkingDealer::CreateBoard()
+ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked()
 {
 	// TODO
-	//CardsDealt
+	AActor* actor = GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), GetActorRotation());
+	ABActorWalkingCard* actor_wc = dynamic_cast<ABActorWalkingCard*>(actor);
+
+	actor_wc->DealerPtr = this;
+	actor_wc->MainCardMaterial = MaterialArray[FMath::Rand() % MaterialArray.Num()];
+	actor_wc->Event = Events[FMath::Rand() % Events.Num()];
+
+	actor_wc->Walls.bottom = true;
+	actor_wc->Walls.top = true;
+	actor_wc->Walls.left = true;
+	actor_wc->Walls.right = true;
+
+	return actor_wc;
+}
+
+void ABActorWalkingDealer::CreateBoard()
+{
+	// create base labyrinth, fully blocked
+	for (int ix = 0; ix < FieldWidth; ++ix) {
+		for (int iy = 0; iy < FieldHeight; ++iy) {
+			CardsDealt.Add(TPair<int, int>(ix, iy), CreateRandomCardFullyBlocked());
+		}
+	}
+	if (!(0 <= StartPosition.Get<0>() && StartPosition.Get<0>() < FieldWidth) || !(0 <= StartPosition.Get<1>() && StartPosition.Get<1>() < FieldHeight)) {
+		CardsDealt.Add(TPair<int, int>(StartPosition.Get<0>(), StartPosition.Get<1>()), CreateRandomCardFullyBlocked());
+	}
+	if (!(0 <= FinishPosition.Get<0>() && FinishPosition.Get<0>() < FieldWidth) || !(0 <= FinishPosition.Get<1>() && FinishPosition.Get<1>() < FieldHeight)) {
+		CardsDealt.Add(TPair<int, int>(FinishPosition.Get<0>(), FinishPosition.Get<1>()), CreateRandomCardFullyBlocked());
+	}
+
+	// use dfs to create random pathways
+	// TODO
 }
 
 bool ABActorWalkingDealer::CheckAbleToGo(int CurrentBoardPositionX, int CurrentBoardPositionY, int BoardPositionX, int BoardPositionY)
@@ -127,12 +143,8 @@ bool ABActorWalkingDealer::CheckAbleToGo(int CurrentBoardPositionX, int CurrentB
 	return true;
 }
 
-void ABActorWalkingDealer::DealCards()
+void ABActorWalkingDealer::SetTimersForCardDeal()
 {
-	CreateBoard();
-
-	// TODO
-	SetPlayerModel(StartPosition.Get<0>(), StartPosition.Get<1>());
 	for (int ix = 0; ix < FieldWidth; ++ix) {
 		for (int iy = 0; iy < FieldHeight; ++iy) {
 			DealingCardSpawinRestTime.Add({ ix, iy, (ix + (FieldHeight - 1 - iy)) * 10 });
@@ -144,4 +156,13 @@ void ABActorWalkingDealer::DealCards()
 	if (!(0 <= FinishPosition.Get<0>() && FinishPosition.Get<0>() < FieldWidth) || !(0 <= FinishPosition.Get<1>() && FinishPosition.Get<1>() < FieldHeight)) {
 		DealingCardSpawinRestTime.Add({ FinishPosition.Get<0>(), FinishPosition.Get<1>(), (FieldHeight + FieldWidth) * 10 });
 	}
+}
+
+void ABActorWalkingDealer::DealCards()
+{
+	SetPlayerModel(StartPosition.Get<0>(), StartPosition.Get<1>());
+
+	CreateBoard();
+
+	SetTimersForCardDeal();
 }
