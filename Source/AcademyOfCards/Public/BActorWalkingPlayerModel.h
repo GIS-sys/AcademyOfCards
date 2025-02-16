@@ -43,4 +43,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	bool Move(FVector LocationTo, int BoardPositionX, int BoardPositionY, ABActorWalkingDealer* DealerPtr);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")
+	int tmp = 123;
 };
