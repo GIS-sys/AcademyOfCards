@@ -8,6 +8,20 @@
 #include "BActorWalkingPlayerModel.generated.h"
 class ABActorWalkingDealer;
 
+
+//USTRUCT(BlueprintType)
+//struct FPlayerStats
+//{
+//	GENERATED_BODY()
+//
+//	UPROPERTY(BlueprintReadWrite)
+//	int32 X;
+//
+//	UPROPERTY(BlueprintReadWrite)
+//	float Y;
+//};
+
+
 UCLASS()
 class ACADEMYOFCARDS_API ABActorWalkingPlayerModel : public ABActorEnhanced
 {
