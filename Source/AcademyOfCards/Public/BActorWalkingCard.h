@@ -43,6 +43,13 @@ public:
 			// if movement is not single step - return false by default
 			return false;
 		}
+
+		void Destroy(int dx, int dy, bool wall_value = false) {
+			if (dx == -1 && dy == 0) left = wall_value;
+			if (dx == 1 && dy == 0) right = wall_value;
+			if (dx == 0 && dy == -1) top = wall_value;
+			if (dx == 0 && dy == 1) bottom = wall_value;
+		}
 	};
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

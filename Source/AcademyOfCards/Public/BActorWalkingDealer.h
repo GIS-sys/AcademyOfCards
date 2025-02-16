@@ -24,11 +24,17 @@ protected:
 	const int FieldHeight = 4;
 	const TPair<int, int> StartPosition = { 5, -1 };
 	const TPair<int, int> FinishPosition = { 2, 4 };
+	const int WALLS_TO_DELETE_AMOUNT = 3;
+	const int ALLOWED_RANDOM_MISTAKES = 1000;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	void LoadConfigEvents();
+
+	bool IsInsideFieldNoEnds(TPair<int, int> point);
+	bool IsEnds(TPair<int, int> point);
+	bool IsInsideFieldWithEnds(TPair<int, int> point);
 
 	void CreateBoard();
 	void DealCard(int ix, int iy);
