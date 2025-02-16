@@ -102,7 +102,7 @@ void ABActorWalkingDealer::SetPlayerModel(int ix, int iy)
 
 ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked()
 {
-	// TODO
+	// TODO proper card stats - at minimum, events from deck?
 	AActor* actor = GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), GetActorRotation());
 	ABActorWalkingCard* actor_wc = dynamic_cast<ABActorWalkingCard*>(actor);
 

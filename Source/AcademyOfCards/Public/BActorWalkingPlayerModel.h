@@ -20,7 +20,7 @@ struct FPlayerStats
 	UPROPERTY(BlueprintReadWrite)
 	float Health = 100.0;
 
-	// TODO
+	// TODO more stats
 };
 
 
