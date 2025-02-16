@@ -3,13 +3,21 @@
 
 #include "WalkingEvent.h"
 #include <WalkingOption.h>
+#include <BUIWalkingPlayerStats.h>
+#include "BActorWalkingDealer.h"
+#include "BUIHUD.h"
+#include "BUIWalkingEvent.h"
+#include "BWalking_UI.h"
+
+#include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 WalkingEvent::WalkingEvent(FString name, TSharedPtr<FJsonObject> data)
 {
-	this->Name = name;
-	this->Text = data->TryGetField("text")->AsString();
+	Name = name;
+	Text = data->TryGetField("text")->AsString();
 	for (auto& option : data->GetArrayField("options")) {
-		this->Options.Add(MakeShareable(new WalkingOption(option->AsObject())));
+		Options.Add(MakeShareable(new WalkingOption(option->AsObject())));
 	}
 }
 
@@ -17,7 +25,21 @@ WalkingEvent::~WalkingEvent()
 {
 }
 
-void WalkingEvent::Fire()
+void WalkingEvent::Fire(ABActorWalkingDealer* DealerPtr)
 {
-	UE_LOG(LogTemp, Log, TEXT("MoveTo square with event: %s"), *Name);
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(DealerPtr->GetWorld(), 0);
+	if (!PlayerController) return;
+    ABUIHUD* HUD = Cast<ABUIHUD>(PlayerController->GetHUD());
+	if (!HUD) return;
+	TObjectPtr<UBWalking_UI> MainMenu = Cast<UBWalking_UI>(HUD->MainMenu);
+	UBUIWalkingEvent* EventUI = MainMenu->BUIWalkingEvent;
+
+	EventUI->NewEventPopup_Start();
+	EventUI->NewEventPopup_SetText(Text);
+	for (auto& OptionPtr : Options) {
+		FString ButtonName = OptionPtr->Text;
+		TArray<TSharedPtr<WalkingResult>> ButtonResults = OptionPtr->Results;
+		EventUI->NewEventPopup_AddButton(ButtonName, ButtonResults);
+	}
+	EventUI->NewEventPopup_Finish();
 }

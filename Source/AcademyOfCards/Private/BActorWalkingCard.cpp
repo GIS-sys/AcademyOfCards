@@ -53,7 +53,7 @@ void ABActorWalkingCard::MoveTo() {
 	if (PlayerModel->Move(GetActorLocation(), BoardPositionX, BoardPositionY, DealerPtr)) {
 		if (!IsDiscovered) {
 			IsDiscovered = true;
-			Event->Fire();
+			Event->Fire(DealerPtr);
 		}
 	}
 }

@@ -14,13 +14,20 @@ struct FPlayerStats
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int32 Energy = 10;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float Health = 100.0;
 
-	// TODO more stats
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	int32 Gold = 50;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	float AlignmentLight = 0.5;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	float AlignmentFire = 0.0;
 };
 
 

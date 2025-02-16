@@ -15,7 +15,7 @@ public:
 	WalkingOption(TSharedPtr<FJsonObject> data);
 	~WalkingOption();
 
-protected:
+public:
 	FString Text;
 	TArray<TSharedPtr<WalkingResult>> Results;
 };

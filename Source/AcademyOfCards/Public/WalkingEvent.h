@@ -4,6 +4,7 @@
 
 class WalkingOption;
 
+#include "BActorWalkingDealer.h"
 #include "CoreMinimal.h"
 
 /**
@@ -15,7 +16,7 @@ public:
 	WalkingEvent(FString name, TSharedPtr<FJsonObject> data);
 	~WalkingEvent();
 
-	void Fire();
+	void Fire(ABActorWalkingDealer* DealerPtr);
 
 	FString Name;
 

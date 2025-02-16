@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "WalkingResult.h"
 #include "BUIWalkingEvent.generated.h"
 
 /**
@@ -14,4 +15,9 @@ class ACADEMYOFCARDS_API UBUIWalkingEvent : public UUserWidget
 {
 	GENERATED_BODY()
 	
+public:
+	void NewEventPopup_Start();
+	void NewEventPopup_Finish();
+	void NewEventPopup_SetText(FString Text);
+	void NewEventPopup_AddButton(FString ButtonName, TArray<TSharedPtr<WalkingResult>> ButtonResults);
 };
