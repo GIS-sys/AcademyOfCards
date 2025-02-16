@@ -47,6 +47,6 @@ bool ABActorWalkingPlayerModel::Move(FVector LocationTo, int BoardPositionX, int
 	// move
 	CurrentBoardPositionX = BoardPositionX;
 	CurrentBoardPositionY = BoardPositionY;
-	MoveOverTimeTo(GetActorLocation(), LocationTo, 1.0);
+	MoveOverTimeTo(GetActorLocation(), LocationTo, MOVING_TIME);
 	return true;
 }

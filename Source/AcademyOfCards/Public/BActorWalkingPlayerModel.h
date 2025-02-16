@@ -45,6 +45,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	const int ENERGY_PER_MOVE = 1;
+	const float MOVING_TIME = 0.5;
 
 	int CurrentBoardPositionX = -1;
 	int CurrentBoardPositionY = -1;
