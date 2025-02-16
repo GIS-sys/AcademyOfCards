@@ -52,9 +52,10 @@ protected:
 	const FVector CardSize = FVector({ 50, 50, 1 });
 
 	TArray<TTuple<float, int, int>> DealingCardSpawnRestTime;
-	TMap<TPair<int, int>, ABActorWalkingCard*> CardsDealt;
 
 public:
+	TMap<TPair<int, int>, ABActorWalkingCard*> CardsDealt;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	TSubclassOf<AActor> ActorToSpawn;
 

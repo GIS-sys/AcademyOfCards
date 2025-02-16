@@ -2,6 +2,7 @@
 
 
 #include "BActorWalkingPlayerModel.h"
+#include <BActorWalkingCard.h>
 #include "BActorWalkingdealer.h"
 
 // Sets default values
@@ -34,5 +35,8 @@ bool ABActorWalkingPlayerModel::Move(FVector LocationTo, int BoardPositionX, int
 	CurrentBoardPositionX = BoardPositionX;
 	CurrentBoardPositionY = BoardPositionY;
 	MoveOverTimeTo(GetActorLocation(), LocationTo, 1.0);
+	if (!DealerPtr->CardsDealt.IsEmpty() && !DealerPtr->CardsDealt[TPair<int, int>(BoardPositionX, BoardPositionY)]->IsDiscovered) {
+		PlayerStats.Energy -= ENERGY_PER_MOVE;
+	}
 	return true;
 }

@@ -9,17 +9,19 @@
 class ABActorWalkingDealer;
 
 
-//USTRUCT(BlueprintType)
-//struct FPlayerStats
-//{
-//	GENERATED_BODY()
-//
-//	UPROPERTY(BlueprintReadWrite)
-//	int32 X;
-//
-//	UPROPERTY(BlueprintReadWrite)
-//	float Y;
-//};
+USTRUCT(BlueprintType)
+struct FPlayerStats
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")
+	int32 Energy = 10;
+
+	UPROPERTY(BlueprintReadWrite)
+	float Health = 100.0;
+
+	// TODO
+};
 
 
 UCLASS()
@@ -35,6 +37,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	const int ENERGY_PER_MOVE = 1;
+
 	int CurrentBoardPositionX = -1;
 	int CurrentBoardPositionY = -1;
 
@@ -45,5 +49,5 @@ public:
 	bool Move(FVector LocationTo, int BoardPositionX, int BoardPositionY, ABActorWalkingDealer* DealerPtr);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")
-	int tmp = 123;
+	FPlayerStats PlayerStats;
 };
