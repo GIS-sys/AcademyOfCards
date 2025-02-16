@@ -26,6 +26,7 @@ protected:
 	const TPair<int, int> FinishPosition = { 2, 4 };
 	const int WALLS_TO_DELETE_AMOUNT = 3;
 	const int ALLOWED_RANDOM_MISTAKES = 1000;
+	const float TIME_CARD_DEALING_MOVEMENT = 0.5;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -50,7 +51,7 @@ protected:
 	const float SpacingBetweenTiles = 0.0;
 	const FVector CardSize = FVector({ 50, 50, 1 });
 
-	TArray<TTuple<float, int, int>> DealingCardSpawinRestTime;
+	TArray<TTuple<float, int, int>> DealingCardSpawnRestTime;
 	TMap<TPair<int, int>, ABActorWalkingCard*> CardsDealt;
 
 public:

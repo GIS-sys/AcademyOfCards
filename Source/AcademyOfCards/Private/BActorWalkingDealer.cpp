@@ -55,15 +55,21 @@ void ABActorWalkingDealer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	TArray<TTuple<float, int, int>> NewDealingCardSpawinRestTime;
-	for (int i = 0; i < DealingCardSpawinRestTime.Num(); ++i) {
-		if (DealingCardSpawinRestTime[i].Get<2>() <= DeltaTime) {
-			DealCard(DealingCardSpawinRestTime[i].Get<0>(), DealingCardSpawinRestTime[i].Get<1>());
+	TArray<TTuple<float, int, int>> NewDealingCardSpawnRestTime;
+	bool DealtCardThisTick = false;
+	for (int i = 0; i < DealingCardSpawnRestTime.Num(); ++i) {
+		if (DealingCardSpawnRestTime[i].Get<2>() <= DeltaTime) {
+			DealCard(DealingCardSpawnRestTime[i].Get<0>(), DealingCardSpawnRestTime[i].Get<1>());
+			DealtCardThisTick = true;
 			continue;
 		}
-		NewDealingCardSpawinRestTime.Add({ DealingCardSpawinRestTime[i].Get<0>(), DealingCardSpawinRestTime[i].Get<1>(), DealingCardSpawinRestTime[i].Get<2>() - DeltaTime });
+		NewDealingCardSpawnRestTime.Add({ DealingCardSpawnRestTime[i].Get<0>(), DealingCardSpawnRestTime[i].Get<1>(), DealingCardSpawnRestTime[i].Get<2>() - DeltaTime });
 	}
-	DealingCardSpawinRestTime = NewDealingCardSpawinRestTime;
+	DealingCardSpawnRestTime = NewDealingCardSpawnRestTime;
+
+	if (DealtCardThisTick && DealingCardSpawnRestTime.IsEmpty()) {
+		SetActorHiddenInGame(true);
+	}
 }
 
 FVector ABActorWalkingDealer::GetCenterCellPosition(int ix, int iy)
@@ -79,7 +85,8 @@ void ABActorWalkingDealer::DealCard(int ix, int iy)
 	actor_wc->BoardPositionX = ix;
 	actor_wc->BoardPositionY = iy;
 	actor_wc->SetActorHiddenInGame(false);
-	actor_wc->MoveOverTimeTo(GetActorLocation(), GetCenterCellPosition(ix, iy), 1.0);
+	FVector CellCenter = GetCenterCellPosition(ix, iy);
+	actor_wc->MoveOverTimeTo(GetActorLocation(), CellCenter, TIME_CARD_DEALING_MOVEMENT);
 }
 
 void ABActorWalkingDealer::SetPlayerModel(int ix, int iy)
@@ -246,14 +253,14 @@ void ABActorWalkingDealer::SetTimersForCardDeal()
 {
 	for (int ix = 0; ix < FieldWidth; ++ix) {
 		for (int iy = 0; iy < FieldHeight; ++iy) {
-			DealingCardSpawinRestTime.Add({ ix, iy, (ix + (FieldHeight - 1 - iy)) * 10 });
+			DealingCardSpawnRestTime.Add({ ix, iy, (ix + (FieldHeight - 1 - iy)) * 10 });
 		}
 	}
 	if (!IsInsideFieldNoEnds(StartPosition)) {
-		DealingCardSpawinRestTime.Add({ StartPosition.Get<0>(), StartPosition.Get<1>(), (FieldWidth + FieldHeight) * 10 });
+		DealingCardSpawnRestTime.Add({ StartPosition.Get<0>(), StartPosition.Get<1>(), (FieldWidth + FieldHeight) * 10 });
 	}
 	if (!IsInsideFieldNoEnds(FinishPosition)) {
-		DealingCardSpawinRestTime.Add({ FinishPosition.Get<0>(), FinishPosition.Get<1>(), (FieldHeight + FieldWidth) * 10 });
+		DealingCardSpawnRestTime.Add({ FinishPosition.Get<0>(), FinishPosition.Get<1>(), (FieldHeight + FieldWidth) * 10 });
 	}
 }
 

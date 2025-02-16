@@ -34,6 +34,7 @@ void ABActorEnhanced::Tick(float DeltaTime)
 
 	if (DeltaTimeMoveOver > 0 && DeltaTimeMoveOverSpent < DeltaTimeMoveOver) {
 		DeltaTimeMoveOverSpent += DeltaTime;
+		if (DeltaTimeMoveOverSpent > DeltaTimeMoveOver) DeltaTimeMoveOverSpent = DeltaTimeMoveOver;
 		LocationOriginal = (FromLocationMovingTo * (DeltaTimeMoveOver - DeltaTimeMoveOverSpent) + NewLocationMovingTo * DeltaTimeMoveOverSpent) / DeltaTimeMoveOver;
 		SetActorLocation(LocationOriginal);
 	}
