@@ -209,7 +209,8 @@ void ABActorWalkingDealer::CreateBoard()
 	int allowed_random_mistakes = ALLOWED_RANDOM_MISTAKES;
 	for (int i = 0; i < std::min(rest_walls_amount, WALLS_TO_DELETE_AMOUNT) && allowed_random_mistakes >= 0; ++i) {
 		TPair<int, int> random_cell_index { rand() % FieldWidth, rand() % FieldHeight };
-		TPair<int, int> random_neighbour_index = random_cell_index + TPair<int, int>(1, 0); // TODO random direction
+		int random_direction = rand() % 2;
+		TPair<int, int> random_neighbour_index = random_cell_index + TPair<int, int>(random_direction, 1 - random_direction);
 
 		if (!IsInsideFieldNoEnds(random_neighbour_index)) {
 			--allowed_random_mistakes;

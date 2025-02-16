@@ -27,8 +27,8 @@ void ABActorWalkingCard::AnimateHighlight()
 		ScaleRelative = FVector(1.0);
 	}
 	else {
-		LocationDelta = FVector(0.0, 0.0, 10.0);
-		ScaleRelative = FVector(1.5, 1.5, 1.0);
+		LocationDelta = FVector(0.0, 0.0, 1.0);
+		ScaleRelative = FVector(1.1, 1.1, 1.0);
 	}
 }
 
