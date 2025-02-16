@@ -29,14 +29,24 @@ void ABActorWalkingPlayerModel::Tick(float DeltaTime)
 
 bool ABActorWalkingPlayerModel::Move(FVector LocationTo, int BoardPositionX, int BoardPositionY, ABActorWalkingDealer* DealerPtr)
 {
+	// check ability to move
 	if (CurrentBoardPositionX != -1 || CurrentBoardPositionY != -1) {
 		if (!DealerPtr->CheckAbleToGo(CurrentBoardPositionX, CurrentBoardPositionY, BoardPositionX, BoardPositionY)) return false;
 	}
-	CurrentBoardPositionX = BoardPositionX;
-	CurrentBoardPositionY = BoardPositionY;
-	MoveOverTimeTo(GetActorLocation(), LocationTo, 1.0);
+	// spend energy
 	if (!DealerPtr->CardsDealt.IsEmpty() && !DealerPtr->CardsDealt[TPair<int, int>(BoardPositionX, BoardPositionY)]->IsDiscovered) {
 		PlayerStats.Energy -= ENERGY_PER_MOVE;
 	}
+	// rotate model
+	float RotationDeg = 0;
+	if (CurrentBoardPositionX - BoardPositionX == 1) RotationDeg = 90;
+	if (CurrentBoardPositionX - BoardPositionX == -1) RotationDeg = -90;
+	if (CurrentBoardPositionY - BoardPositionY == 1) RotationDeg = 180;
+	if (CurrentBoardPositionY - BoardPositionY == -1) RotationDeg = 0;
+	SetActorRotation(FRotator(0, RotationDeg, 0));
+	// move
+	CurrentBoardPositionX = BoardPositionX;
+	CurrentBoardPositionY = BoardPositionY;
+	MoveOverTimeTo(GetActorLocation(), LocationTo, 1.0);
 	return true;
 }
