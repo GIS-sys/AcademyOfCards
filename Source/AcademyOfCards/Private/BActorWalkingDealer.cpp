@@ -84,6 +84,9 @@ void ABActorWalkingDealer::DealCard(int ix, int iy)
 	ABActorWalkingCard* actor_wc = CardsDealt[TPair<int, int>(ix, iy)];
 	actor_wc->BoardPositionX = ix;
 	actor_wc->BoardPositionY = iy;
+	if (TPair<int, int>(ix, iy) == StartPosition) {
+		actor_wc->IsDiscovered = true;
+	}
 	actor_wc->SetActorHiddenInGame(false);
 	FVector CellCenter = GetCenterCellPosition(ix, iy);
 	actor_wc->MoveOverTimeTo(GetActorLocation(), CellCenter, TIME_CARD_DEALING_MOVEMENT);

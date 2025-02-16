@@ -51,6 +51,9 @@ void ABActorWalkingCard::MoveTo() {
 	AActor* FoundActor = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
 	ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(FoundActor);
 	if (PlayerModel->Move(GetActorLocation(), BoardPositionX, BoardPositionY, DealerPtr)) {
-		Event->Fire();
+		if (!IsDiscovered) {
+			IsDiscovered = true;
+			Event->Fire();
+		}
 	}
 }

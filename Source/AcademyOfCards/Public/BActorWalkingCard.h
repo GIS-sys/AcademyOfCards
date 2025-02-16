@@ -80,7 +80,7 @@ public:
 	ABActorWalkingDealer* DealerPtr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")
-	bool IsDiscovered;
+	bool IsDiscovered = false;
 
 	WallsStruct Walls;
 };
