@@ -34,7 +34,7 @@ void WalkingEvent::Fire(ABActorWalkingDealer* DealerPtr)
 	TObjectPtr<UBWalking_UI> MainMenu = Cast<UBWalking_UI>(HUD->MainMenu);
 	UBUIWalkingEvent* EventUI = MainMenu->BUIWalkingEvent;
 
-	EventUI->NewEventPopup_Start();
+	EventUI->NewEventPopup_Clear();
 	EventUI->NewEventPopup_SetText(Text);
 	for (auto& OptionPtr : Options) {
 		FString ButtonName = OptionPtr->Text;
