@@ -11,7 +11,8 @@ class ACADEMYOFCARDS_API WalkingResult
 {
 public:
 	WalkingResult();
-	~WalkingResult();
+	virtual ~WalkingResult();
 
 	static TSharedPtr <WalkingResult> FactoryCreate(FString name, TSharedPtr<FJsonObject> data);
+	virtual void Execute();
 };

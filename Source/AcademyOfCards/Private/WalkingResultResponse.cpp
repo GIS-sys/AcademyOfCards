@@ -17,3 +17,9 @@ WalkingResultResponse::WalkingResultResponse(TSharedPtr<FJsonObject> data)
 WalkingResultResponse::~WalkingResultResponse()
 {
 }
+
+void WalkingResultResponse::Execute()
+{
+	// TODO
+	UE_LOG(LogTemp, Error, TEXT("EXECUTE: Response(%s)"), *Response);
+}

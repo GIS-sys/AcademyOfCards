@@ -47,6 +47,8 @@ void UBUIWalkingEvent::NewEventPopup_AddButton(FString ButtonName, TArray<TShare
 
 void UBUIWalkingEvent::EventPopupButtonOnClicked(FString ButtonName, TArray<TSharedPtr<WalkingResult>> ButtonResults)
 {
-	// TODO
-    UE_LOG(LogTemp, Log, TEXT("Button clicked: %s"), *ButtonName);
+    for (const auto& Result : ButtonResults) {
+        // TODO
+        Result->Execute();
+    }
 }

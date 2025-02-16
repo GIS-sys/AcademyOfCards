@@ -12,7 +12,9 @@ class ACADEMYOFCARDS_API WalkingResultResponse : public WalkingResult
 {
 public:
 	WalkingResultResponse(TSharedPtr<FJsonObject> data);
-	~WalkingResultResponse();
+	virtual ~WalkingResultResponse();
+
+	virtual void Execute();
 
 protected:
 	FString Response;

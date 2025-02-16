@@ -39,3 +39,9 @@ TSharedPtr<WalkingResult> WalkingResult::FactoryCreate(FString name, TSharedPtr<
 	}
 	return MakeShareable<WalkingResult>(nullptr);
 }
+
+void WalkingResult::Execute()
+{
+	// TODO
+	UE_LOG(LogTemp, Error, TEXT("EXECUTE: not implemented"));
+}
