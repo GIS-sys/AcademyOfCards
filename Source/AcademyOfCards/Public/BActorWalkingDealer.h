@@ -22,8 +22,8 @@ public:
 protected:
 	const int FieldWidth = 8;
 	const int FieldHeight = 4;
-	const TPair<int, int> StartPosition = { 5, -1 };
-	const TPair<int, int> FinishPosition = { 2, 4 };
+	const TPair<int, int> StartPosition = { 2, 4 };
+	const TPair<int, int> FinishPosition = { 5, -1 };
 	const int WALLS_TO_DELETE_AMOUNT = 3;
 	const int ALLOWED_RANDOM_MISTAKES = 1000;
 	const float TIME_CARD_DEALING_MOVEMENT = 0.5;
@@ -47,9 +47,9 @@ protected:
 
 	TArray<TSharedPtr<WalkingEvent>> Events;
 
-	const FVector DealingOffset{ 20.0, -440.0, 10.0 };
+	const FVector DealingOffset{ -660.0, -660.0, -20.0 };
 	const float SpacingBetweenTiles = 0.0;
-	const FVector CardSize = FVector({ 50, 50, 1 });
+	const FVector CardSize = FVector({ 100, 100, 1 });
 
 	TArray<TTuple<float, int, int>> DealingCardSpawnRestTime;
 
