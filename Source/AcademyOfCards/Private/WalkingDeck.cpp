@@ -14,7 +14,7 @@ WalkingDeck::~WalkingDeck()
 }
 
 void WalkingDeck::LoadConfigEvents() {
-	FString FilePath = FPaths::ProjectContentDir() / TEXT("WalkingStage/Configs/config_walking_events.json");
+	FString FilePath = FPaths::ProjectContentDir() / TEXT("WalkingStage/Configs/config_walking_events_new.json");
 	FString JsonString;
 	if (FFileHelper::LoadFileToString(JsonString, *FilePath))
 	{
@@ -34,7 +34,7 @@ void WalkingDeck::LoadConfigEvents() {
 }
 
 void WalkingDeck::LoadConfigCards() {
-	FString FilePath = FPaths::ProjectContentDir() / TEXT("WalkingStage/Configs/config_walking_cards.json");
+	FString FilePath = FPaths::ProjectContentDir() / TEXT("WalkingStage/Configs/event_cards_config_new.json");
 	FString JsonString;
 	if (FFileHelper::LoadFileToString(JsonString, *FilePath))
 	{
@@ -60,6 +60,13 @@ TSharedPtr<WalkingCardConfig> WalkingDeck::GetRandomCard() const {
 TSharedPtr<WalkingEvent> WalkingDeck::GetEventByName(FString Name) const {
 	for (const auto& event : Events) {
 		if (event->Name == Name) return event;
+	}
+	return WalkingEvent::CreateDefault();
+}
+
+TSharedPtr<WalkingEvent> WalkingDeck::GetEventByID(FString ID) const {
+	for (const auto& event : Events) {
+		if (event->ID == ID) return event;
 	}
 	return WalkingEvent::CreateDefault();
 }

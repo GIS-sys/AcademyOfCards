@@ -55,7 +55,7 @@ void ABActorWalkingCard::MoveTo() {
 	if (PlayerModel->Move(GetActorLocation(), BoardPositionX, BoardPositionY, DealerPtr)) {
 		if (!IsDiscovered) {
 			IsDiscovered = true;
-			WalkingDeck->GetEventByName(CardConfig->GetEventFired(PlayerModel->PlayerStats))->Fire(DealerPtr);
+			WalkingDeck->GetEventByID(CardConfig->GetEventFired(PlayerModel->PlayerStats))->Fire(DealerPtr);
 		}
 	}
 }

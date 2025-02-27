@@ -24,4 +24,5 @@ public:
 
 	TSharedPtr<WalkingCardConfig> GetRandomCard() const;
 	TSharedPtr<WalkingEvent> GetEventByName(FString Name) const;
+	TSharedPtr<WalkingEvent> GetEventByID(FString ID) const;
 };

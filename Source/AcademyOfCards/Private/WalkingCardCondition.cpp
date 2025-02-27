@@ -5,7 +5,7 @@
 
 WalkingCardCondition::WalkingCardCondition(TSharedPtr<FJsonObject> config)
 {
-	EventName = config->GetStringField("event");
+	EventID = config->GetStringField("id");
 	if (config->HasField("condition")) {
 		for (const auto& condition_clause : config->GetArrayField("condition")) {
 			Conditions.Add(condition_clause->AsObject());

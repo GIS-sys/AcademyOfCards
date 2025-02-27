@@ -12,16 +12,18 @@
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 
-WalkingEvent::WalkingEvent(FString name, FString text, TArray<TSharedPtr<WalkingOption>> options)
+WalkingEvent::WalkingEvent(FString id, FString name, FString text, TArray<TSharedPtr<WalkingOption>> options)
 {
+	ID = id;
 	Name = name;
 	Text = text;
 	Options = options;
 }
 
-WalkingEvent::WalkingEvent(FString name, TSharedPtr<FJsonObject> data)
+WalkingEvent::WalkingEvent(FString id, TSharedPtr<FJsonObject> data)
 {
-	Name = name;
+	ID = id;
+	Name = data->TryGetField("name")->AsString();
 	Text = data->TryGetField("text")->AsString();
 	for (auto& option : data->GetArrayField("options")) {
 		Options.Add(MakeShareable(new WalkingOption(option->AsObject())));
@@ -53,5 +55,5 @@ void WalkingEvent::Fire(ABActorWalkingDealer* DealerPtr)
 
 TSharedPtr<WalkingEvent> WalkingEvent::CreateDefault()
 {
-	return MakeShareable(new WalkingEvent("", "Nothing happened", TArray<TSharedPtr<WalkingOption>>()));
+	return MakeShareable(new WalkingEvent("", "", "Nothing happened", TArray<TSharedPtr<WalkingOption>>()));
 }

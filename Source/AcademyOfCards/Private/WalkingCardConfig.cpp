@@ -18,7 +18,7 @@ WalkingCardConfig::~WalkingCardConfig()
 
 FString WalkingCardConfig::GetEventFired(const FPlayerStats& stats) const {
 	for (const auto& condition : Conditions) {
-		if (condition->IsFired(stats)) return condition->EventName;
+		if (condition->IsFired(stats)) return condition->EventID;
 	}
 	return "";
 }

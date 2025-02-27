@@ -19,5 +19,5 @@ public:
 
 	bool IsFired(const FPlayerStats& stats) const;
 
-	FString EventName;
+	FString EventID;
 };
