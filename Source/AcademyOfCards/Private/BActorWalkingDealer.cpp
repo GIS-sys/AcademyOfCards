@@ -4,6 +4,7 @@
 #include "BActorWalkingDealer.h"
 #include <BActorWalkingCard.h>
 #include <BActorWalkingPlayerModel.h>
+#include <WalkingDeck.h>
 #include <WalkingEvent.h>
 #include <Kismet/GameplayStatics.h>
 #include "Serialization/JsonSerializer.h"
@@ -20,27 +21,9 @@ ABActorWalkingDealer::ABActorWalkingDealer()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	LoadConfigEvents();
-}
-
-void ABActorWalkingDealer::LoadConfigEvents() {
-	FString FilePath = FPaths::ProjectContentDir() / TEXT("WalkingStage/Configs/config_walking_events.json");
-	FString JsonString;
-	if (FFileHelper::LoadFileToString(JsonString, *FilePath))
-	{
-		TSharedPtr<FJsonObject> JsonObject;
-		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(*JsonString);
-		if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
-		{
-			for (const auto& [x, y] : JsonObject->Values) {
-				Events.Add(MakeShareable(new WalkingEvent(x, y->AsObject())));
-			}
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to load JSON file from path: %s"), *FilePath);
-	}
+	Deck = MakeShareable(new WalkingDeck());
+	Deck->LoadConfigCards();
+	Deck->LoadConfigEvents();
 }
 
 // Called when the game starts or when spawned
@@ -102,13 +85,13 @@ void ABActorWalkingDealer::SetPlayerModel(int ix, int iy)
 
 ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked()
 {
-	// TODO proper card stats - at minimum, events from deck?
 	AActor* actor = GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), GetActorRotation());
 	ABActorWalkingCard* actor_wc = dynamic_cast<ABActorWalkingCard*>(actor);
 
 	actor_wc->DealerPtr = this;
-	actor_wc->MainCardMaterial = MaterialArray[FMath::Rand() % MaterialArray.Num()];
-	actor_wc->Event = Events[FMath::Rand() % Events.Num()];
+	actor_wc->MainCardMaterial = MaterialArray[FMath::Rand() % MaterialArray.Num()]; // TODO connect main card material to card config?
+	actor_wc->CardConfig = Deck->GetRandomCard();
+	actor_wc->WalkingDeck = Deck;
 
 	actor_wc->Walls.bottom = true;
 	actor_wc->Walls.top = true;

@@ -5,10 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 
+class WalkingDeck;
 class ABActorWalkingCard;
-class WalkingEvent;
 
 #include "BActorWalkingDealer.generated.h"
+
 
 UCLASS()
 class ACADEMYOFCARDS_API ABActorWalkingDealer : public AActor
@@ -31,8 +32,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void LoadConfigEvents();
-
 	bool IsInsideFieldNoEnds(TPair<int, int> point);
 	bool IsEnds(TPair<int, int> point);
 	bool IsInsideFieldWithEnds(TPair<int, int> point);
@@ -45,19 +44,26 @@ protected:
 
 	FVector GetCenterCellPosition(int ix, int iy);
 
-	TArray<TSharedPtr<WalkingEvent>> Events;
-
-	const FVector DealingOffset{ -660.0, -660.0, -20.0 };
 	const float SpacingBetweenTiles = 0.0;
-	const FVector CardSize = FVector({ 100, 100, 1 });
 
 	TArray<TTuple<float, int, int>> DealingCardSpawnRestTime;
 
 public:
+	TSharedPtr<WalkingDeck> Deck;
+
 	TMap<TPair<int, int>, ABActorWalkingCard*> CardsDealt;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	FVector DealingOffset { -660.0, -660.0, -20.0 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	FVector CardSize = FVector({ 100, 100, 1 });
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	TSubclassOf<AActor> ActorToSpawn;
+
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	TSubclassOf<AActor> ActorWhereToSpawn;*/ // TODO add actors to point where to deal cards
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 	TArray<UMaterialInterface*> MaterialArray;

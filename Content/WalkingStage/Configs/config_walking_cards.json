@@ -1,0 +1,29 @@
+[
+  {
+    "name": "card_gandalf",
+    "conditions": [
+      {
+        "condition": {
+          "alignment_good": {"in": [0.5, 1.0]},
+          "alignment_towards_old_gays": {"bigger": 0.5}
+        },
+        "event": "event_gandalf_good"
+      },
+      {
+        "condition": {
+          "alignment_good": {"in": [-0.9, 0.4]}
+        },
+        "event": "event_gandalf_bad"
+      },
+      {
+        "condition": {
+          "alignment_good": {"less": -0.9}
+        },
+        "event": "event_gandalf_instant_death"
+      },
+      {
+        "event": "event_gandalf_default"
+      }
+    ]
+  }
+]

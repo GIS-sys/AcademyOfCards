@@ -5,6 +5,8 @@
 #include <WalkingEvent.h>
 #include <BActorWalkingPlayerModel.h>
 #include <Kismet/GameplayStatics.h>
+#include "WalkingDeck.h"
+#include "WalkingCardConfig.h"
 
 // Sets default values
 ABActorWalkingCard::ABActorWalkingCard()
@@ -53,7 +55,7 @@ void ABActorWalkingCard::MoveTo() {
 	if (PlayerModel->Move(GetActorLocation(), BoardPositionX, BoardPositionY, DealerPtr)) {
 		if (!IsDiscovered) {
 			IsDiscovered = true;
-			Event->Fire(DealerPtr);
+			WalkingDeck->GetEventByID(CardConfig->GetEventFired(PlayerModel->PlayerStats))->Fire(DealerPtr);
 		}
 	}
 }
