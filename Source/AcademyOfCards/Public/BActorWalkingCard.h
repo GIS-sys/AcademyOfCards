@@ -6,7 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "BActorEnhanced.h"
 #include "BActorWalkingCard.generated.h"
-class WalkingEvent;
+class WalkingDeck;
+class WalkingCardConfig;
 class ABActorWalkingDealer;
 
 UCLASS()
@@ -72,8 +73,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 	UMaterialInterface* MainCardMaterial;
 
-	TSharedPtr<WalkingEvent> Event;
-
 	float BoardPositionX;
 	float BoardPositionY;
 
@@ -83,4 +82,7 @@ public:
 	bool IsDiscovered = false;
 
 	WallsStruct Walls;
+
+	TSharedPtr<WalkingCardConfig> CardConfig;
+	TSharedPtr<WalkingDeck> WalkingDeck;
 };

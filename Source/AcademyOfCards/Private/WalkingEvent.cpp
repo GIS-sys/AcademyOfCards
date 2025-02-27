@@ -12,6 +12,13 @@
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 
+WalkingEvent::WalkingEvent(FString name, FString text, TArray<TSharedPtr<WalkingOption>> options)
+{
+	Name = name;
+	Text = text;
+	Options = options;
+}
+
 WalkingEvent::WalkingEvent(FString name, TSharedPtr<FJsonObject> data)
 {
 	Name = name;
@@ -42,4 +49,9 @@ void WalkingEvent::Fire(ABActorWalkingDealer* DealerPtr)
 		EventUI->NewEventPopup_AddButton(ButtonName, ButtonResults);
 	}
 	EventUI->NewEventPopup_Finish();
+}
+
+TSharedPtr<WalkingEvent> WalkingEvent::CreateDefault()
+{
+	return MakeShareable(new WalkingEvent("", "Nothing happened", TArray<TSharedPtr<WalkingOption>>()));
 }

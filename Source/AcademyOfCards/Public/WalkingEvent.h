@@ -13,10 +13,12 @@ class WalkingOption;
 class ACADEMYOFCARDS_API WalkingEvent
 {
 public:
+	WalkingEvent(FString name, FString text, TArray<TSharedPtr<WalkingOption>> options);
 	WalkingEvent(FString name, TSharedPtr<FJsonObject> data);
 	~WalkingEvent();
 
 	void Fire(ABActorWalkingDealer* DealerPtr);
+	static TSharedPtr<WalkingEvent> CreateDefault();
 
 	FString Name;
 
