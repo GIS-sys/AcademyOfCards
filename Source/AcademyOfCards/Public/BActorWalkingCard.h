@@ -81,6 +81,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")
 	bool IsDiscovered = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")
+	bool IsCollectible = false; // TODO set this variable from config
+
 	WallsStruct Walls;
 
 	TSharedPtr<WalkingCardConfig> CardConfig;
