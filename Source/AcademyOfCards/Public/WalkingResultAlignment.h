@@ -16,4 +16,7 @@ public:
 
 protected:
 	float DarkAlignment = 0;
+	float LightAlignment = 0;
+	float IceAlignment = 0;
+	float FireAlignment = 0;
 };

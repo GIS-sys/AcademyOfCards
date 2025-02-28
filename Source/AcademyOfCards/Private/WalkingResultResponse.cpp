@@ -20,6 +20,5 @@ WalkingResultResponse::~WalkingResultResponse()
 
 void WalkingResultResponse::Execute()
 {
-	// TODO
-	UE_LOG(LogTemp, Error, TEXT("EXECUTE: Response(%s)"), *Response);
+	UE_LOG(LogTemp, Error, TEXT("EXECUTE: Response(%s)"), *Response); // TODO actually execute results
 }

@@ -5,8 +5,21 @@
 
 WalkingResultCard::WalkingResultCard(TSharedPtr<FJsonObject> data)
 {
-	for (TSharedPtr<FJsonValue> card : data->GetArrayField("options")) {
-		CardOptions.Add(card->AsString());
+	if (data->HasField("options")) {
+		for (TSharedPtr<FJsonValue> card : data->GetArrayField("options")) {
+			CardOptions.Add(card->AsString());
+		}
+	}
+	if (data->HasField("random")) {
+		CardRandomAmount = data->GetObjectField("random")->GetNumberField("amount");
+		for (TSharedPtr<FJsonValue> card : data->GetObjectField("random")->GetArrayField("tags")) {
+			CardRandomTags.Add(card->AsString());
+		}
+	}
+	if (data->HasField("specific")) {
+		for (TSharedPtr<FJsonValue> card : data->GetArrayField("specific")) {
+			CardSpecificIDs.Add(card->AsString());
+		}
 	}
 }
 

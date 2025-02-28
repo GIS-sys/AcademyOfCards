@@ -7,13 +7,14 @@
 
 void UBUIWalkingEvent::NewEventPopup_Clear()
 {
+    EventIsShown = false;
     if (EventPopupVerticalBox) EventPopupVerticalBox->ClearChildren();
     if (EventPopupLabel) EventPopupLabel->SetText(FText::FromString(""));
 }
 
 void UBUIWalkingEvent::NewEventPopup_Finish()
 {
-
+    EventIsShown = true;
 }
 
 void UBUIWalkingEvent::NewEventPopup_SetText(FString Text)
@@ -32,6 +33,7 @@ void UBUIWalkingEvent::NewEventPopup_AddButton(FString ButtonName, TArray<TShare
     // create label
     UTextBlock* ButtonText = NewObject<UTextBlock>(NewButton);
     ButtonText->SetText(FText::FromString(ButtonName));
+    ButtonText->SetAutoWrapText(true);
     NewButton->AddChild(ButtonText);
     // add onclick
     SButton* ButtonWidget = (SButton*)&(NewButton->TakeWidget().Get());
@@ -48,7 +50,6 @@ void UBUIWalkingEvent::NewEventPopup_AddButton(FString ButtonName, TArray<TShare
 void UBUIWalkingEvent::EventPopupButtonOnClicked(FString ButtonName, TArray<TSharedPtr<WalkingResult>> ButtonResults)
 {
     for (const auto& Result : ButtonResults) {
-        // TODO
-        Result->Execute();
+        Result->Execute(); // TODO actually execute result after button is clicked
     }
 }

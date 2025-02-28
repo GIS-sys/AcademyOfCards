@@ -9,6 +9,18 @@ WalkingResultAlignment::WalkingResultAlignment(TSharedPtr<FJsonObject> data)
 	{
 		DarkAlignment = data->GetNumberField("dark");
 	}
+	if (data->HasField("light"))
+	{
+		LightAlignment = data->GetNumberField("light");
+	}
+	if (data->HasField("ice"))
+	{
+		IceAlignment = data->GetNumberField("ice");
+	}
+	if (data->HasField("fire"))
+	{
+		FireAlignment = data->GetNumberField("fire");
+	}
 }
 
 WalkingResultAlignment::~WalkingResultAlignment()

@@ -4,6 +4,7 @@
 #include "BActorWalkingDealer.h"
 #include <BActorWalkingCard.h>
 #include <BActorWalkingPlayerModel.h>
+#include <WalkingCardConfig.h>
 #include <WalkingDeck.h>
 #include <WalkingEvent.h>
 #include <Kismet/GameplayStatics.h>
@@ -57,9 +58,11 @@ void ABActorWalkingDealer::Tick(float DeltaTime)
 
 FVector ABActorWalkingDealer::GetCenterCellPosition(int ix, int iy)
 {
-	float dx = (FieldHeight - 1 - iy) * CardSize.Y * (1.0 + SpacingBetweenTiles);
-	float dy = ix * CardSize.X * (1.0 + SpacingBetweenTiles);
-	return GetActorLocation() + FVector(dx, dy, 0.0) + DealingOffset;
+	float dx = (FieldHeight - 1 - iy + FieldHeight + 1) * CardSize.Y * (1.0 + SpacingBetweenTiles);
+	float dy = (ix + (FieldWidth - 1) / 2.0) * CardSize.X * (1.0 + SpacingBetweenTiles);
+	AActor* FoundActor = UGameplayStatics::GetActorOfClass(GetWorld(), ActorWhereToSpawn);
+	FVector center = FoundActor->GetActorLocation();
+	return center + FVector(dx, dy, 0.0) + DealingOffset;
 }
 
 void ABActorWalkingDealer::DealCard(int ix, int iy)
@@ -89,8 +92,15 @@ ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked()
 	ABActorWalkingCard* actor_wc = dynamic_cast<ABActorWalkingCard*>(actor);
 
 	actor_wc->DealerPtr = this;
-	actor_wc->MainCardMaterial = MaterialArray[FMath::Rand() % MaterialArray.Num()]; // TODO connect main card material to card config?
-	actor_wc->CardConfig = Deck->GetRandomCard();
+	actor_wc->CardConfig = Deck->GetRandomCard(); // TODO is collectible somehow
+	int MaterialIndex = 0;
+	for (int i = 0; i < MaterialIDsArray.Num(); ++i) {
+		if (MaterialIDsArray[i] == actor_wc->CardConfig->ID) {
+			MaterialIndex = i;
+			break;
+		}
+	}
+	actor_wc->MainCardMaterial = MaterialArray[MaterialIndex];
 	actor_wc->WalkingDeck = Deck;
 
 	actor_wc->Walls.bottom = true;

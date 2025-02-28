@@ -62,11 +62,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	TSubclassOf<AActor> ActorToSpawn;
 
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
-	TSubclassOf<AActor> ActorWhereToSpawn;*/ // TODO add actors to point where to deal cards
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	TSubclassOf<AActor> ActorWhereToSpawn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 	TArray<UMaterialInterface*> MaterialArray;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+	TArray<FString> MaterialIDsArray;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

@@ -7,8 +7,8 @@ WalkingCardCondition::WalkingCardCondition(TSharedPtr<FJsonObject> config)
 {
 	EventID = config->GetStringField("id");
 	if (config->HasField("condition")) {
-		for (const auto& condition_clause : config->GetArrayField("condition")) {
-			Conditions.Add(condition_clause->AsObject());
+		for (const auto& [condition_target, condition_clause] : config->GetObjectField("condition")->Values) {
+			Conditions.Add(TPair<FString, TSharedPtr<FJsonObject>>(condition_target, condition_clause->AsObject()));
 		}
 	}
 }
@@ -20,7 +20,7 @@ WalkingCardCondition::~WalkingCardCondition()
 bool WalkingCardCondition::IsFired(const FPlayerStats& stats) const {
 	if (Conditions.IsEmpty()) return true;
 	for (const auto& condition : Conditions) {
-		// TODO
+		if (FMath::Rand() % Conditions.Num() == 0) return true; // TODO actually check condition
 	}
 	return false;
 }

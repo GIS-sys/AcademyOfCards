@@ -11,7 +11,7 @@
 class ACADEMYOFCARDS_API WalkingCardCondition
 {
 protected:
-	TArray<TSharedPtr<FJsonObject>> Conditions;
+	TArray<TPair<FString, TSharedPtr<FJsonObject>>> Conditions;
 
 public:
 	WalkingCardCondition(TSharedPtr<FJsonObject> config);
