@@ -17,5 +17,4 @@ public:
 protected:
 	FString Opponent;
 	TArray<TSharedPtr<WalkingResult>> ResultsWin;
-	TArray<TSharedPtr<WalkingResult>> ResultsLose;
 };

@@ -16,4 +16,7 @@ public:
 
 protected:
 	TArray<FString> CardOptions;
+	TArray<FString> CardSpecificIDs;
+	int CardRandomAmount = 0;
+	TArray<FString> CardRandomTags;
 };

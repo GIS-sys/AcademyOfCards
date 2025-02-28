@@ -48,7 +48,6 @@ void UBUIWalkingEvent::NewEventPopup_AddButton(FString ButtonName, TArray<TShare
 void UBUIWalkingEvent::EventPopupButtonOnClicked(FString ButtonName, TArray<TSharedPtr<WalkingResult>> ButtonResults)
 {
     for (const auto& Result : ButtonResults) {
-        // TODO
-        Result->Execute();
+        Result->Execute(); // TODO actually execute result after button is clicked
     }
 }

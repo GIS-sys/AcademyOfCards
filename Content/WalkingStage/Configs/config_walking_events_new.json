@@ -21,12 +21,6 @@
                   "Pikachu"
                 ]
               }
-            },
-            "reward_lose": {
-              "response": { "text": "Поражение!" },
-              "stats": {
-                "gold": -10
-              }
             }
           }
         }
@@ -54,8 +48,7 @@
                 },
                 "fight": {
                   "who": "MegaGandalf",
-                  "reward_win": {},
-                  "reward_lose": {}
+                  "reward_win": {}
                 }
               }
             }
@@ -162,7 +155,9 @@
                 "light": 1
               },
               "card": {
-                "id": "c001s"
+                "specific": [
+                  "c001s"
+                ]
               }
             }
           }
@@ -180,7 +175,9 @@
                 "fire": 2
               },
               "card": {
-                "id": "c001s"
+                "specific": [
+                  "c001s"
+                ]
               }
             }
           }
@@ -202,7 +199,9 @@
                   "gold": -100
                 },
                 "card": {
-                  "id": "c002s"
+                  "specific": [
+                    "c002s"
+                  ]
                 }
               }
             },

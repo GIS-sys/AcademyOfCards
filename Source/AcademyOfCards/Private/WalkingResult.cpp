@@ -42,6 +42,5 @@ TSharedPtr<WalkingResult> WalkingResult::FactoryCreate(FString name, TSharedPtr<
 
 void WalkingResult::Execute()
 {
-	// TODO
-	UE_LOG(LogTemp, Error, TEXT("EXECUTE: not implemented"));
+	UE_LOG(LogTemp, Error, TEXT("EXECUTE: not implemented")); // TODO actually execute results
 }

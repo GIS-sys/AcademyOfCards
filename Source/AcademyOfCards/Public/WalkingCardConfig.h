@@ -21,5 +21,5 @@ public:
 
 	FString GetEventFired(const FPlayerStats& stats) const;
 
-	FString Name;
+	FString ID;
 };

@@ -16,7 +16,7 @@ public:
 
 	struct WalkingResultProbabilityInner {
 		FString Name;
-		double Probability;
+		FString Probability; // TODO parse somehow
 		TArray<TSharedPtr<WalkingResult>> Results;
 	};
 

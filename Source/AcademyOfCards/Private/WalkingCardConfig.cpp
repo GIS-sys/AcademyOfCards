@@ -6,7 +6,7 @@
 
 WalkingCardConfig::WalkingCardConfig(TSharedPtr<FJsonObject> config)
 {
-	Name = config->GetStringField("name");
+	ID = config->GetStringField("id");
 	for (const auto& condition : config->GetArrayField("conditions")) {
 		Conditions.Add(MakeShareable(new WalkingCardCondition(condition->AsObject())));
 	}
