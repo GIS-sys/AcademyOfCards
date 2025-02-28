@@ -31,4 +31,7 @@ public:
 	void NewEventPopup_AddButton(FString ButtonName, TArray<TSharedPtr<WalkingResult>> ButtonResults);
 
 	void EventPopupButtonOnClicked(FString ButtonName, TArray<TSharedPtr<WalkingResult>> ButtonResults);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "IsShown")
+	bool EventIsShown = false;
 };

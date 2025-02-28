@@ -27,7 +27,13 @@ struct FPlayerStats
 	float AlignmentLight = 0.5;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	float AlignmentDark = 0.5;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float AlignmentFire = 0.0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	float AlignmentIce = 0.0;
 };
 
 

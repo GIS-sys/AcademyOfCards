@@ -7,13 +7,14 @@
 
 void UBUIWalkingEvent::NewEventPopup_Clear()
 {
+    EventIsShown = false;
     if (EventPopupVerticalBox) EventPopupVerticalBox->ClearChildren();
     if (EventPopupLabel) EventPopupLabel->SetText(FText::FromString(""));
 }
 
 void UBUIWalkingEvent::NewEventPopup_Finish()
 {
-
+    EventIsShown = true;
 }
 
 void UBUIWalkingEvent::NewEventPopup_SetText(FString Text)
