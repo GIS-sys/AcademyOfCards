@@ -57,9 +57,11 @@ void ABActorWalkingDealer::Tick(float DeltaTime)
 
 FVector ABActorWalkingDealer::GetCenterCellPosition(int ix, int iy)
 {
-	float dx = (FieldHeight - 1 - iy) * CardSize.Y * (1.0 + SpacingBetweenTiles);
-	float dy = ix * CardSize.X * (1.0 + SpacingBetweenTiles);
-	return GetActorLocation() + FVector(dx, dy, 0.0) + DealingOffset;
+	float dx = (FieldHeight - 1 - iy + FieldHeight + 1) * CardSize.Y * (1.0 + SpacingBetweenTiles);
+	float dy = (ix + (FieldWidth - 1) / 2.0) * CardSize.X * (1.0 + SpacingBetweenTiles);
+	AActor* FoundActor = UGameplayStatics::GetActorOfClass(GetWorld(), ActorWhereToSpawn);
+	FVector center = FoundActor->GetActorLocation();
+	return center + FVector(dx, dy, 0.0) + DealingOffset;
 }
 
 void ABActorWalkingDealer::DealCard(int ix, int iy)

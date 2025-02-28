@@ -33,6 +33,7 @@ void UBUIWalkingEvent::NewEventPopup_AddButton(FString ButtonName, TArray<TShare
     // create label
     UTextBlock* ButtonText = NewObject<UTextBlock>(NewButton);
     ButtonText->SetText(FText::FromString(ButtonName));
+    ButtonText->SetAutoWrapText(true);
     NewButton->AddChild(ButtonText);
     // add onclick
     SButton* ButtonWidget = (SButton*)&(NewButton->TakeWidget().Get());
