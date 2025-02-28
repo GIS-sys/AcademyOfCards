@@ -100,7 +100,6 @@ ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked()
 			break;
 		}
 	}
-	MaterialIndex = 1; // TODO
 	actor_wc->MainCardMaterial = MaterialArray[MaterialIndex];
 	actor_wc->WalkingDeck = Deck;
 

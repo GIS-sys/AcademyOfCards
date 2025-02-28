@@ -8,6 +8,7 @@
 #include <WalkingResultProbability.h>
 #include <WalkingResultResponse.h>
 #include <WalkingResultStats.h>
+#include <WalkingResultArtifact.h>
 
 WalkingResult::WalkingResult()
 {
@@ -37,7 +38,10 @@ TSharedPtr<WalkingResult> WalkingResult::FactoryCreate(FString name, TSharedPtr<
 	if (name == "alignment") {
 		return MakeShareable(new WalkingResultAlignment(data));
 	}
-	return MakeShareable<WalkingResult>(nullptr);
+	if (name == "artifact") {
+		return MakeShareable(new WalkingResultArtifact(data));
+	}
+	throw "Exception at FactoryCreate WalkingResult: no such " + name + " is available";
 }
 
 void WalkingResult::Execute()
