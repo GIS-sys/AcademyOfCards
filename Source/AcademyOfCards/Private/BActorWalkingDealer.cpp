@@ -4,6 +4,7 @@
 #include "BActorWalkingDealer.h"
 #include <BActorWalkingCard.h>
 #include <BActorWalkingPlayerModel.h>
+#include <WalkingCardConfig.h>
 #include <WalkingDeck.h>
 #include <WalkingEvent.h>
 #include <Kismet/GameplayStatics.h>
@@ -91,8 +92,16 @@ ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked()
 	ABActorWalkingCard* actor_wc = dynamic_cast<ABActorWalkingCard*>(actor);
 
 	actor_wc->DealerPtr = this;
-	actor_wc->MainCardMaterial = MaterialArray[FMath::Rand() % MaterialArray.Num()]; // TODO connect main card material to card config?
-	actor_wc->CardConfig = Deck->GetRandomCard();
+	actor_wc->CardConfig = Deck->GetRandomCard(); // TODO is collectible somehow
+	int MaterialIndex = 0;
+	for (int i = 0; i < MaterialIDsArray.Num(); ++i) {
+		if (MaterialIDsArray[i] == actor_wc->CardConfig->ID) {
+			MaterialIndex = i;
+			break;
+		}
+	}
+	MaterialIndex = 1; // TODO
+	actor_wc->MainCardMaterial = MaterialArray[MaterialIndex];
 	actor_wc->WalkingDeck = Deck;
 
 	actor_wc->Walls.bottom = true;

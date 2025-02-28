@@ -68,6 +68,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 	TArray<UMaterialInterface*> MaterialArray;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+	TArray<FString> MaterialIDsArray;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
