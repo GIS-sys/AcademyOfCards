@@ -92,7 +92,7 @@ ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked()
 	ABActorWalkingCard* actor_wc = dynamic_cast<ABActorWalkingCard*>(actor);
 
 	actor_wc->DealerPtr = this;
-	actor_wc->CardConfig = Deck->GetRandomCard(); // TODO is collectible somehow
+	actor_wc->CardConfig = Deck->GetRandomCard();
 	int MaterialIndex = 0;
 	for (int i = 0; i < MaterialIDsArray.Num(); ++i) {
 		if (MaterialIDsArray[i] == actor_wc->CardConfig->ID) {
