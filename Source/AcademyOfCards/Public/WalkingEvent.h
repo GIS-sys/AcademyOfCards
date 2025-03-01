@@ -19,6 +19,7 @@ public:
 
 	void Fire(ABActorWalkingDealer* DealerPtr);
 	static TSharedPtr<WalkingEvent> CreateDefault();
+	void AddCloseOption();
 
 	FString ID;
 	FString Name;

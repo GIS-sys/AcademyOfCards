@@ -81,8 +81,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")
 	bool IsDiscovered = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")
-	bool IsCollectible = false; // TODO set this variable from config
+	UFUNCTION(BlueprintCallable)
+	bool IsCollectible();
 
 	WallsStruct Walls;
 

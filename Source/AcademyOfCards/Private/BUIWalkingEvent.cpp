@@ -52,4 +52,5 @@ void UBUIWalkingEvent::EventPopupButtonOnClicked(FString ButtonName, TArray<TSha
     for (const auto& Result : ButtonResults) {
         Result->Execute(); // TODO actually execute result after button is clicked
     }
+    NewEventPopup_Clear();
 }

@@ -7,6 +7,7 @@
 #include <WalkingResultFight.h>
 #include <WalkingResultProbability.h>
 #include <WalkingResultResponse.h>
+#include <WalkingResultSpecialClose.h>
 #include <WalkingResultStats.h>
 #include <WalkingResultArtifact.h>
 
@@ -40,6 +41,9 @@ TSharedPtr<WalkingResult> WalkingResult::FactoryCreate(FString name, TSharedPtr<
 	}
 	if (name == "artifact") {
 		return MakeShareable(new WalkingResultArtifact(data));
+	}
+	if (name == "__close__") {
+		return MakeShareable(new WalkingResultSpecialClose(data));
 	}
 	throw "Exception at FactoryCreate WalkingResult: no such " + name + " is available";
 }

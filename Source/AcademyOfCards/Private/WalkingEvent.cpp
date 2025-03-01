@@ -18,6 +18,9 @@ WalkingEvent::WalkingEvent(FString id, FString name, FString text, TArray<TShare
 	Name = name;
 	Text = text;
 	Options = options;
+	if (Options.IsEmpty()) {
+		AddCloseOption();
+	}
 }
 
 WalkingEvent::WalkingEvent(FString id, TSharedPtr<FJsonObject> data)
@@ -27,6 +30,9 @@ WalkingEvent::WalkingEvent(FString id, TSharedPtr<FJsonObject> data)
 	Text = data->TryGetField("text")->AsString();
 	for (auto& option : data->GetArrayField("options")) {
 		Options.Add(MakeShareable(new WalkingOption(option->AsObject())));
+	}
+	if (Options.IsEmpty()) {
+		AddCloseOption();
 	}
 }
 
@@ -56,4 +62,8 @@ void WalkingEvent::Fire(ABActorWalkingDealer* DealerPtr)
 TSharedPtr<WalkingEvent> WalkingEvent::CreateDefault()
 {
 	return MakeShareable(new WalkingEvent("", "", "Nothing happened", TArray<TSharedPtr<WalkingOption>>()));
+}
+
+void WalkingEvent::AddCloseOption() {
+	Options.Add(WalkingOption::FactoryCreateCloseOption());
 }

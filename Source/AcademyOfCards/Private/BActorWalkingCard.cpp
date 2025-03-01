@@ -59,3 +59,8 @@ void ABActorWalkingCard::MoveTo() {
 		}
 	}
 }
+
+bool ABActorWalkingCard::IsCollectible() {
+	char last_id_letter = CardConfig->ID[CardConfig->ID.Len() - 1];
+	return last_id_letter == 'c';
+}
