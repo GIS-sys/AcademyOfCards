@@ -10,7 +10,7 @@ WalkingResultResponse::WalkingResultResponse(TSharedPtr<FJsonObject> data)
 	}
 	else
 	{
-		Response = "";
+		Response = "...";
 	}
 }
 
@@ -18,7 +18,7 @@ WalkingResultResponse::~WalkingResultResponse()
 {
 }
 
-void WalkingResultResponse::Execute()
+void WalkingResultResponse::Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model)
 {
-	UE_LOG(LogTemp, Error, TEXT("EXECUTE: Response(%s)"), *Response); // TODO actually execute results
+	UE_LOG(LogTemp, Error, TEXT("EXECUTE: Response(%s)"), *Response);
 }

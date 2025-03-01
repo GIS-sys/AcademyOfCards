@@ -2,19 +2,27 @@
 
 
 #include "BUIWalkingEvent.h"
+#include "BActorWalkingPlayerModel.h"
 #include <Components/Button.h>
 #include <Components/TextBlock.h>
+#include <Kismet/GameplayStatics.h>
 
 void UBUIWalkingEvent::NewEventPopup_Clear()
 {
     EventIsShown = false;
+    if (CurrentWalkingCard) {
+        CurrentWalkingCard->IsCloseUpLook = false;
+        CurrentWalkingCard = nullptr;
+    }
     if (EventPopupVerticalBox) EventPopupVerticalBox->ClearChildren();
     if (EventPopupLabel) EventPopupLabel->SetText(FText::FromString(""));
 }
 
-void UBUIWalkingEvent::NewEventPopup_Finish()
+void UBUIWalkingEvent::NewEventPopup_Finish(ABActorWalkingCard* WalkingCard)
 {
     EventIsShown = true;
+    CurrentWalkingCard = WalkingCard;
+    CurrentWalkingCard->IsCloseUpLook = true;
 }
 
 void UBUIWalkingEvent::NewEventPopup_SetText(FString Text)
@@ -49,8 +57,10 @@ void UBUIWalkingEvent::NewEventPopup_AddButton(FString ButtonName, TArray<TShare
 
 void UBUIWalkingEvent::EventPopupButtonOnClicked(FString ButtonName, TArray<TSharedPtr<WalkingResult>> ButtonResults)
 {
+    AActor* FoundActor = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
+    ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(FoundActor);
     for (const auto& Result : ButtonResults) {
-        Result->Execute(); // TODO actually execute result after button is clicked
+        Result->Execute(this, PlayerModel); // TODO actually execute result after button is clicked
     }
-    NewEventPopup_Clear();
+    //NewEventPopup_Clear(); // TODO
 }

@@ -81,6 +81,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")
 	bool IsDiscovered = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")
+	bool IsCloseUpLook = false;
+
 	UFUNCTION(BlueprintCallable)
 	bool IsCollectible();
 

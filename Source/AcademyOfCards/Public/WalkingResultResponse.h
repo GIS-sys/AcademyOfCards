@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include <WalkingResult.h>
+class UBUIWalkingEvent;
+class ABActorWalkingPlayerModel;
 
 /**
  * 
@@ -14,7 +16,7 @@ public:
 	WalkingResultResponse(TSharedPtr<FJsonObject> data);
 	virtual ~WalkingResultResponse();
 
-	virtual void Execute();
+	virtual void Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model);
 
 protected:
 	FString Response;

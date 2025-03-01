@@ -17,7 +17,7 @@ public:
 	WalkingEvent(FString id, TSharedPtr<FJsonObject> data);
 	~WalkingEvent();
 
-	void Fire(ABActorWalkingDealer* DealerPtr);
+	void Fire(ABActorWalkingDealer* DealerPtr, ABActorWalkingCard* WalkingCard);
 	static TSharedPtr<WalkingEvent> CreateDefault();
 	void AddCloseOption();
 
@@ -25,7 +25,6 @@ public:
 	FString Name;
 
 protected:
-	
 	FString Text;
 	TArray<TSharedPtr<WalkingOption>> Options;
 };

@@ -7,6 +7,7 @@
 #include "WalkingResult.h"
 #include <Components/VerticalBox.h>
 #include <Components/TextBlock.h>
+#include "BActorWalkingCard.h"
 #include "BUIWalkingEvent.generated.h"
 
 /**
@@ -26,7 +27,7 @@ public:
 
 public:
 	void NewEventPopup_Clear();
-	void NewEventPopup_Finish();
+	void NewEventPopup_Finish(ABActorWalkingCard* WalkingCard);
 	void NewEventPopup_SetText(FString Text);
 	void NewEventPopup_AddButton(FString ButtonName, TArray<TSharedPtr<WalkingResult>> ButtonResults);
 
@@ -34,4 +35,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "IsShown")
 	bool EventIsShown = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "IsShown")
+	ABActorWalkingCard* CurrentWalkingCard;
 };

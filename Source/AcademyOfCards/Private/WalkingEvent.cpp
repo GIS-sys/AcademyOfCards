@@ -40,7 +40,7 @@ WalkingEvent::~WalkingEvent()
 {
 }
 
-void WalkingEvent::Fire(ABActorWalkingDealer* DealerPtr)
+void WalkingEvent::Fire(ABActorWalkingDealer* DealerPtr, ABActorWalkingCard* WalkingCard)
 {
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(DealerPtr->GetWorld(), 0);
 	if (!PlayerController) return;
@@ -56,7 +56,7 @@ void WalkingEvent::Fire(ABActorWalkingDealer* DealerPtr)
 		TArray<TSharedPtr<WalkingResult>> ButtonResults = OptionPtr->Results;
 		EventUI->NewEventPopup_AddButton(ButtonName, ButtonResults);
 	}
-	EventUI->NewEventPopup_Finish();
+	EventUI->NewEventPopup_Finish(WalkingCard);
 }
 
 TSharedPtr<WalkingEvent> WalkingEvent::CreateDefault()

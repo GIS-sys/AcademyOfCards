@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+class UBUIWalkingEvent;
+class ABActorWalkingPlayerModel;
 
 /**
  * 
@@ -14,5 +16,5 @@ public:
 	virtual ~WalkingResult();
 
 	static TSharedPtr <WalkingResult> FactoryCreate(FString name, TSharedPtr<FJsonObject> data);
-	virtual void Execute();
+	virtual void Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model);
 };
