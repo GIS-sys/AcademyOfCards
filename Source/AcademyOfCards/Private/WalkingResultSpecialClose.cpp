@@ -2,6 +2,8 @@
 
 
 #include "WalkingResultSpecialClose.h"
+#include "BUIWalkingEvent.h"
+#include "BActorWalkingPlayerModel.h"
 
 WalkingResultSpecialClose::WalkingResultSpecialClose(TSharedPtr<FJsonObject> data)
 {
@@ -9,4 +11,9 @@ WalkingResultSpecialClose::WalkingResultSpecialClose(TSharedPtr<FJsonObject> dat
 
 WalkingResultSpecialClose::~WalkingResultSpecialClose()
 {
+}
+
+void WalkingResultSpecialClose::Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model)
+{
+	walking_event->CloseFromResult = true;
 }

@@ -26,7 +26,7 @@ public:
 	UTextBlock* EventPopupLabel;
 
 public:
-	void NewEventPopup_Clear();
+	void NewEventPopup_Clear(bool ForgetChosenCard = true);
 	void NewEventPopup_Finish(ABActorWalkingCard* WalkingCard);
 	void NewEventPopup_SetText(FString Text);
 	void NewEventPopup_AddButton(FString ButtonName, TArray<TSharedPtr<WalkingResult>> ButtonResults);
@@ -38,4 +38,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "IsShown")
 	ABActorWalkingCard* CurrentWalkingCard;
+
+	FString TextFromResult;
+	bool CloseFromResult = false;
 };

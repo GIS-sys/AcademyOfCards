@@ -13,4 +13,6 @@ class ACADEMYOFCARDS_API WalkingResultSpecialClose : public WalkingResult
 public:
 	WalkingResultSpecialClose(TSharedPtr<FJsonObject> data);
 	~WalkingResultSpecialClose();
+
+	virtual void Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model);
 };
