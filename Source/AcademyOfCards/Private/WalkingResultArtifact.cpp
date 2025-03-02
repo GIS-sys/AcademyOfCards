@@ -16,5 +16,5 @@ WalkingResultArtifact::~WalkingResultArtifact()
 
 void WalkingResultArtifact::Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model)
 {
-	walking_event->TextFromResult += "Artifact: " + ID + "\n"; // TOOD add real artifacts to player
+	walking_event->TextFromResult += "Artifact: " + ID + "\n"; // TODO add real artifacts to player
 }
