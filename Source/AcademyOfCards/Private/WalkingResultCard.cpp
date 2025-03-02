@@ -26,11 +26,11 @@ WalkingResultCard::WalkingResultCard(TSharedPtr<FJsonObject> data)
 
 	if (data->GetObjectField("how")->GetStringField("type") == "random") {
 		How_Type = "random";
-		How_Amount = data->GetObjectField("how")->GetNumberField("type");
+		How_Amount = data->GetObjectField("how")->GetNumberField("amount");
 	}
 	if (data->GetObjectField("how")->GetStringField("type") == "random_different") {
 		How_Type = "random_different";
-		How_Amount = data->GetObjectField("how")->GetNumberField("type");
+		How_Amount = data->GetObjectField("how")->GetNumberField("amount");
 	}
 	if (data->GetObjectField("how")->GetStringField("type") == "all") {
 		How_Type = "all";
@@ -66,7 +66,7 @@ void WalkingResultCard::Execute(UBUIWalkingEvent* walking_event, ABActorWalkingP
 	}
 	if (How_Type == "random_different") {
 		From_Pool = shuffle(From_Pool);
-		for (int i = 0; i < How_Amount && i < Chosen.Num(); ++i) {
+		for (int i = 0; i < How_Amount && i < From_Pool.Num(); ++i) {
 			Chosen.Add(From_Pool[i]);
 		}
 	}
@@ -74,14 +74,14 @@ void WalkingResultCard::Execute(UBUIWalkingEvent* walking_event, ABActorWalkingP
 		Chosen = From_Pool;
 	}
 
-	TArray<FString> ChosenCards;
+	TArray<CardType> ChosenCards;
 
-	if (From_Type == "tags") {
+	if (From_Type == "tag") {
 		for (FString tag : Chosen) {
 			ChosenCards.Add("(tag:" + tag + ")");
 		}
 	}
-	if (From_Type == "ids") {
+	if (From_Type == "specific") {
 		for (FString id : Chosen) {
 			ChosenCards.Add("(id:" + id + ")");
 		}
@@ -89,10 +89,10 @@ void WalkingResultCard::Execute(UBUIWalkingEvent* walking_event, ABActorWalkingP
 
 	if (IsGiveChoice) {
 		walking_event->TextFromResult += "Choose a card from the list below\n";
-		// TODO
-		for (FString card : ChosenCards) {
+		for (CardType card : ChosenCards) {
 			TArray<TSharedPtr<WalkingResult>> ResultAddSingleCard;
-			//ResultAddSingleCard.Add(MakeShareable(new WalkingResult(card))); TODO
+			ResultAddSingleCard.Add(FactoryCreateSingleCard(card));
+			// ResultAddSingleCard.Add(WalkingResult::FactoryCreate("__close__", nullptr));
 			walking_event->ButtonsFromResult.Add(std::make_pair(card, ResultAddSingleCard));
 		}
 	} else {
@@ -100,4 +100,18 @@ void WalkingResultCard::Execute(UBUIWalkingEvent* walking_event, ABActorWalkingP
 			walking_event->TextFromResult += "Random card: " + card + "\n";
 		}
 	}
+}
+
+TSharedPtr<WalkingResultCard> WalkingResultCard::FactoryCreateSingleCard(CardType Card)
+{
+	TSharedPtr<FJsonObject> data = MakeShareable(new FJsonObject()); // TODO
+	data->SetBoolField("give_choice", false);
+	data->SetObjectField("how", MakeShareable(new FJsonObject()));
+	data->GetObjectField("how")->SetStringField("type", "all");
+	data->SetObjectField("from", MakeShareable(new FJsonObject()));
+	data->GetObjectField("from")->SetStringField("type", "tag");
+	TArray<TSharedPtr<FJsonValue>> tags;
+	tags.Add(MakeShareable(new FJsonValueString(Card)));
+	data->GetObjectField("from")->SetArrayField("tags", tags);
+	return MakeShareable(new WalkingResultCard(data));
 }

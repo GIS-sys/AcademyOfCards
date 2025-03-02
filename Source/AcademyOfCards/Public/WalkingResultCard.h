@@ -7,6 +7,8 @@
 class UBUIWalkingEvent;
 class ABActorWalkingPlayerModel;
 
+using CardType = FString;
+
 /**
  * 
  */
@@ -17,11 +19,12 @@ public:
 	~WalkingResultCard();
 
 	virtual void Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model);
+	static TSharedPtr<WalkingResultCard> FactoryCreateSingleCard(CardType Card);
 
 protected:
-	bool IsGiveChoice;
+	bool IsGiveChoice = false;
 	FString How_Type;
-	int How_Amount;
+	int How_Amount = 0;
 	FString From_Type;
 	TArray<FString> From_Pool;
 };

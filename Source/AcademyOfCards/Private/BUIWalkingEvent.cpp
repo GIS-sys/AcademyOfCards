@@ -64,6 +64,7 @@ void UBUIWalkingEvent::EventPopupButtonOnClicked(FString ButtonName, TArray<TSha
 {
     TextFromResult = "";
     CloseFromResult = false;
+    ButtonsFromResult.Empty();
     AActor* FoundActor = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
     ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(FoundActor);
     for (const auto& Result : ButtonResults) {
