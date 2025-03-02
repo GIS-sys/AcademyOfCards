@@ -4,23 +4,48 @@
 #include "WalkingResultCard.h"
 #include "BUIWalkingEvent.h"
 #include "BActorWalkingPlayerModel.h"
+#include <vector>
+
+template <typename T>
+TArray<T> shuffle(const TArray<T>& arr)
+{
+	std::vector<std::pair<int, int>> indexes;
+	for (int i = 0; i < arr.Num(); ++i) indexes.push_back({ rand(), i});
+	std::sort(indexes.begin(), indexes.end(), [](const std::pair<int, int>& a, const std::pair<int, int>& b) { return a.second < b.second; });
+
+	TArray<T> result;
+	for (const auto& [weight, index] : indexes) {
+		result.Add(arr[index]);
+	}
+	return result;
+}
 
 WalkingResultCard::WalkingResultCard(TSharedPtr<FJsonObject> data)
 {
-	if (data->HasField("options")) {
-		for (TSharedPtr<FJsonValue> card : data->GetArrayField("options")) {
-			CardOptions.Add(card->AsString());
+	IsGiveChoice = data->GetBoolField("give_choice");
+
+	if (data->GetObjectField("how")->GetStringField("type") == "random") {
+		How_Type = "random";
+		How_Amount = data->GetObjectField("how")->GetNumberField("type");
+	}
+	if (data->GetObjectField("how")->GetStringField("type") == "random_different") {
+		How_Type = "random_different";
+		How_Amount = data->GetObjectField("how")->GetNumberField("type");
+	}
+	if (data->GetObjectField("how")->GetStringField("type") == "all") {
+		How_Type = "all";
+	}
+
+	if (data->GetObjectField("from")->GetStringField("type") == "tag") {
+		From_Type = "tag";
+		for (TSharedPtr<FJsonValue> card : data->GetObjectField("from")->GetArrayField("tags")) {
+			From_Pool.Add(card->AsString());
 		}
 	}
-	if (data->HasField("random")) {
-		CardRandomAmount = data->GetObjectField("random")->GetNumberField("amount");
-		for (TSharedPtr<FJsonValue> card : data->GetObjectField("random")->GetArrayField("tags")) {
-			CardRandomTags.Add(card->AsString());
-		}
-	}
-	if (data->HasField("specific")) {
-		for (TSharedPtr<FJsonValue> card : data->GetArrayField("specific")) {
-			CardSpecificIDs.Add(card->AsString());
+	if (data->GetObjectField("from")->GetStringField("type") == "specific") {
+		From_Type = "specific";
+		for (TSharedPtr<FJsonValue> card : data->GetObjectField("from")->GetArrayField("ids")) {
+			From_Pool.Add(card->AsString());
 		}
 	}
 }
@@ -32,20 +57,47 @@ WalkingResultCard::~WalkingResultCard()
 void WalkingResultCard::Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model)
 {
 	// TODO card result
-	for (auto& CardID : CardSpecificIDs) {
-		walking_event->TextFromResult += "Card with ID: " + CardID + "\n";
-	}
-	for (int i = 0; i < CardRandomAmount; ++i) {
-		walking_event->TextFromResult += "Random card with tags: ";
-		for (FString Tag : CardRandomTags) {
-			walking_event->TextFromResult += Tag + " ";
+	TArray<FString> Chosen;
+
+	if (How_Type == "random") {
+		for (int i = 0; i < How_Amount; ++i) {
+			Chosen.Add(From_Pool[rand() % From_Pool.Num()]);
 		}
-		walking_event->TextFromResult += "\n";
 	}
-	if (!CardOptions.IsEmpty()) {
-		walking_event->TextFromResult += "Choose a card from list below\n";
-		for (auto& CardID : CardOptions) {
-			//walking_event->OptionsFromResult.Add(); // TODO !!!
+	if (How_Type == "random_different") {
+		From_Pool = shuffle(From_Pool);
+		for (int i = 0; i < How_Amount && i < Chosen.Num(); ++i) {
+			Chosen.Add(From_Pool[i]);
+		}
+	}
+	if (How_Type == "all") {
+		Chosen = From_Pool;
+	}
+
+	TArray<FString> ChosenCards;
+
+	if (From_Type == "tags") {
+		for (FString tag : Chosen) {
+			ChosenCards.Add("(tag:" + tag + ")");
+		}
+	}
+	if (From_Type == "ids") {
+		for (FString id : Chosen) {
+			ChosenCards.Add("(id:" + id + ")");
+		}
+	}
+
+	if (IsGiveChoice) {
+		walking_event->TextFromResult += "Choose a card from the list below\n";
+		// TODO
+		for (FString card : ChosenCards) {
+			TArray<TSharedPtr<WalkingResult>> ResultAddSingleCard;
+			//ResultAddSingleCard.Add(MakeShareable(new WalkingResult(card))); TODO
+			walking_event->ButtonsFromResult.Add(std::make_pair(card, ResultAddSingleCard));
+		}
+	} else {
+		for (FString card : ChosenCards) {
+			walking_event->TextFromResult += "Random card: " + card + "\n";
 		}
 	}
 }

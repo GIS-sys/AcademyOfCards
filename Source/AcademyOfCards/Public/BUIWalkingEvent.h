@@ -41,4 +41,5 @@ public:
 
 	FString TextFromResult;
 	bool CloseFromResult = false;
+	TArray<std::pair<FString, TArray<TSharedPtr<WalkingResult>>>> ButtonsFromResult;
 };

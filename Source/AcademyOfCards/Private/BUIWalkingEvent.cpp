@@ -74,6 +74,9 @@ void UBUIWalkingEvent::EventPopupButtonOnClicked(FString ButtonName, TArray<TSha
         return;
     }
     NewEventPopup_Clear(false);
-    NewEventPopup_SetText(TextFromResult); // TODO
+    NewEventPopup_SetText(TextFromResult);
+    for (auto& [ButtonFromResultName, ButtonFromResultResults] : ButtonsFromResult) {
+        NewEventPopup_AddButton(ButtonFromResultName, ButtonFromResultResults);
+    }
     NewEventPopup_Finish(CurrentWalkingCard);
 }

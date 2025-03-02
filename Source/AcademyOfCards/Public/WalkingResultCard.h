@@ -19,8 +19,9 @@ public:
 	virtual void Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model);
 
 protected:
-	TArray<FString> CardOptions;
-	TArray<FString> CardSpecificIDs;
-	int CardRandomAmount = 0;
-	TArray<FString> CardRandomTags;
+	bool IsGiveChoice;
+	FString How_Type;
+	int How_Amount;
+	FString From_Type;
+	TArray<FString> From_Pool;
 };
