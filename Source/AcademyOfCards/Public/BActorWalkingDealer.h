@@ -27,7 +27,8 @@ protected:
 	const TPair<int, int> FinishPosition = { 5, -1 };
 	const int WALLS_TO_DELETE_AMOUNT = 3;
 	const int ALLOWED_RANDOM_MISTAKES = 1000;
-	const float TIME_CARD_DEALING_MOVEMENT = 0.5;
+	const float TIME_CARD_DEALING_MOVEMENT = 0.2;
+	const float TIME_BETWEEN_CARD_DEAL = 0.08;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

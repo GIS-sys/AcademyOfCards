@@ -59,7 +59,7 @@ public:
 	void Highlight();
 
 	UFUNCTION(BlueprintCallable)
-	void MoveTo();
+	int MoveTo(); // returns 0 if move is unavailable, 1 if moved and discovered new card, 2 if moved on already discovered card
 
 	UFUNCTION(BlueprintCallable)
 	bool GetWallLeft() const { return Walls.left; };

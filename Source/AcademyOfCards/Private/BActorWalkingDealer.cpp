@@ -248,16 +248,21 @@ bool ABActorWalkingDealer::CheckAbleToGo(int CurrentBoardPositionX, int CurrentB
 
 void ABActorWalkingDealer::SetTimersForCardDeal()
 {
+	float TimeBetweenFactor = 1100.0 / 16.0; // Idk why but I need this factor to make TIME_BETWEEN_CARD_DEAL be in seconds
 	for (int ix = 0; ix < FieldWidth; ++ix) {
 		for (int iy = 0; iy < FieldHeight; ++iy) {
-			DealingCardSpawnRestTime.Add({ ix, iy, (ix + (FieldHeight - 1 - iy)) * 10 });
+			DealingCardSpawnRestTime.Add({ ix, iy, (ix + (FieldHeight - 1 - iy)) * TimeBetweenFactor * TIME_BETWEEN_CARD_DEAL });
 		}
 	}
 	if (!IsInsideFieldNoEnds(StartPosition)) {
-		DealingCardSpawnRestTime.Add({ StartPosition.Get<0>(), StartPosition.Get<1>(), (FieldWidth + FieldHeight) * 10 });
+		int ix = StartPosition.Get<0>();
+		int iy = StartPosition.Get<1>();
+		DealingCardSpawnRestTime.Add({ ix, iy, (ix + (FieldHeight - 1 - iy)) * TimeBetweenFactor * TIME_BETWEEN_CARD_DEAL });
 	}
 	if (!IsInsideFieldNoEnds(FinishPosition)) {
-		DealingCardSpawnRestTime.Add({ FinishPosition.Get<0>(), FinishPosition.Get<1>(), (FieldHeight + FieldWidth) * 10 });
+		int ix = FinishPosition.Get<0>();
+		int iy = FinishPosition.Get<1>();
+		DealingCardSpawnRestTime.Add({ ix, iy, (ix + (FieldHeight - 1 - iy)) * TimeBetweenFactor * TIME_BETWEEN_CARD_DEAL });
 	}
 }
 

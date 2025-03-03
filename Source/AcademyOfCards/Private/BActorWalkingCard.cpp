@@ -49,15 +49,19 @@ void ABActorWalkingCard::Highlight() {
 	TicksNotHighlighted = 0;
 }
 
-void ABActorWalkingCard::MoveTo() {
+int ABActorWalkingCard::MoveTo() {
 	AActor* FoundActor = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
 	ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(FoundActor);
 	if (PlayerModel->Move(GetActorLocation(), BoardPositionX, BoardPositionY, DealerPtr)) {
 		if (!IsDiscovered) {
 			IsDiscovered = true;
 			WalkingDeck->GetEventByID(CardConfig->GetEventFired(PlayerModel->PlayerStats))->Fire(DealerPtr, this);
+			return 1;
+		} else {
+			return 2;
 		}
 	}
+	return 0;
 }
 
 bool ABActorWalkingCard::IsCollectible() {
