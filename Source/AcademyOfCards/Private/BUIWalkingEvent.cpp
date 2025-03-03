@@ -2,19 +2,32 @@
 
 
 #include "BUIWalkingEvent.h"
+#include "BActorWalkingPlayerModel.h"
 #include <Components/Button.h>
 #include <Components/TextBlock.h>
+#include <Kismet/GameplayStatics.h>
+#include <WalkingOption.h>
 
-void UBUIWalkingEvent::NewEventPopup_Clear()
+void UBUIWalkingEvent::NewEventPopup_Clear(bool ForgetChosenCard)
 {
     EventIsShown = false;
+    if (CurrentWalkingCard && ForgetChosenCard) {
+        CurrentWalkingCard->IsCloseUpLook = false;
+        CurrentWalkingCard = nullptr;
+    }
     if (EventPopupVerticalBox) EventPopupVerticalBox->ClearChildren();
     if (EventPopupLabel) EventPopupLabel->SetText(FText::FromString(""));
 }
 
-void UBUIWalkingEvent::NewEventPopup_Finish()
+void UBUIWalkingEvent::NewEventPopup_Finish(ABActorWalkingCard* WalkingCard)
 {
     EventIsShown = true;
+    CurrentWalkingCard = WalkingCard;
+    CurrentWalkingCard->IsCloseUpLook = true;
+    if (!EventPopupVerticalBox->HasAnyChildren()) {
+        TSharedPtr<WalkingOption> Option = WalkingOption::FactoryCreateCloseOption();
+        NewEventPopup_AddButton(Option->Text, Option->Results);
+    }
 }
 
 void UBUIWalkingEvent::NewEventPopup_SetText(FString Text)
@@ -49,7 +62,22 @@ void UBUIWalkingEvent::NewEventPopup_AddButton(FString ButtonName, TArray<TShare
 
 void UBUIWalkingEvent::EventPopupButtonOnClicked(FString ButtonName, TArray<TSharedPtr<WalkingResult>> ButtonResults)
 {
+    TextFromResult = "";
+    CloseFromResult = false;
+    ButtonsFromResult.Empty();
+    AActor* FoundActor = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
+    ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(FoundActor);
     for (const auto& Result : ButtonResults) {
-        Result->Execute(); // TODO actually execute result after button is clicked
+        Result->Execute(this, PlayerModel);
     }
+    if (CloseFromResult) {
+        NewEventPopup_Clear();
+        return;
+    }
+    NewEventPopup_Clear(false);
+    NewEventPopup_SetText(TextFromResult);
+    for (auto& [ButtonFromResultName, ButtonFromResultResults] : ButtonsFromResult) {
+        NewEventPopup_AddButton(ButtonFromResultName, ButtonFromResultResults);
+    }
+    NewEventPopup_Finish(CurrentWalkingCard);
 }

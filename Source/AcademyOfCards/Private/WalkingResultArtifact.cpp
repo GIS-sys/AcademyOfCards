@@ -2,6 +2,8 @@
 
 
 #include "WalkingResultArtifact.h"
+#include "BUIWalkingEvent.h"
+#include "BActorWalkingPlayerModel.h"
 
 WalkingResultArtifact::WalkingResultArtifact(TSharedPtr<FJsonObject> data)
 {
@@ -10,4 +12,9 @@ WalkingResultArtifact::WalkingResultArtifact(TSharedPtr<FJsonObject> data)
 
 WalkingResultArtifact::~WalkingResultArtifact()
 {
+}
+
+void WalkingResultArtifact::Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model)
+{
+	walking_event->TextFromResult += "Artifact: " + ID + "\n"; // TODO add real artifacts to player
 }

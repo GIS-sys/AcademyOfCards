@@ -55,7 +55,12 @@ void ABActorWalkingCard::MoveTo() {
 	if (PlayerModel->Move(GetActorLocation(), BoardPositionX, BoardPositionY, DealerPtr)) {
 		if (!IsDiscovered) {
 			IsDiscovered = true;
-			WalkingDeck->GetEventByID(CardConfig->GetEventFired(PlayerModel->PlayerStats))->Fire(DealerPtr);
+			WalkingDeck->GetEventByID(CardConfig->GetEventFired(PlayerModel->PlayerStats))->Fire(DealerPtr, this);
 		}
 	}
+}
+
+bool ABActorWalkingCard::IsCollectible() {
+	char last_id_letter = CardConfig->ID[CardConfig->ID.Len() - 1];
+	return last_id_letter == 'c';
 }

@@ -4,6 +4,10 @@
 
 #include "CoreMinimal.h"
 #include <WalkingResult.h>
+class UBUIWalkingEvent;
+class ABActorWalkingPlayerModel;
+
+using CardType = FString;
 
 /**
  * 
@@ -14,9 +18,13 @@ public:
 	WalkingResultCard(TSharedPtr<FJsonObject> data);
 	~WalkingResultCard();
 
+	virtual void Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model);
+	static TSharedPtr<WalkingResultCard> FactoryCreateSingleCard(CardType Card);
+
 protected:
-	TArray<FString> CardOptions;
-	TArray<FString> CardSpecificIDs;
-	int CardRandomAmount = 0;
-	TArray<FString> CardRandomTags;
+	bool IsGiveChoice = false;
+	FString How_Type;
+	int How_Amount = 0;
+	FString From_Type;
+	TArray<FString> From_Pool;
 };

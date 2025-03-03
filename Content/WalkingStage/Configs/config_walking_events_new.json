@@ -15,11 +15,14 @@
                 "gold": 10
               },
               "card": {
-                "options": [
-                  "Blue Eyes Dragon",
-                  "Black Lotus",
-                  "Pikachu"
-                ]
+                "give_choice": true,
+                "how": {
+                  "type": "all"
+                },
+                "from": {
+                  "type": "specific",
+                  "ids": ["Blue Eyes Dragon", "Black Lotus", "Pikachu"]
+                }
               }
             }
           }
@@ -125,11 +128,14 @@
                 "gold": 10
               },
               "card": {
-                "random": {
-                  "amount": 3,
-                  "tags": [
-                    "common"
-                  ]
+                "give_choice": true,
+                "how": {
+                  "type": "random_different",
+                  "amount": 3
+                },
+                "from": {
+                  "type": "tag",
+                  "tags": ["common"]
                 }
               }
             }
@@ -155,9 +161,14 @@
                 "light": 1
               },
               "card": {
-                "specific": [
-                  "c001s"
-                ]
+                "give_choice": false,
+                "how": {
+                  "type": "all"
+                },
+                "from": {
+                  "type": "specific",
+                  "ids": ["c001s"]
+                }
               }
             }
           }
@@ -175,9 +186,14 @@
                 "fire": 2
               },
               "card": {
-                "specific": [
-                  "c001s"
-                ]
+                "give_choice": false,
+                "how": {
+                  "type": "all"
+                },
+                "from": {
+                  "type": "specific",
+                  "ids": ["c001s"]
+                }
               }
             }
           }
@@ -199,9 +215,14 @@
                   "gold": -100
                 },
                 "card": {
-                  "specific": [
-                    "c002s"
-                  ]
+                  "give_choice": false,
+                  "how": {
+                    "type": "all"
+                  },
+                  "from": {
+                    "type": "specific",
+                    "ids": ["c002s"]
+                  }
                 }
               }
             },
@@ -257,11 +278,14 @@
                   "gold": 50
                 },
                 "card": {
-                  "random": {
-                    "amount": 3,
-                    "tags": [
-                      "common"
-                    ]
+                  "give_choice": true,
+                  "how": {
+                    "type": "random_different",
+                    "amount": 3
+                  },
+                  "from": {
+                    "type": "tag",
+                    "tags": ["common"]
                   }
                 }
               }
@@ -309,11 +333,14 @@
                   "health": -10
                 },
                 "card": {
-                  "random": {
-                    "amount": 3,
-                    "tags": [
-                      "common"
-                    ]
+                  "give_choice": true,
+                  "how": {
+                    "type": "random_different",
+                    "amount": 3
+                  },
+                  "from": {
+                    "type": "tag",
+                    "tags": ["common"]
                   }
                 }
               }
@@ -345,11 +372,14 @@
             "ice": 1
           },
           "card": {
-            "random": {
-              "amount": 3,
-              "tags": [
-                "common"
-              ]
+            "give_choice": true,
+            "how": {
+              "type": "random_different",
+              "amount": 3
+            },
+            "from": {
+              "type": "tag",
+              "tags": ["common"]
             }
           }
         }
@@ -387,14 +417,16 @@
             "dark": 1
           },
           "card": {
-            "random": {
-              "amount": 3,
-              "tags": [
-                "dark",
-                "rare"
-              ]
-            }
-          }
+  "give_choice": true,
+  "how": {
+    "type": "random_different",
+    "amount": 3
+  },
+  "from": {
+    "type": "tag",
+    "tags": ["dark", "rare"]
+  }
+}
         }
       },
       {

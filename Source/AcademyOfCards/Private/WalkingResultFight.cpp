@@ -2,6 +2,8 @@
 
 
 #include "WalkingResultFight.h"
+#include "BUIWalkingEvent.h"
+#include "BActorWalkingPlayerModel.h"
 
 WalkingResultFight::WalkingResultFight(TSharedPtr<FJsonObject> data)
 {
@@ -13,4 +15,14 @@ WalkingResultFight::WalkingResultFight(TSharedPtr<FJsonObject> data)
 
 WalkingResultFight::~WalkingResultFight()
 {
+}
+
+void WalkingResultFight::Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model)
+{
+	// TODO fight result
+	walking_event->TextFromResult += "Fight: " + Opponent + "\n";
+	walking_event->TextFromResult += "You won!\n";
+	for (auto& Result : ResultsWin) {
+		Result->Execute(walking_event, player_model);
+	}
 }

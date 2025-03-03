@@ -1,8 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "WalkingOption.h"
 #include <WalkingResult.h>
+
+WalkingOption::WalkingOption(FString text) : Text(text) {}
 
 WalkingOption::WalkingOption(TSharedPtr<FJsonObject> data)
 {
@@ -14,4 +16,10 @@ WalkingOption::WalkingOption(TSharedPtr<FJsonObject> data)
 
 WalkingOption::~WalkingOption()
 {
+}
+
+TSharedPtr<WalkingOption> WalkingOption::FactoryCreateCloseOption() {
+	TSharedPtr<WalkingOption> CloseOption = MakeShareable(new WalkingOption("Close"));
+	CloseOption->Results.Add(WalkingResult::FactoryCreate("__close__", MakeShareable(new FJsonObject())));
+	return CloseOption;
 }

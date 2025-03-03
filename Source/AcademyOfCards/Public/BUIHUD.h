@@ -26,6 +26,6 @@ protected:
 	TSubclassOf<class UUserWidget> MainMenuClass;
 
 public:
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Menu")
 	TObjectPtr<UUserWidget> MainMenu;
 };

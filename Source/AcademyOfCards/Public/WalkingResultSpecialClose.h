@@ -4,20 +4,15 @@
 
 #include "CoreMinimal.h"
 #include <WalkingResult.h>
-class UBUIWalkingEvent;
-class ABActorWalkingPlayerModel;
 
 /**
- * 
+ *
  */
-class ACADEMYOFCARDS_API WalkingResultResponse : public WalkingResult
+class ACADEMYOFCARDS_API WalkingResultSpecialClose : public WalkingResult
 {
 public:
-	WalkingResultResponse(TSharedPtr<FJsonObject> data);
-	virtual ~WalkingResultResponse();
+	WalkingResultSpecialClose(TSharedPtr<FJsonObject> data);
+	~WalkingResultSpecialClose();
 
 	virtual void Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model);
-
-protected:
-	FString Response;
 };

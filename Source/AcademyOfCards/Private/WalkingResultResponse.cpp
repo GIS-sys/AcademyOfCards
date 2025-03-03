@@ -2,6 +2,8 @@
 
 
 #include "WalkingResultResponse.h"
+#include "BUIWalkingEvent.h"
+#include "BActorWalkingPlayerModel.h"
 
 WalkingResultResponse::WalkingResultResponse(TSharedPtr<FJsonObject> data)
 {
@@ -10,7 +12,7 @@ WalkingResultResponse::WalkingResultResponse(TSharedPtr<FJsonObject> data)
 	}
 	else
 	{
-		Response = "";
+		Response = "...";
 	}
 }
 
@@ -18,7 +20,7 @@ WalkingResultResponse::~WalkingResultResponse()
 {
 }
 
-void WalkingResultResponse::Execute()
+void WalkingResultResponse::Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model)
 {
-	UE_LOG(LogTemp, Error, TEXT("EXECUTE: Response(%s)"), *Response); // TODO actually execute results
+	walking_event->TextFromResult += Response + "\n";
 }

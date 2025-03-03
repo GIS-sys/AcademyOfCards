@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include <WalkingResult.h>
+class UBUIWalkingEvent;
+class ABActorWalkingPlayerModel;
 
 /**
  * 
@@ -13,6 +15,8 @@ class ACADEMYOFCARDS_API WalkingResultFight : public WalkingResult
 public:
 	WalkingResultFight(TSharedPtr<FJsonObject> data);
 	~WalkingResultFight();
+
+	virtual void Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model);
 
 protected:
 	FString Opponent;

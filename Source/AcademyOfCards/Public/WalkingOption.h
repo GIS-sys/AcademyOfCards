@@ -12,10 +12,13 @@ class WalkingResult;
 class ACADEMYOFCARDS_API WalkingOption
 {
 public:
+	WalkingOption(FString text);
 	WalkingOption(TSharedPtr<FJsonObject> data);
 	~WalkingOption();
 
 public:
 	FString Text;
 	TArray<TSharedPtr<WalkingResult>> Results;
+
+	static TSharedPtr<WalkingOption> FactoryCreateCloseOption();
 };

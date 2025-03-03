@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include <WalkingResult.h>
+class UBUIWalkingEvent;
+class ABActorWalkingPlayerModel;
 
 /**
  * 
@@ -16,9 +18,11 @@ public:
 
 	struct WalkingResultProbabilityInner {
 		FString Name;
-		FString Probability; // TODO parse somehow
+		FString Probability;
 		TArray<TSharedPtr<WalkingResult>> Results;
 	};
+
+	virtual void Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model);
 
 protected:
 	TArray<WalkingResultProbabilityInner> ProbabilityInners;
