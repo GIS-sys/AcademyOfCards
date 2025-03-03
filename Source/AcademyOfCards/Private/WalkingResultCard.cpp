@@ -104,7 +104,7 @@ void WalkingResultCard::Execute(UBUIWalkingEvent* walking_event, ABActorWalkingP
 
 TSharedPtr<WalkingResultCard> WalkingResultCard::FactoryCreateSingleCard(CardType Card)
 {
-	TSharedPtr<FJsonObject> data = MakeShareable(new FJsonObject()); // TODO
+	TSharedPtr<FJsonObject> data = MakeShareable(new FJsonObject());
 	data->SetBoolField("give_choice", false);
 	data->SetObjectField("how", MakeShareable(new FJsonObject()));
 	data->GetObjectField("how")->SetStringField("type", "all");
