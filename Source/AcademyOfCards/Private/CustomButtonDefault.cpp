@@ -3,3 +3,8 @@
 
 #include "CustomButtonDefault.h"
 
+void UCustomButtonDefault::CallOnClickDelegate() {
+	if (OnClickDelegate.IsBound()) {
+		OnClickDelegate.Execute();
+	}
+}

@@ -42,21 +42,16 @@ void UBUIWalkingEvent::NewEventPopup_AddButton(FString ButtonName, TArray<TShare
     if (!EventPopupVerticalBox) return;
 
     // create button
-    UButton* NewButton = NewObject<UButton>(this);
-    // create label
-    UTextBlock* ButtonText = NewObject<UTextBlock>(NewButton);
-    ButtonText->SetText(FText::FromString(ButtonName));
-    ButtonText->SetAutoWrapText(true);
-    NewButton->AddChild(ButtonText);
-    // add onclick
-    SButton* ButtonWidget = (SButton*)&(NewButton->TakeWidget().Get());
-    ButtonWidget->SetOnClicked(FOnClicked::CreateLambda([this, ButtonName, ButtonResults]()
+    UCustomButtonDefault* NewButton = CreateWidget<UCustomButtonDefault>(this, ButtonWidget);
+    NewButton->InnerText = ButtonName;
+    NewButton->OnClickDelegate = FOnClicked::CreateLambda([this, ButtonName, ButtonResults]()
         {
             EventPopupButtonOnClicked(ButtonName, ButtonResults);
             return FReply::Handled();
         }
-    ));
-    // add to box
+    );
+
+    // add to the box
     EventPopupVerticalBox->AddChild(NewButton);
 }
 

@@ -8,6 +8,7 @@
 #include <Components/VerticalBox.h>
 #include <Components/TextBlock.h>
 #include "BActorWalkingCard.h"
+#include <CustomButtonDefault.h>
 #include "BUIWalkingEvent.generated.h"
 
 /**
@@ -38,6 +39,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "IsShown")
 	ABActorWalkingCard* CurrentWalkingCard;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Button")
+	TSubclassOf<UCustomButtonDefault> ButtonWidget;
 
 	FString TextFromResult;
 	bool CloseFromResult = false;

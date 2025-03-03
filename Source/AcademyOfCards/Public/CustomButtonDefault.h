@@ -17,4 +17,9 @@ class ACADEMYOFCARDS_API UCustomButtonDefault : public UUserWidget
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	FString InnerText;
+
+	UFUNCTION(BlueprintCallable)
+	void CallOnClickDelegate();
+
+	TDelegate<FReply()> OnClickDelegate;
 };
