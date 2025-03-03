@@ -1,32 +1,5 @@
 [
   {
-    "id": "002cb",
-    "conditions": [
-      {
-        "condition": {
-          "alignment_good": { "in": [ 0.5, 1.0 ] },
-          "alignment_towards_old_gays": { "bigger": 0.5 }
-        },
-        "id": "event_gandalf_good"
-      },
-      {
-        "condition": {
-          "alignment_good": { "in": [ -0.9, 0.4 ] }
-        },
-        "id": "event_gandalf_bad"
-      },
-      {
-        "condition": {
-          "alignment_good": { "less": -0.9 }
-        },
-        "id": "event_gandalf_instant_death"
-      },
-      {
-        "id": "event_gandalf_default"
-      }
-    ]
-  },
-  {
     "id": "001u",
     "conditions": [
       {

@@ -23,6 +23,7 @@ public:
 	void LoadConfigCards();
 
 	TSharedPtr<WalkingCardConfig> GetRandomCard() const;
+	TSharedPtr<WalkingCardConfig> GetCardByID(FString ID) const;
 	TSharedPtr<WalkingEvent> GetEventByName(FString Name) const;
 	TSharedPtr<WalkingEvent> GetEventByID(FString ID) const;
 };

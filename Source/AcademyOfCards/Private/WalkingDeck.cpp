@@ -53,6 +53,13 @@ void WalkingDeck::LoadConfigCards() {
 	}
 }
 
+TSharedPtr<WalkingCardConfig> WalkingDeck::GetCardByID(FString ID) const {
+	for (auto& card : CardConfigs) {
+		if (card->ID == ID) return card;
+	}
+	return nullptr;
+}
+
 TSharedPtr<WalkingCardConfig> WalkingDeck::GetRandomCard() const {
 	return CardConfigs[FMath::Rand() % CardConfigs.Num()];
 }

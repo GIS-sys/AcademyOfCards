@@ -54,6 +54,9 @@ public:
 
 	TMap<TPair<int, int>, ABActorWalkingCard*> CardsDealt;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Debug")
+	FString DEBUG_CARD_ID;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	FVector DealingOffset { -660.0, -660.0, -20.0 };
 
