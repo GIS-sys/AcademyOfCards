@@ -24,11 +24,17 @@ protected:
 	float DeltaTimeMoveOver = 0;
 	float DeltaTimeMoveOverSpent = 0;
 
+	FVector LocationBeforeOutOfFrame;
+	const FVector LocationDeltaOutOfFrame{ 0.0, 0.0, 1000.0 };
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	void MoveOverTimeTo(FVector FromLocation, FVector NewLocation, float DeltaTime);
+
+	void MoveOutOfFrame(float DeltaTime);
+	void MoveIntoFrame(float DeltaTime);
 
 	FVector LocationOriginal;
 };

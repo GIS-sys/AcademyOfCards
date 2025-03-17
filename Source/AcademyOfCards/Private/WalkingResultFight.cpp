@@ -4,6 +4,8 @@
 #include "WalkingResultFight.h"
 #include "BUIWalkingEvent.h"
 #include "BActorWalkingPlayerModel.h"
+#include <Kismet/GameplayStatics.h>
+#include <BUIGameModeBase.h>
 
 WalkingResultFight::WalkingResultFight(TSharedPtr<FJsonObject> data)
 {
@@ -19,7 +21,11 @@ WalkingResultFight::~WalkingResultFight()
 
 void WalkingResultFight::Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model)
 {
-	// TODO fight result
+	// TODO !!! fight result
+	FWorldContext* world = GEngine->GetWorldContextFromGameViewport(GEngine->GameViewport);
+	ABUIGameModeBase* MyMode = Cast<ABUIGameModeBase>(UGameplayStatics::GetGameMode(world->World()));
+	MyMode->SwitchToFight();
+
 	walking_event->TextFromResult += "Fight: " + Opponent + "\n";
 	walking_event->TextFromResult += "You won!\n";
 	for (auto& Result : ResultsWin) {

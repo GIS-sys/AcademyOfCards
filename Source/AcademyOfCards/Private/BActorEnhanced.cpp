@@ -42,3 +42,11 @@ void ABActorEnhanced::Tick(float DeltaTime)
 	}
 }
 
+void ABActorEnhanced::MoveOutOfFrame(float DeltaTime) {
+	LocationBeforeOutOfFrame = LocationOriginal;
+	MoveOverTimeTo(LocationOriginal, LocationOriginal + LocationDeltaOutOfFrame, DeltaTime);
+}
+
+void ABActorEnhanced::MoveIntoFrame(float DeltaTime) {
+	MoveOverTimeTo(LocationOriginal, LocationBeforeOutOfFrame, DeltaTime);
+}
