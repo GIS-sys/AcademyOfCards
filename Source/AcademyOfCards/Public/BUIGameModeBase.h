@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "BActorEnhanced.h"
 #include "BUIGameModeBase.generated.h"
 
 /**
@@ -15,8 +16,17 @@ class ACADEMYOFCARDS_API ABUIGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 protected:
-	const float MOVE_OUT_OF_FRAME_SECONDS = 1.0;
+	const float MOVE_OUT_OF_FRAME_SECONDS = 4.0;
 
 public:
 	void SwitchToFight();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transition")
+	TSubclassOf<ABUIGameModeBase> PlayerGameModeWalkingStage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transition")
+	TSubclassOf<ABUIGameModeBase> PlayerGameModeFightStage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transition")
+	TArray<TSubclassOf<ABActorEnhanced>> MoveWhileStageTransitioningStaticClass;
 };

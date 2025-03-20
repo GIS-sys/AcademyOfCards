@@ -28,4 +28,7 @@ protected:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Menu")
 	TObjectPtr<UUserWidget> MainMenu;
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Transition")
+	void Disappear(float Seconds);
 };
