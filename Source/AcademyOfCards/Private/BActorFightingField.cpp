@@ -40,7 +40,7 @@ void ABActorFightingField::Init()
                     SceneComponentCells->GetComponentLocation() +
                     (i * vi + j * vj + k * vk) * ABActorFightingCellBase::RADIUS +
                     FVector()  +
-                    FVector(0, 0, 10 * rand() * 1.0 / RAND_MAX)
+                    FVector(0, 0, -20 * rand() * 1.0 / RAND_MAX)
                 );
                 ArrayCells[i][j][k] = NewActor;
             }

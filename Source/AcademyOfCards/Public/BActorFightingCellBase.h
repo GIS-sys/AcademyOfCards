@@ -15,5 +15,5 @@ class ACADEMYOFCARDS_API ABActorFightingCellBase : public ABActorEnhanced
 	GENERATED_BODY()
 	
 public:
-	static constexpr float RADIUS = 40;
+	static constexpr float RADIUS = 80;
 };
