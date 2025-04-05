@@ -31,10 +31,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MoveOverTimeTo(FVector FromLocation, FVector NewLocation, float DeltaTime);
 
 	void MoveOutOfFrame(float DeltaTime);
 	void MoveIntoFrame(float DeltaTime);
 
-	FVector LocationOriginal;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	FVector LocationOriginal{ 0, 0, 0 };
 };
