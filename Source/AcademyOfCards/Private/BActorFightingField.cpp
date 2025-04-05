@@ -18,9 +18,9 @@ void ABActorFightingField::InitCells()
     FActorSpawnParameters SpawnParams;
     SpawnParams.Owner = this;
 
-    FVector vi(-1, 0, 0);
-    FVector vj(0.5, 1.732 / 2, 0);
-    FVector vk(0.5, -1.732 / 2, 0);
+    FVector vi(-1.732 / 2, 0.5, 0);
+    FVector vj(1.732 / 2, 0.5, 0);
+    FVector vk(0, -1, 0);
     for (int i = 0; i < RADIUS; ++i) {
         for (int j = 0; j < RADIUS; ++j) {
             for (int k = 0; k < RADIUS; ++k) {
@@ -39,8 +39,8 @@ void ABActorFightingField::InitCells()
                 NewActor->LocationOriginal = (
                     SceneComponentCells->GetComponentLocation() +
                     (i * vi + j * vj + k * vk) * ABActorFightingCellBase::RADIUS +
-                    FVector(0, 0, -COLUMN_SHOW_HEIGHT) +
-                    FVector(0, 0, -20 * rand() * 1.0 / RAND_MAX)
+                    FVector(-20, 0, -COLUMN_SHOW_HEIGHT)
+                    //+ FVector(0, 0, -20 * rand() * 1.0 / RAND_MAX)
                 );
                 ArrayCells[i][j][k] = NewActor;
             }

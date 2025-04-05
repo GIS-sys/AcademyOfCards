@@ -15,7 +15,7 @@ class ACADEMYOFCARDS_API ABActorFightingCellBase : public ABActorEnhanced
 	GENERATED_BODY()
 	
 public:
-	static constexpr float RADIUS = 80;
+	static constexpr float RADIUS = 89;
 
 	UFUNCTION(BlueprintCallable, Category = "Location")
 	FVector GetUnitLocation();
