@@ -32,6 +32,11 @@ void ABActorFightingDeck::DrawCard(int index)
     NewActor->SetActorLocation(GetActorLocation());
     CardActors.Add(NewActor);
 
+    RearrangeCardsInHand();
+}
+
+void ABActorFightingDeck::RearrangeCardsInHand()
+{
     for (int i = 0; i < CardActors.Num(); ++i) {
         const auto& card = CardActors[i];
         card->MoveOverTimeTo(
@@ -39,5 +44,24 @@ void ABActorFightingDeck::DrawCard(int index)
             GetActorLocation() + WHERE_IS_HAND + (i - CardActors.Num() / 2.0) * SPACE_BETWEEN_CARDS,
             DRAWING_TIME
         );
+    }
+}
+
+void ABActorFightingDeck::PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell)
+{
+    for (int i = 0; i < CardActors.Num(); ++i) {
+        if (Card == CardActors[i]) {
+            CardActors.RemoveAt(i);
+            Card->MoveOverTimeTo(Card->GetActorLocation(), Cell->GetActorLocation(), CARD_PLAY_TIME);
+            RearrangeCardsInHand();
+
+            FTimerHandle TimerHandle;
+            GetWorld()->GetTimerManager().SetTimer(
+                TimerHandle,
+                [this, Card]() { Card->Destroy(); },
+                CARD_PLAY_TIME,
+                false
+            );
+        }
     }
 }

@@ -3,3 +3,9 @@
 
 #include "ABPlayerControllerBase.h"
 
+void AABPlayerControllerBase::BeginPlay()
+{
+    Super::BeginPlay();
+
+    ControllerFightState = NewObject<UControllerFightState>(this);
+}

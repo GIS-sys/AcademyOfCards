@@ -16,7 +16,7 @@ class ACADEMYOFCARDS_API ABUIGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 protected:
-	const float MOVE_OUT_OF_FRAME_SECONDS = 4.0;
+	const float MOVE_OUT_OF_FRAME_SECONDS = 2.0;
 
 public:
 	void SwitchToFight();

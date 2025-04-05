@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "BActorEnhanced.h"
 #include <BActorFightingCard.h>
+#include <BActorFightingCellBase.h>
 #include "BActorFightingDeck.generated.h"
 
 /**
@@ -34,7 +35,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Base")
 	void DrawCard(int index);
 
+	UFUNCTION(BlueprintCallable, Category = "Base")
+	void PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell);
+
+	void RearrangeCardsInHand();
+
 	static constexpr int STARTING_HAND = 5;
 	static constexpr float DRAWING_TIME = 0.5;
+	static constexpr float CARD_PLAY_TIME = 1;
 	TArray<ABActorFightingCard*> CardActors;
 };

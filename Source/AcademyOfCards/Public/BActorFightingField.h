@@ -39,6 +39,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	class USceneComponent* SceneComponentCells;
 	void InitCells();
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	float COLUMN_SHOW_HEIGHT = 20.0;
 
 	UFUNCTION(BlueprintCallable, Category = "Base")
 	void Init();

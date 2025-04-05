@@ -36,10 +36,10 @@ void ABActorFightingField::InitCells()
                     SceneComponentCells,
                     FAttachmentTransformRules::SnapToTargetNotIncludingScale
                 );
-                NewActor->SetActorLocation(
+                NewActor->LocationOriginal = (
                     SceneComponentCells->GetComponentLocation() +
                     (i * vi + j * vj + k * vk) * ABActorFightingCellBase::RADIUS +
-                    FVector() +
+                    FVector(0, 0, -COLUMN_SHOW_HEIGHT) +
                     FVector(0, 0, -20 * rand() * 1.0 / RAND_MAX)
                 );
                 ArrayCells[i][j][k] = NewActor;

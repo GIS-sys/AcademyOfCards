@@ -23,12 +23,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void AnimateHighlight();
-
-	int TicksNotHighlighted = 1;
-	FVector ScaleRelative;
-	FVector LocationDelta;
-
 public:
 	struct WallsStruct {
 		bool left;
@@ -54,9 +48,6 @@ public:
 	};
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	UFUNCTION(BlueprintCallable)
-	void Highlight();
 
 	UFUNCTION(BlueprintCallable)
 	int MoveTo(); // returns 0 if move is unavailable, 1 if moved and discovered new card, 2 if moved on already discovered card

@@ -31,6 +31,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// Movement
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MoveOverTimeTo(FVector FromLocation, FVector NewLocation, float DeltaTime);
 
@@ -39,4 +40,31 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	FVector LocationOriginal{ 0, 0, 0 };
+	FVector ScaleOriginal{ 1, 1, 1 };
+
+	// Highlighting
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Highlight")
+	bool IsHighlighted = true;
+	int TicksNotHighlighted = 1;
+
+	void AnimateHighlight();
+
+	virtual void OnHighlight();
+	virtual void OnDisHighlight();
+	virtual void OnChangeHighlight();
+
+	FVector ScaleRelative{ 1, 1, 1 };
+	FVector LocationDelta{ 0, 0, 0 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Highlight")
+	FVector WhenHighlightedScaleRelative{ 1.1, 1.1, 1.0 };
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Highlight")
+	FVector WhenHighlightedLocationDelta{ 0.0, 0.0, 1.0 };
+
+	UFUNCTION(BlueprintCallable, Category = "Highlight")
+	void Highlight();
+	UFUNCTION(BlueprintCallable, Category = "Highlight")
+	void PermanentlyHighlight();
+	UFUNCTION(BlueprintCallable, Category = "Highlight")
+	void ResetPermanentHighlight();
 };
