@@ -3,7 +3,7 @@
 
 #include "BActorFightingField.h"
 
-void ABActorFightingField::Init()
+void ABActorFightingField::InitCells()
 {
     for (int i = 0; i < RADIUS; ++i) {
         ArrayCells.Add(TArray<TArray<ABActorFightingCellBase*>>());
@@ -39,11 +39,31 @@ void ABActorFightingField::Init()
                 NewActor->SetActorLocation(
                     SceneComponentCells->GetComponentLocation() +
                     (i * vi + j * vj + k * vk) * ABActorFightingCellBase::RADIUS +
-                    FVector()  +
+                    FVector() +
                     FVector(0, 0, -20 * rand() * 1.0 / RAND_MAX)
                 );
                 ArrayCells[i][j][k] = NewActor;
             }
         }
     }
+}
+
+void ABActorFightingField::InitDecks()
+{
+    DeckMy->Init();
+    DeckOpponent->Init();
+    DeckMy->DealCards();
+    DeckOpponent->DealCards();
+}
+
+void ABActorFightingField::InitUnits()
+{
+
+}
+
+void ABActorFightingField::Init()
+{
+    InitCells();
+    InitDecks();
+    InitUnits();
 }
