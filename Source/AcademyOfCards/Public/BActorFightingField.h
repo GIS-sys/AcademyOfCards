@@ -19,11 +19,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Classes")
 	TArray<TSubclassOf<ABActorEnhanced>> CardsSubclasses;
 
-	/*ABActorFightingDeck* DeckMy;
-	ABActorFightingDeck* DeckOpponent;*/
 	void InitDecks();
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
-	//TSubclassOf<ABActorFightingDeck> ActorToSpawnDecks;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	ABActorFightingDeck* DeckMy;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
@@ -31,6 +27,10 @@ public:
 
 	TArray<ABActorFightingUnitBase*> ArrayUnits;
 	void InitUnits();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit;
+	UFUNCTION(BlueprintCallable, Category = "Spawning")
+	void MoveUnit(ABActorFightingUnitBase* Unit);
 
 	const int RADIUS = 5;
 	TArray<TArray<TArray<ABActorFightingCellBase*>>> ArrayCells;

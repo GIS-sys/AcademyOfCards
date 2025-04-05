@@ -50,10 +50,17 @@ void ABActorFightingField::InitCells()
 
 void ABActorFightingField::InitDecks()
 {
+    DeckMy->BActorFightingField = this;
+    DeckOpponent->BActorFightingField = this;
     DeckMy->Init();
     DeckOpponent->Init();
     DeckMy->DealCards();
     DeckOpponent->DealCards();
+}
+
+void ABActorFightingField::MoveUnit(ABActorFightingUnitBase* Unit)
+{
+    // TODO
 }
 
 void ABActorFightingField::InitUnits()

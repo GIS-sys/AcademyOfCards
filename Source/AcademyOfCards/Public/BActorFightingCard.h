@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "BActorEnhanced.h"
+#include <BActorFightingUnitBase.h>
 #include "BActorFightingCard.generated.h"
+
+class ABActorFightingCellBase;
 
 /**
  * 
@@ -14,4 +17,6 @@ class ACADEMYOFCARDS_API ABActorFightingCard : public ABActorEnhanced
 {
 	GENERATED_BODY()
 	
+public:
+	ABActorFightingUnitBase* SpawnUnit(ABActorFightingCellBase* Cell, TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit);
 };

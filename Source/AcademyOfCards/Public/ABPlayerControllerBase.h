@@ -22,7 +22,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Helper")
     bool CanSelectCell()
     {
-        return state == 1;
+        return state == 1 || state == 2;
     }
 
     UFUNCTION(BlueprintCallable, Category = "Helper")

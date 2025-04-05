@@ -2,6 +2,7 @@
 
 
 #include "BActorFightingDeck.h"
+#include <BActorFightingField.h>
 
 void ABActorFightingDeck::DealCards()
 {
@@ -18,7 +19,6 @@ void ABActorFightingDeck::DealCards()
 
 void ABActorFightingDeck::DrawCard(int index)
 {
-    UE_LOG(LogTemp, Error, TEXT("DrawCard: %d"), index);
     FActorSpawnParameters SpawnParams;
     SpawnParams.Owner = this;
 
@@ -58,7 +58,10 @@ void ABActorFightingDeck::PlayCard(ABActorFightingCard* Card, ABActorFightingCel
             FTimerHandle TimerHandle;
             GetWorld()->GetTimerManager().SetTimer(
                 TimerHandle,
-                [this, Card]() { Card->Destroy(); },
+                [this, Card, Cell]() {
+                    Card->SpawnUnit(Cell, BActorFightingField->ActorToSpawnUnit);
+                    Card->Destroy();
+                },
                 CARD_PLAY_TIME,
                 false
             );

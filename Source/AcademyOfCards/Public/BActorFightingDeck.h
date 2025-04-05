@@ -8,6 +8,8 @@
 #include <BActorFightingCellBase.h>
 #include "BActorFightingDeck.generated.h"
 
+class ABActorFightingField;
+
 /**
  * 
  */
@@ -44,4 +46,6 @@ public:
 	static constexpr float DRAWING_TIME = 0.5;
 	static constexpr float CARD_PLAY_TIME = 1;
 	TArray<ABActorFightingCard*> CardActors;
+
+	ABActorFightingField* BActorFightingField;
 };
