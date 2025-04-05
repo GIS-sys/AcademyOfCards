@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include <BActorEnhanced.h>
 #include <BActorFightingUnitBase.h>
+#include <BActorFightingCellBase.h>
 #include "BActorFightingField.generated.h"
 
 UCLASS()
@@ -17,7 +18,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Classes")
 	TArray<TSubclassOf<ABActorEnhanced>> CardsSubclasses;
 
-	TArray<ABActorEnhanced*> Cards;
+	TArray<ABActorEnhanced*> ArrayCards;
 
-	TArray<ABActorFightingUnitBase*> Units;
+	TArray<ABActorFightingUnitBase*> ArrayUnits;
+
+	TArray<TArray<TArray<ABActorFightingCellBase*>>> ArrayCells;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	TSubclassOf<ABActorFightingCellBase> ActorToSpawnCells;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	class USceneComponent* SceneComponentCells;
+
+	UFUNCTION(BlueprintCallable, Category = "Base")
+	void Init();
+
+	const int RADIUS = 5;
 };
