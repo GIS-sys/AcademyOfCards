@@ -29,6 +29,8 @@ void ABActorFightingDeck::DrawCard(int index)
         SpawnParams
     );
     ABActorFightingCard* NewActor = dynamic_cast<ABActorFightingCard*>(NewActorRaw);
+    NewActor->WhenHighlightedScaleRelative = WhenHighlightedScaleRelative;
+    NewActor->WhenHighlightedLocationDelta = WhenHighlightedLocationDelta;
     NewActor->SetActorLocation(GetActorLocation());
     CardActors.Add(NewActor);
 
