@@ -62,12 +62,20 @@ struct FMana
 		};
 	}
 
+	FMana operator-() const {
+		return FMana() - *this;
+	}
+
 	void operator-=(const FMana& other) {
-		General -= other.General;
-		Light -= other.Light;
-		Dark -= other.Dark;
-		Fire -= other.Fire;
-		Ice -= other.Ice;
+		*this += (-other);
+	}
+
+	void operator+=(const FMana& other) {
+		General += other.General;
+		Light += other.Light;
+		Dark += other.Dark;
+		Fire += other.Fire;
+		Ice += other.Ice;
 	}
 
 	explicit operator bool() const {
