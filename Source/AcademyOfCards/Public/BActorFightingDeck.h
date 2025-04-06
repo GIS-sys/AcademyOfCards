@@ -38,7 +38,7 @@ public:
 	void DrawCard(int index);
 
 	UFUNCTION(BlueprintCallable, Category = "Base")
-	void PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell);
+	ABActorFightingUnitBase* PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell);
 
 	void RearrangeCardsInHand();
 

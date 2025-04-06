@@ -37,13 +37,15 @@ public:
 	ABActorFightingDeck* DeckMy;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	ABActorFightingDeck* DeckOpponent;
+	UFUNCTION(BlueprintCallable, Category = "Spawning")
+	void PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell);
 
 	TArray<ABActorFightingUnitBase*> ArrayUnits;
 	void InitUnits();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit;
 	UFUNCTION(BlueprintCallable, Category = "Spawning")
-	void MoveUnit(ABActorFightingUnitBase* Unit);
+	void MoveUnit(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell);
 
 	const int RADIUS = 4;
 	TArray<TArray<TArray<ABActorFightingCellBase*>>> ArrayCells;

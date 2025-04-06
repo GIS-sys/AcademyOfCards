@@ -49,7 +49,7 @@ void ABActorFightingDeck::RearrangeCardsInHand()
     }
 }
 
-void ABActorFightingDeck::PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell)
+ABActorFightingUnitBase* ABActorFightingDeck::PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell)
 {
     for (int i = 0; i < CardActors.Num(); ++i) {
         if (Card == CardActors[i]) {
@@ -58,15 +58,19 @@ void ABActorFightingDeck::PlayCard(ABActorFightingCard* Card, ABActorFightingCel
             RearrangeCardsInHand();
 
             FTimerHandle TimerHandle;
+            ABActorFightingUnitBase* NewUnit = Card->SpawnUnit(Cell, BActorFightingField->ActorToSpawnUnit);
+            NewUnit->SetActorHiddenInGame(true);
             GetWorld()->GetTimerManager().SetTimer(
                 TimerHandle,
-                [this, Card, Cell]() {
-                    Card->SpawnUnit(Cell, BActorFightingField->ActorToSpawnUnit);
+                [this, Card, Cell, NewUnit]() {
+                    NewUnit->SetActorHiddenInGame(false);
                     Card->Destroy();
                 },
                 CARD_PLAY_TIME,
                 false
             );
+            return NewUnit;
         }
     }
+    return nullptr;
 }

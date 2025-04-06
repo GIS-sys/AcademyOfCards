@@ -58,9 +58,16 @@ void ABActorFightingField::InitDecks()
     DeckOpponent->DealCards();
 }
 
-void ABActorFightingField::MoveUnit(ABActorFightingUnitBase* Unit)
+void ABActorFightingField::MoveUnit(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell)
 {
     // TODO
+    Unit->Move(Cell);
+}
+
+void ABActorFightingField::PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell)
+{
+    ABActorFightingUnitBase* NewUnit = DeckMy->PlayCard(Card, Cell);
+    ArrayUnits.Add(NewUnit);
 }
 
 void ABActorFightingField::InitPlayers()
