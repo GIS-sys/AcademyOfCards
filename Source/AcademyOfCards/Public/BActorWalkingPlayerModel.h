@@ -5,36 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "BActorEnhanced.h"
+#include "StatStructs.h"
 #include "BActorWalkingPlayerModel.generated.h"
 class ABActorWalkingDealer;
-
-
-USTRUCT(BlueprintType)
-struct FPlayerStats
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	int32 Energy = 10;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float Health = 100.0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	int32 Gold = 50;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float AlignmentLight = 0.5;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float AlignmentDark = 0.5;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float AlignmentFire = 0.0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float AlignmentIce = 0.0;
-};
 
 
 UCLASS()
