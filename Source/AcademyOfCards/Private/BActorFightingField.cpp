@@ -66,8 +66,12 @@ void ABActorFightingField::MoveUnit(ABActorFightingUnitBase* Unit, ABActorFighti
 
 void ABActorFightingField::PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell)
 {
-    ABActorFightingUnitBase* NewUnit = DeckMy->PlayCard(Card, Cell);
-    ArrayUnits.Add(NewUnit);
+    FMana ManaRest = PlayerMana - Card->ManaCost;
+    if (ManaRest) {
+        ABActorFightingUnitBase* NewUnit = DeckMy->PlayCard(Card, Cell);
+        ArrayUnits.Add(NewUnit);
+        PlayerMana -= Card->ManaCost;
+    }
 }
 
 void ABActorFightingField::InitPlayers()
