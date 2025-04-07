@@ -32,7 +32,11 @@ public:
 	FVector WHERE_IS_HAND;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
-	FVector SPACE_BETWEEN_CARDS;
+	FVector MIN_SPACE_BETWEEN_CARDS;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	FVector MAX_SPACE_BETWEEN_CARDS;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	FVector MAX_HAND_SIZE;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	TSubclassOf<ABActorFightingCard> ActorToSpawnCard;

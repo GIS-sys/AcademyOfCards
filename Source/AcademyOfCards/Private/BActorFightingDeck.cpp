@@ -44,13 +44,23 @@ void ABActorFightingDeck::DrawCard(int index)
     RearrangeCardsInHand();
 }
 
+void VectorClamp(FVector& VOriginal, const FVector& VMin, const FVector& VMax)
+{
+    for (int i = 0; i < 3; ++i) {
+        if (VOriginal[i] < VMin[i]) VOriginal[i] = VMin[i];
+        if (VOriginal[i] > VMax[i]) VOriginal[i] = VMax[i];
+    }
+}
+
 void ABActorFightingDeck::RearrangeCardsInHand()
 {
+    FVector SpaceBetweenCards = MAX_HAND_SIZE / CardActors.Num();
+    VectorClamp(SpaceBetweenCards, MIN_SPACE_BETWEEN_CARDS, MAX_SPACE_BETWEEN_CARDS);
     for (int i = 0; i < CardActors.Num(); ++i) {
         const auto& card = CardActors[i];
         card->MoveOverTimeTo(
             card->GetActorLocation(),
-            GetActorLocation() + WHERE_IS_HAND + (i - CardActors.Num() / 2.0) * SPACE_BETWEEN_CARDS,
+            GetActorLocation() + WHERE_IS_HAND + (i - CardActors.Num() / 2.0) * SpaceBetweenCards,
             DRAWING_TIME
         );
     }

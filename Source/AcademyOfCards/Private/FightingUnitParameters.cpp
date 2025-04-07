@@ -7,5 +7,6 @@ void UFightingUnitParameters::ResetCurrent()
 {
 	CurrentMovement = Movement;
 	CurrentHealth = Health;
-	CurrentPower = Power;
+	//CurrentPower = Power; TODO
+	CurrentPower += 1;
 }
