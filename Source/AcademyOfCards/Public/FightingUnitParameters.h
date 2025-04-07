@@ -14,13 +14,21 @@ class ACADEMYOFCARDS_API UFightingUnitParameters : public UObject
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	int Movement = 1;
+	int Movement = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int Health = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int Power = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	int Attacks = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	int Range = 0;
+
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int CurrentMovement = 0;
@@ -30,6 +38,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int CurrentPower = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	int CurrentAttacks = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	int CurrentRange = 0;
 
 	void ResetCurrent();
 };

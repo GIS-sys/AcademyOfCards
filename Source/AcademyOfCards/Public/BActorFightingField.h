@@ -50,6 +50,8 @@ public:
 	TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit;
 	UFUNCTION(BlueprintCallable, Category = "Spawning")
 	bool MoveUnit(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell);
+	UFUNCTION(BlueprintCallable, Category = "Spawning")
+	bool AttackUnit(ABActorFightingUnitBase* Attacker, ABActorFightingUnitBase* Victim);
 
 	const int RADIUS = 4;
 	TArray<TArray<TArray<ABActorFightingCellBase*>>> ArrayCells;

@@ -38,6 +38,8 @@ void ABActorFightingDeck::DrawCard(int index)
     NewActor->UnitParameters->Health = rand() % 10 + 1;
     NewActor->UnitParameters->Power = rand() % 10 + 1;
     NewActor->UnitParameters->Movement = rand() % 2 + 1;
+    NewActor->UnitParameters->Attacks = rand() % 2 + 1;
+    NewActor->UnitParameters->Range = rand() % 2 + 1;
     NewActor->IsControlledByPlayer = IsControlledByPlayer;
     CardActors.Add(NewActor);
 

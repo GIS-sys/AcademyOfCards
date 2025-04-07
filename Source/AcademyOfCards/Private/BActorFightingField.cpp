@@ -67,7 +67,21 @@ void ABActorFightingField::InitDecks()
 
 bool ABActorFightingField::MoveUnit(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell)
 {
+    for (ABActorFightingUnitBase* AnotherUnit : ArrayUnits) {
+        if (AnotherUnit->CurrentCell == Cell) return false;
+    }
     return Unit->Move(Cell);
+}
+
+bool ABActorFightingField::AttackUnit(ABActorFightingUnitBase* Attacker, ABActorFightingUnitBase* Victim)
+{
+    if (Attacker == Victim) return false;
+    if (Attacker->UnitParameters->CurrentAttacks <= 0) return false;
+    int Distance = ABActorFightingCellBase::Distance(Attacker->CurrentCell, Victim->CurrentCell);
+    if (Distance > Attacker->UnitParameters->Range) return false;
+
+    Victim->UnitParameters->CurrentHealth -= Attacker->UnitParameters->CurrentPower;
+    return true;
 }
 
 void ABActorFightingField::PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell)
