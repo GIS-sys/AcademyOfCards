@@ -18,6 +18,7 @@ WalkingResultFight::WalkingResultFight(TSharedPtr<FJsonObject> data)
 
 WalkingResultFight::~WalkingResultFight()
 {
+	UE_LOG(LogTemp, Error, TEXT("WalkingResultFight destructor"));
 }
 
 void WalkingResultFight::Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model)
@@ -25,7 +26,7 @@ void WalkingResultFight::Execute(UBUIWalkingEvent* walking_event, ABActorWalking
 	// TODO !!! fight result
 	FWorldContext* world = GEngine->GetWorldContextFromGameViewport(GEngine->GameViewport);
 	ABUIGameModeBase* MyMode = Cast<ABUIGameModeBase>(UGameplayStatics::GetGameMode(world->World()));
-	MyMode->SwitchToFight();
+	MyMode->SwitchToFight(this);
 	WalkingOption::FactoryCreateCloseOption()->Results[0]->Execute(walking_event, player_model); // TODO
 
 	/*walking_event->TextFromResult += "Fight: " + Opponent + "\n";

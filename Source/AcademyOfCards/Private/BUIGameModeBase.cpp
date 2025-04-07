@@ -7,16 +7,26 @@
 #include <BPlayerPawnBase.h>
 #include <UMyGameInstance.h>
 #include <Kismet/GameplayStatics.h>
+#include "BActorWalkingPlayerModel.h"
+#include "WalkingResultFight.h"
 #include "BActorEnhanced.h"
 
 
-void ABUIGameModeBase::SwitchToFight() {
+void ABUIGameModeBase::SwitchToFight(WalkingResultFight* FightResult) {
+	AActor* PlayerModelRaw = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
+	ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(PlayerModelRaw);
+
 	// Change data in persistent stage
 	UUMyGameInstance* MyGameInstance = Cast<UUMyGameInstance>(GetGameInstance());
 	MyGameInstance->PersistentStage = EnumStage::FIGHTING;
 
+
+	MyGameInstance->WalkingSave.Data.Add("PlayerStats", new TSharedPtr<FPlayerStats>(new FPlayerStats(PlayerModel->PlayerStats)));
+	MyGameInstance->WalkingSave.Data.Add("FightResult", new TSharedPtr<WalkingResultFight>(new WalkingResultFight(*FightResult)));
+
 	// Move objects out of frame
 	UE_LOG(LogTemp, Error, TEXT("Switch To Fight"));
+
 	for (const auto& ClassToMove : MoveWhileStageTransitioningStaticClass) {
 		TArray<AActor*> FoundActors;
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ClassToMove, FoundActors);

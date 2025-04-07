@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "BActorEnhanced.h"
 #include "BUIGameModeBase.generated.h"
+class WalkingResultFight;
 
 /**
  * 
@@ -19,7 +20,7 @@ protected:
 	const float MOVE_OUT_OF_FRAME_SECONDS = 2.0;
 
 public:
-	void SwitchToFight();
+	void SwitchToFight(WalkingResultFight* FightResult);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transition")
 	TSubclassOf<ABUIGameModeBase> PlayerGameModeWalkingStage;

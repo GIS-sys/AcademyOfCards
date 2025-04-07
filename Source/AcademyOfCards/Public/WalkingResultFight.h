@@ -18,6 +18,9 @@ public:
 
 	virtual void Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model);
 
+	FString GetOpponent() const {
+		return Opponent;
+	}
 protected:
 	FString Opponent;
 	TArray<TSharedPtr<WalkingResult>> ResultsWin;

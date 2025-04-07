@@ -33,7 +33,7 @@ void ABActorFightingDeck::DrawCard(int index)
     NewActor->WhenHighlightedLocationDelta = WhenHighlightedLocationDelta;
     NewActor->SetActorLocation(GetActorLocation());
     NewActor->ManaCost = FMana(rand() % 6, rand() % 2, rand() % 2, rand() % 2, rand() % 2);
-    NewActor->ManaGain = FMana(0, rand() % 2, rand() % 2, rand() % 2, rand() % 2);;
+    NewActor->ManaGain = FMana(0, rand() % 2, rand() % 2, rand() % 2, rand() % 2);
     CardActors.Add(NewActor);
 
     RearrangeCardsInHand();

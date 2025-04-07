@@ -12,4 +12,6 @@ class ACADEMYOFCARDS_API LevelSaveInstance
 public:
 	LevelSaveInstance();
 	~LevelSaveInstance();
+
+	TMap<FString, void*> Data;
 };

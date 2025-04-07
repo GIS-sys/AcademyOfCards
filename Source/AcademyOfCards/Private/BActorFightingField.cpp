@@ -2,6 +2,10 @@
 
 
 #include "BActorFightingField.h"
+#include <UMyGameInstance.h>
+#include <WalkingResultFight.h>
+#include <Kismet/GameplayStatics.h>
+#include "BActorWalkingPlayerModel.h"
 
 void ABActorFightingField::InitCells()
 {
@@ -93,8 +97,25 @@ void ABActorFightingField::InitUnits()
 
 }
 
+void ABActorFightingField::InitLoadFromWalking()
+{
+    // Load
+    UUMyGameInstance* MyGameInstance = Cast<UUMyGameInstance>(GetGameInstance());
+    TSharedPtr<FPlayerStats>* WalkingPlayerStats = (TSharedPtr<FPlayerStats>*)(MyGameInstance->WalkingSave.Data["PlayerStats"]);
+    TSharedPtr<WalkingResultFight>* WalkingFight = (TSharedPtr<WalkingResultFight>*)(MyGameInstance->WalkingSave.Data["FightResult"]);
+    
+    // Set back
+    OpponentName = (*WalkingFight)->GetOpponent();
+
+    AActor* PlayerModelRaw = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
+    ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(PlayerModelRaw);
+    PlayerModel->PlayerStats = **WalkingPlayerStats;
+}
+
 void ABActorFightingField::Init()
 {
+    InitLoadFromWalking();
+
     InitPlayers();
     InitCells();
     InitDecks();

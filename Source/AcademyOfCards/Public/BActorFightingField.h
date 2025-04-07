@@ -30,7 +30,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Classes")
 	TArray<TSubclassOf<ABActorEnhanced>> CardsSubclasses;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")
+	FString OpponentName;
 	void InitPlayers();
+
+	void InitLoadFromWalking();
 
 	void InitDecks();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
