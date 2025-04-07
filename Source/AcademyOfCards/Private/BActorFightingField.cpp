@@ -100,7 +100,8 @@ bool ABActorFightingField::AttackUnit(ABActorFightingUnitBase* Attacker, ABActor
         if (!Victim->IsPlayer) {
             Victim->Destroy();
         } else {
-            // TODO if player is dead do something
+            IsFinished = true;
+            IsPlayerWinner = (Victim != PlayerUnitMy);
         }
     }
     return true;

@@ -32,6 +32,11 @@ public:
 		return GetPlayerStats(IsPlayerTurn);
 	}
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")
+	bool IsFinished = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")
+	bool IsPlayerWinner = false;
+
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")
