@@ -18,7 +18,6 @@ WalkingResultFight::WalkingResultFight(TSharedPtr<FJsonObject> data)
 
 WalkingResultFight::~WalkingResultFight()
 {
-	UE_LOG(LogTemp, Error, TEXT("WalkingResultFight destructor"));
 }
 
 void WalkingResultFight::Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model)
