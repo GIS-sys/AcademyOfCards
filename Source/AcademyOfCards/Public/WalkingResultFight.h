@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include <WalkingResult.h>
-class UBUIWalkingEvent;
+#include <BUIWalkingEvent.h>
 class ABActorWalkingPlayerModel;
 
 /**
@@ -17,6 +17,7 @@ public:
 	~WalkingResultFight();
 
 	virtual void Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model);
+	void ExecuteAfterFight(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model);
 
 	FString GetOpponent() const {
 		return Opponent;

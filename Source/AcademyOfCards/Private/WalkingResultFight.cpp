@@ -22,15 +22,18 @@ WalkingResultFight::~WalkingResultFight()
 
 void WalkingResultFight::Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model)
 {
-	// TODO !!! fight result
 	FWorldContext* world = GEngine->GetWorldContextFromGameViewport(GEngine->GameViewport);
 	ABUIGameModeBase* MyMode = Cast<ABUIGameModeBase>(UGameplayStatics::GetGameMode(world->World()));
 	MyMode->SwitchToFight(this);
-	WalkingOption::FactoryCreateCloseOption()->Results[0]->Execute(walking_event, player_model); // TODO
+	//WalkingOption::FactoryCreateCloseOption()->Results[0]->Execute(walking_event, player_model); // TODO
+}
 
-	/*walking_event->TextFromResult += "Fight: " + Opponent + "\n";
+void WalkingResultFight::ExecuteAfterFight(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model)
+{
+	// TODO call this
+	walking_event->TextFromResult += "Fight: " + Opponent + "\n";
 	walking_event->TextFromResult += "You won!\n";
 	for (auto& Result : ResultsWin) {
 		Result->Execute(walking_event, player_model);
-	}*/
+	}
 }

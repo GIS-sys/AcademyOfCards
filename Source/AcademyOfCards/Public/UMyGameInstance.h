@@ -28,7 +28,7 @@ public:
 	LevelSaveInstance FightingSave;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Persistent Data")
-	bool NotLoadedWalkingBefore = false; // TODO
+	bool NotLoadedWalkingBefore = true; // TODO
 
 	UPROPERTY(BlueprintReadWrite, Category = "Persistent Data")
 	EnumStage PersistentStage = EnumStage::WALKING;

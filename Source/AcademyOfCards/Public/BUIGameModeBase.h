@@ -7,6 +7,7 @@
 #include "BActorEnhanced.h"
 #include "BUIGameModeBase.generated.h"
 class WalkingResultFight;
+class ABActorFightingField;
 
 /**
  * 
@@ -21,6 +22,8 @@ protected:
 
 public:
 	void SwitchToFight(WalkingResultFight* FightResult);
+	UFUNCTION(BlueprintCallable, Category = "Transition")
+	void SwitchToWalking(ABActorFightingField* FightField);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transition")
 	TSubclassOf<ABUIGameModeBase> PlayerGameModeWalkingStage;
