@@ -21,6 +21,8 @@ class ACADEMYOFCARDS_API ABActorFightingCard : public ABActorEnhanced
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	bool IsControlledByPlayer = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	bool IsBeingPlayed = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	FMana ManaCost;

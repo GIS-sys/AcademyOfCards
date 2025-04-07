@@ -17,6 +17,21 @@ class ACADEMYOFCARDS_API ABActorFightingField : public ABActorEnhanced
 	GENERATED_BODY()
 
 public:
+	ABActorFightingUnitBase* GetCurrentPlayerUnit() const {
+		if (IsPlayerTurn) return PlayerUnitMy;
+		return PlayerUnitOpponent;
+	}
+	bool IsOccupied(ABActorFightingCellBase* Cell) const {
+		for (ABActorFightingUnitBase* Unit : ArrayUnits) {
+			if (Unit->CurrentCell == Cell) return true;
+		}
+		return false;
+	}
+	FPlayerStats* GetPlayerStats(bool IsPlayerMe);
+	FPlayerStats* GetCurrentPlayerStats() {
+		return GetPlayerStats(IsPlayerTurn);
+	}
+
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")
@@ -54,7 +69,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	ABActorFightingDeck* DeckOpponent;
 	UFUNCTION(BlueprintCallable, Category = "Spawning")
-	void PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell);
+	bool PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell);
 
 	TArray<ABActorFightingUnitBase*> ArrayUnits;
 	void InitUnits();

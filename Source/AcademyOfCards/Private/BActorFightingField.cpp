@@ -7,6 +7,14 @@
 #include <Kismet/GameplayStatics.h>
 #include "BActorWalkingPlayerModel.h"
 
+FPlayerStats* ABActorFightingField::GetPlayerStats(bool IsPlayerMe) {
+    if (!IsPlayerMe) return &OpponentStats;
+
+    AActor* PlayerModelRaw = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
+    ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(PlayerModelRaw);
+    return &PlayerModel->PlayerStats;
+}
+
 void ABActorFightingField::InitCells()
 {
     for (int i = 0; i < RADIUS; ++i) {
@@ -67,9 +75,7 @@ void ABActorFightingField::InitDecks()
 
 bool ABActorFightingField::MoveUnit(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell)
 {
-    for (ABActorFightingUnitBase* AnotherUnit : ArrayUnits) {
-        if (AnotherUnit->CurrentCell == Cell) return false;
-    }
+    if (IsOccupied(Cell)) return false;
     return Unit->Move(Cell);
 }
 
@@ -82,27 +88,35 @@ bool ABActorFightingField::AttackUnit(ABActorFightingUnitBase* Attacker, ABActor
 
     Victim->UnitParameters->CurrentHealth -= Attacker->UnitParameters->CurrentPower;
     Attacker->UnitParameters->CurrentAttacks -= 1;
+    if (Victim->IsPlayer) {
+        Victim->UnitParameters->Health = Victim->UnitParameters->CurrentHealth;
+        GetPlayerStats(Victim->IsControlledByPlayer)->Health = Victim->UnitParameters->Health;
+    }
+
+    if (Victim->UnitParameters->Health <= 0) {
+        // TODO kill unit
+    }
     return true;
 }
 
-void ABActorFightingField::PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell)
+bool ABActorFightingField::PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell)
 {
+    if (ABActorFightingCellBase::Distance(GetCurrentPlayerUnit()->CurrentCell, Cell) > 1) return false;
+    if (IsOccupied(Cell)) return false;
     FMana ManaRest = PlayerMana - Card->ManaCost;
-    if (ManaRest) {
-        ABActorFightingUnitBase* NewUnit = DeckMy->PlayCard(Card, Cell);
-        ArrayUnits.Add(NewUnit);
-        PlayerMana -= Card->ManaCost;
-        PlayerMana += Card->ManaGain;
-    }
+    if (!ManaRest) return false;
+    ABActorFightingUnitBase* NewUnit = DeckMy->PlayCard(Card, Cell);
+    if (!NewUnit) return false;
+    ArrayUnits.Add(NewUnit);
+    PlayerMana -= Card->ManaCost;
+    PlayerMana += Card->ManaGain;
+    return true;
 }
 
 void ABActorFightingField::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
     for (ABActorFightingUnitBase* Unit : ArrayUnits) {
-        if (Unit && !Unit->IsMovingOverTime()) Unit->MoveOverTimeTo(Unit->LocationOriginal, Unit->CurrentCell->GetUnitLocation(), 0.1);
-    }
-    for (ABActorFightingUnitBase* Unit : {PlayerUnitMy, PlayerUnitOpponent}) {
         if (Unit && !Unit->IsMovingOverTime()) Unit->MoveOverTimeTo(Unit->LocationOriginal, Unit->CurrentCell->GetUnitLocation(), 0.1);
     }
 }
@@ -117,9 +131,6 @@ void ABActorFightingField::InitPlayers()
     FActorSpawnParameters SpawnParams;
     SpawnParams.Owner = this;
     {
-        AActor* PlayerModelRaw = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
-        ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(PlayerModelRaw);
-
         AActor* NewActorRaw = GetWorld()->SpawnActor<AActor>(
             ActorToSpawnUnit,
             FVector(0, 0, 0),
@@ -128,7 +139,7 @@ void ABActorFightingField::InitPlayers()
         );
         PlayerUnitMy = dynamic_cast<ABActorFightingUnitBase*>(NewActorRaw);
         ABActorFightingCellBase* StartingCell = ArrayCells[PLAYER_START_MY_X][PLAYER_START_MY_Y][PLAYER_START_MY_Z];
-        PlayerUnitMy->InitPlayerMy(StartingCell, &PlayerModel->PlayerStats);
+        PlayerUnitMy->InitPlayerMy(StartingCell, GetPlayerStats(true));
         ArrayUnits.Add(PlayerUnitMy);
     }
     {
@@ -140,7 +151,7 @@ void ABActorFightingField::InitPlayers()
         );
         PlayerUnitOpponent = dynamic_cast<ABActorFightingUnitBase*>(NewActorRaw);
         ABActorFightingCellBase* StartingCell = ArrayCells[PLAYER_START_OPPONENT_X][PLAYER_START_OPPONENT_Y][PLAYER_START_OPPONENT_Z];
-        PlayerUnitOpponent->InitPlayerOpponent(OpponentName, StartingCell, &OpponentStats);
+        PlayerUnitOpponent->InitPlayerOpponent(OpponentName, StartingCell, GetPlayerStats(false));
         ArrayUnits.Add(PlayerUnitOpponent);
     }
 
@@ -162,9 +173,7 @@ void ABActorFightingField::InitLoadFromWalking()
     // Set back
     OpponentName = (*WalkingFight)->GetOpponent();
 
-    AActor* PlayerModelRaw = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
-    ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(PlayerModelRaw);
-    PlayerModel->PlayerStats = **WalkingPlayerStats;
+    *GetPlayerStats(true) = **WalkingPlayerStats;
 }
 
 void ABActorFightingField::Init()
@@ -239,7 +248,7 @@ FString ABActorFightingField::PassTurn()
     }
 
     if (!IsPlayerTurn) {
-        PassTurn(); //AIMove(); // TODO
+        PassTurn(); //AIMove(); // TODO proper ai
     }
     return "";
 }

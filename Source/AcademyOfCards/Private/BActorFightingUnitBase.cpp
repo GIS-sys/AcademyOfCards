@@ -32,7 +32,7 @@ void ABActorFightingUnitBase::InitPlayerMy(ABActorFightingCellBase* Cell, const 
 	IsControlledByPlayer = true;
 	UnitParameters = NewObject<UFightingUnitParameters>(this, UFightingUnitParameters::StaticClass());
 	UnitParameters->Health = Stats->Health;
-	UnitParameters->Movement = 1; // TODO
+	UnitParameters->Movement = 1; // TODO player stats
 	OnSpawn();
 }
 
@@ -43,7 +43,7 @@ void ABActorFightingUnitBase::InitPlayerOpponent(FString OpponentName, ABActorFi
 	CurrentCell = Cell;
 	IsControlledByPlayer = false;
 	UnitParameters = NewObject<UFightingUnitParameters>(this, UFightingUnitParameters::StaticClass());
-	if (OpponentName == "acolyte_easy") { // TODO
+	if (OpponentName == "acolyte_easy") { // TODO opponent stats
 		UnitParameters->Attacks = 1;
 		UnitParameters->Health = 10;
 		UnitParameters->Movement = 2;
