@@ -49,7 +49,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit;
 	UFUNCTION(BlueprintCallable, Category = "Spawning")
-	void MoveUnit(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell);
+	bool MoveUnit(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell);
 
 	const int RADIUS = 4;
 	TArray<TArray<TArray<ABActorFightingCellBase*>>> ArrayCells;

@@ -18,5 +18,8 @@ ABActorFightingUnitBase* ABActorFightingCard::SpawnUnit(ABActorFightingCellBase*
     ABActorFightingUnitBase* NewActor = dynamic_cast<ABActorFightingUnitBase*>(NewActorRaw);
     NewActor->LocationOriginal = Cell->GetUnitLocation();
     NewActor->CurrentCell = Cell;
+    NewActor->UnitParameters = UnitParameters;
+    NewActor->IsControlledByPlayer = IsControlledByPlayer;
+    NewActor->OnSpawn();
     return NewActor;
 }

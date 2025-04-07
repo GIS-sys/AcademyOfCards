@@ -25,6 +25,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Base")
 	void DealCards();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	bool IsControlledByPlayer = false;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	FVector WHERE_IS_HAND;
 

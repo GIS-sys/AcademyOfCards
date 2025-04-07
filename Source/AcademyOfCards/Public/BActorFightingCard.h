@@ -20,10 +20,16 @@ class ACADEMYOFCARDS_API ABActorFightingCard : public ABActorEnhanced
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	bool IsControlledByPlayer = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	FMana ManaCost;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	FMana ManaGain;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	UFightingUnitParameters* UnitParameters;
 
 	ABActorFightingUnitBase* SpawnUnit(ABActorFightingCellBase* Cell, TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit);
 };

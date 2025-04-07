@@ -32,8 +32,13 @@ void ABActorFightingDeck::DrawCard(int index)
     NewActor->WhenHighlightedScaleRelative = WhenHighlightedScaleRelative;
     NewActor->WhenHighlightedLocationDelta = WhenHighlightedLocationDelta;
     NewActor->SetActorLocation(GetActorLocation());
-    NewActor->ManaCost = FMana(rand() % 6, rand() % 2, rand() % 2, rand() % 2, rand() % 2);
+    NewActor->ManaCost = FMana(rand() % 6, rand() % 2, rand() % 2, rand() % 2, rand() % 2); // TODO
     NewActor->ManaGain = FMana(0, rand() % 2, rand() % 2, rand() % 2, rand() % 2);
+    NewActor->UnitParameters = NewObject<UFightingUnitParameters>(this, UFightingUnitParameters::StaticClass());
+    NewActor->UnitParameters->Health = rand() % 10 + 1;
+    NewActor->UnitParameters->Power = rand() % 10 + 1;
+    NewActor->UnitParameters->Movement = rand() % 2 + 1;
+    NewActor->IsControlledByPlayer = IsControlledByPlayer;
     CardActors.Add(NewActor);
 
     RearrangeCardsInHand();

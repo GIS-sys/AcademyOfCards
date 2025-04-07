@@ -93,7 +93,8 @@ struct FPlayerMana : public FMana
 };
 
 UCLASS(Blueprintable, BlueprintType)
-class ACADEMYOFCARDS_API UStatStructs : public UObject {
+class ACADEMYOFCARDS_API UStatStructs : public UObject
+{
 	GENERATED_BODY()
 
 public:

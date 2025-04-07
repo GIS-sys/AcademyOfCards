@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "BActorEnhanced.h"
 #include <BActorFightingCellBase.h>
+#include <FightingUnitParameters.h>
 #include "BActorFightingUnitBase.generated.h"
 
 /**
@@ -16,9 +17,16 @@ class ACADEMYOFCARDS_API ABActorFightingUnitBase : public ABActorEnhanced
 	GENERATED_BODY()
 	
 public:
+	float MOVING_TIME = 1.0;
+	bool IsControlledByPlayer = false;
+
 	ABActorFightingCellBase* CurrentCell;
 
-	float MOVING_TIME = 1.0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	UFightingUnitParameters* UnitParameters;
 
-	void Move(ABActorFightingCellBase* Cell);
+	bool Move(ABActorFightingCellBase* Cell);
+
+	void OnSpawn();
+	void OnTurnEnd(bool TurnEndedIsThisOwner);
 };

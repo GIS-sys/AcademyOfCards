@@ -47,6 +47,9 @@ void ABActorFightingField::InitCells()
                     //+ FVector(0, 0, -20 * rand() * 1.0 / RAND_MAX)
                 );
                 ArrayCells[i][j][k] = NewActor;
+                NewActor->X = i;
+                NewActor->Y = j;
+                NewActor->Z = k;
             }
         }
     }
@@ -62,10 +65,9 @@ void ABActorFightingField::InitDecks()
     DeckOpponent->DealCards();
 }
 
-void ABActorFightingField::MoveUnit(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell)
+bool ABActorFightingField::MoveUnit(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell)
 {
-    // TODO
-    Unit->Move(Cell);
+    return Unit->Move(Cell);
 }
 
 void ABActorFightingField::PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell)
@@ -178,6 +180,10 @@ FString ABActorFightingField::PassTurn()
     CurrentPlayerMana->GeneralMax += 2;
     CurrentPlayerMana->General += CurrentPlayerMana->GeneralMax;
     if (CurrentPlayerMana->General > CurrentPlayerMana->GeneralMax) CurrentPlayerMana->General = CurrentPlayerMana->GeneralMax;
+
+    for (ABActorFightingUnitBase* Unit : ArrayUnits) {
+        Unit->OnTurnEnd(IsPlayerTurn != Unit->IsControlledByPlayer);
+    }
 
     if (!IsPlayerTurn) {
         PassTurn(); //AIMove(); // TODO
