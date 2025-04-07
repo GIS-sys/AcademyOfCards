@@ -6,6 +6,7 @@
 #include "BActorEnhanced.h"
 #include <BActorFightingCellBase.h>
 #include <FightingUnitParameters.h>
+#include <StatStructs.h>
 #include "BActorFightingUnitBase.generated.h"
 
 /**
@@ -18,7 +19,10 @@ class ACADEMYOFCARDS_API ABActorFightingUnitBase : public ABActorEnhanced
 	
 public:
 	float MOVING_TIME = 1.0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	bool IsControlledByPlayer = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	bool IsPlayer = false;
 
 	ABActorFightingCellBase* CurrentCell;
 
@@ -29,4 +33,7 @@ public:
 
 	void OnSpawn();
 	void OnTurnEnd(bool TurnEndedIsThisOwner);
+
+	void InitPlayerMy(ABActorFightingCellBase* Cell, const FPlayerStats* Stats);
+	void InitPlayerOpponent(FString OpponentName, ABActorFightingCellBase* Cell, FPlayerStats* Stats);
 };

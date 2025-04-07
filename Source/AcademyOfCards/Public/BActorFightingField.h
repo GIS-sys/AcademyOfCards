@@ -17,6 +17,8 @@ class ACADEMYOFCARDS_API ABActorFightingField : public ABActorEnhanced
 	GENERATED_BODY()
 
 public:
+	virtual void Tick(float DeltaTime) override;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")
 	FPlayerMana PlayerMana;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")
@@ -30,6 +32,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Classes")
 	TArray<TSubclassOf<ABActorEnhanced>> CardsSubclasses;
 
+	static constexpr int PLAYER_START_MY_X = 2;
+	static constexpr int PLAYER_START_MY_Y = 0;
+	static constexpr int PLAYER_START_MY_Z = 1;
+	static constexpr int PLAYER_START_OPPONENT_X = 0;
+	static constexpr int PLAYER_START_OPPONENT_Y = 2;
+	static constexpr int PLAYER_START_OPPONENT_Z = 1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")
+	ABActorFightingUnitBase* PlayerUnitMy;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")
+	ABActorFightingUnitBase* PlayerUnitOpponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")
 	FString OpponentName;
 	void InitPlayers();

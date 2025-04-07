@@ -34,6 +34,10 @@ public:
 	// Movement
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MoveOverTimeTo(FVector FromLocation, FVector NewLocation, float DeltaTime);
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+	bool IsMovingOverTime() const {
+		return DeltaTimeMoveOver > 0 && DeltaTimeMoveOverSpent < DeltaTimeMoveOver;
+	}
 
 	void MoveOutOfFrame(float DeltaTime);
 	void MoveIntoFrame(float DeltaTime);

@@ -96,6 +96,17 @@ void ABActorFightingField::PlayCard(ABActorFightingCard* Card, ABActorFightingCe
     }
 }
 
+void ABActorFightingField::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+    for (ABActorFightingUnitBase* Unit : ArrayUnits) {
+        if (Unit && !Unit->IsMovingOverTime()) Unit->MoveOverTimeTo(Unit->LocationOriginal, Unit->CurrentCell->GetUnitLocation(), 0.1);
+    }
+    for (ABActorFightingUnitBase* Unit : {PlayerUnitMy, PlayerUnitOpponent}) {
+        if (Unit && !Unit->IsMovingOverTime()) Unit->MoveOverTimeTo(Unit->LocationOriginal, Unit->CurrentCell->GetUnitLocation(), 0.1);
+    }
+}
+
 void ABActorFightingField::InitPlayers()
 {
     IsPlayerTurn = false;
@@ -103,8 +114,35 @@ void ABActorFightingField::InitPlayers()
     PlayerMana.GeneralMax = 0;
     OpponentMana.GeneralMax = 0;
 
-    // TODO use who we are fighting
-    OpponentStats.Health = 10;
+    FActorSpawnParameters SpawnParams;
+    SpawnParams.Owner = this;
+    {
+        AActor* PlayerModelRaw = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
+        ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(PlayerModelRaw);
+
+        AActor* NewActorRaw = GetWorld()->SpawnActor<AActor>(
+            ActorToSpawnUnit,
+            FVector(0, 0, 0),
+            GetActorRotation(),
+            SpawnParams
+        );
+        PlayerUnitMy = dynamic_cast<ABActorFightingUnitBase*>(NewActorRaw);
+        ABActorFightingCellBase* StartingCell = ArrayCells[PLAYER_START_MY_X][PLAYER_START_MY_Y][PLAYER_START_MY_Z];
+        PlayerUnitMy->InitPlayerMy(StartingCell, &PlayerModel->PlayerStats);
+        ArrayUnits.Add(PlayerUnitMy);
+    }
+    {
+        AActor* NewActorRaw = GetWorld()->SpawnActor<AActor>(
+            ActorToSpawnUnit,
+            FVector(0, 0, 0),
+            GetActorRotation(),
+            SpawnParams
+        );
+        PlayerUnitOpponent = dynamic_cast<ABActorFightingUnitBase*>(NewActorRaw);
+        ABActorFightingCellBase* StartingCell = ArrayCells[PLAYER_START_OPPONENT_X][PLAYER_START_OPPONENT_Y][PLAYER_START_OPPONENT_Z];
+        PlayerUnitOpponent->InitPlayerOpponent(OpponentName, StartingCell, &OpponentStats);
+        ArrayUnits.Add(PlayerUnitOpponent);
+    }
 
     PassTurn();
 }
@@ -133,8 +171,8 @@ void ABActorFightingField::Init()
 {
     InitLoadFromWalking();
 
-    InitPlayers();
     InitCells();
+    InitPlayers();
     InitDecks();
     InitUnits();
 }

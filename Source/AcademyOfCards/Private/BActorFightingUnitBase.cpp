@@ -23,3 +23,39 @@ void ABActorFightingUnitBase::OnTurnEnd(bool TurnEndedIsThisOwner)
 		UnitParameters->ResetCurrent();
 	}
 }
+
+void ABActorFightingUnitBase::InitPlayerMy(ABActorFightingCellBase* Cell, const FPlayerStats* Stats)
+{
+	IsPlayer = true;
+	LocationOriginal = Cell->GetUnitLocation();
+	CurrentCell = Cell;
+	IsControlledByPlayer = true;
+	UnitParameters = NewObject<UFightingUnitParameters>(this, UFightingUnitParameters::StaticClass());
+	UnitParameters->Health = Stats->Health;
+	UnitParameters->Movement = 1; // TODO
+	OnSpawn();
+}
+
+void ABActorFightingUnitBase::InitPlayerOpponent(FString OpponentName, ABActorFightingCellBase* Cell, FPlayerStats* Stats)
+{
+	IsPlayer = true;
+	LocationOriginal = Cell->GetUnitLocation();
+	CurrentCell = Cell;
+	IsControlledByPlayer = false;
+	UnitParameters = NewObject<UFightingUnitParameters>(this, UFightingUnitParameters::StaticClass());
+	if (OpponentName == "acolyte_easy") { // TODO
+		UnitParameters->Attacks = 1;
+		UnitParameters->Health = 10;
+		UnitParameters->Movement = 2;
+		UnitParameters->Power = 1;
+		UnitParameters->Range = 1;
+	} else {
+		UnitParameters->Attacks = 3;
+		UnitParameters->Health = 50;
+		UnitParameters->Movement = 2;
+		UnitParameters->Power = 5;
+		UnitParameters->Range = 3;
+	}
+	//UnitParameters = UnitParameters;
+	OnSpawn();
+}
