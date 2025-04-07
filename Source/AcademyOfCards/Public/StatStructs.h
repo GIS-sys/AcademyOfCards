@@ -81,10 +81,6 @@ struct FMana
 	explicit operator bool() const {
 		return General >= 0 && Light >= 0 && Dark >= 0 && Fire >= 0 && Ice >= 0;
 	}
-
-	/*bool BiggerThanZero() const {
-		return General > 0 && Light > 0 && Dark > 0 && Fire > 0 && Ice > 0;
-	}*/
 };
 
 USTRUCT(BlueprintType)
@@ -94,4 +90,15 @@ struct FPlayerMana : public FMana
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int GeneralMax = 2;
+};
+
+UCLASS(Blueprintable, BlueprintType)
+class ACADEMYOFCARDS_API UStatStructs : public UObject {
+	GENERATED_BODY()
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "Util")
+	static FString ToString(const FMana& Mana) {
+		return FString::Printf(TEXT("%d LD%d-%d FI%d-%d"), Mana.General, Mana.Light, Mana.Dark, Mana.Fire, Mana.Ice);
+	}
 };

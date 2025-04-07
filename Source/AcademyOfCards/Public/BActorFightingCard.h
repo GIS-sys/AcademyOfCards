@@ -23,7 +23,7 @@ public:
 	FMana ManaCost;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
-	FMana ManaGives;
+	FMana ManaGain;
 
 	ABActorFightingUnitBase* SpawnUnit(ABActorFightingCellBase* Cell, TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit);
 };

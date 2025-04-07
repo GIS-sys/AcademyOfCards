@@ -71,7 +71,7 @@ void ABActorFightingField::PlayCard(ABActorFightingCard* Card, ABActorFightingCe
         ABActorFightingUnitBase* NewUnit = DeckMy->PlayCard(Card, Cell);
         ArrayUnits.Add(NewUnit);
         PlayerMana -= Card->ManaCost;
-        PlayerMana += Card->ManaGives;
+        PlayerMana += Card->ManaGain;
     }
 }
 
