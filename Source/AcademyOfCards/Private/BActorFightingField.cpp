@@ -93,8 +93,15 @@ bool ABActorFightingField::AttackUnit(ABActorFightingUnitBase* Attacker, ABActor
         GetPlayerStats(Victim->IsControlledByPlayer)->Health = Victim->UnitParameters->Health;
     }
 
-    if (Victim->UnitParameters->Health <= 0) {
-        // TODO kill unit
+    if (Victim->UnitParameters->CurrentHealth <= 0) {
+        for (int i = 0; i < ArrayUnits.Num(); ++i) {
+            if (ArrayUnits[i] == Victim) ArrayUnits.RemoveAt(i);
+        }
+        if (!Victim->IsPlayer) {
+            Victim->Destroy();
+        } else {
+            // TODO if player is dead do something
+        }
     }
     return true;
 }
