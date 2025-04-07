@@ -81,6 +81,7 @@ bool ABActorFightingField::AttackUnit(ABActorFightingUnitBase* Attacker, ABActor
     if (Distance > Attacker->UnitParameters->Range) return false;
 
     Victim->UnitParameters->CurrentHealth -= Attacker->UnitParameters->CurrentPower;
+    Attacker->UnitParameters->CurrentAttacks -= 1;
     return true;
 }
 

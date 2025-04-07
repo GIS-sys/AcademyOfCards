@@ -34,7 +34,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Helper")
     bool CanSelectUnit()
     {
-        return state == 0;
+        return state == 0 || state == 2;
     }
 };
 
