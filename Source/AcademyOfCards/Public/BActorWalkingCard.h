@@ -23,6 +23,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	bool IsCloseUpLook = false;
+
 public:
 	struct WallsStruct {
 		bool left;
@@ -73,7 +75,13 @@ public:
 	bool IsDiscovered = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")
-	bool IsCloseUpLook = false;
+	bool IsMovingCloseUpLook = false;
+
+	UFUNCTION(BlueprintCallable, Category = "Actor")
+	bool GetCloseUpLook() const { return IsCloseUpLook; }
+
+	UFUNCTION(BlueprintCallable, Category = "Actor")
+	void SetCloseUpLook(bool NewCloseUpLook) { IsCloseUpLook = NewCloseUpLook; IsMovingCloseUpLook = true; }
 
 	UFUNCTION(BlueprintCallable)
 	bool IsCollectible();

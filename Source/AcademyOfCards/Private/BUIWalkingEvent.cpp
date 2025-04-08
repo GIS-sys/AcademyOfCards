@@ -12,7 +12,7 @@ void UBUIWalkingEvent::NewEventPopup_Clear(bool ForgetChosenCard)
 {
     EventIsShown = false;
     if (CurrentWalkingCard && ForgetChosenCard) {
-        CurrentWalkingCard->IsCloseUpLook = false;
+        CurrentWalkingCard->SetCloseUpLook(false);
         CurrentWalkingCard = nullptr;
     }
     if (EventPopupVerticalBox) EventPopupVerticalBox->ClearChildren();
@@ -23,7 +23,7 @@ void UBUIWalkingEvent::NewEventPopup_Finish(ABActorWalkingCard* WalkingCard)
 {
     EventIsShown = true;
     CurrentWalkingCard = WalkingCard;
-    CurrentWalkingCard->IsCloseUpLook = true;
+    CurrentWalkingCard->SetCloseUpLook(true);
     if (!EventPopupVerticalBox->HasAnyChildren()) {
         TSharedPtr<WalkingOption> Option = WalkingOption::FactoryCreateCloseOption();
         NewEventPopup_AddButton(Option->Text, Option->Results);

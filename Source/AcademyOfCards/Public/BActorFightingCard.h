@@ -31,6 +31,12 @@ public:
 	FMana ManaGain;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	FString AlignmentKind;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	FString Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	UFightingUnitParameters* UnitParameters;
 
 	ABActorFightingUnitBase* SpawnUnit(ABActorFightingCellBase* Cell, TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit);
