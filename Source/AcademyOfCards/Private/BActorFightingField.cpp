@@ -256,7 +256,65 @@ FString ABActorFightingField::PassTurn()
     }
 
     if (!IsPlayerTurn) {
-        PassTurn(); //AIMove(); // TODO proper ai
+        AIOpponent.YourTurn(this);
     }
     return "";
+}
+
+
+
+
+
+
+
+
+void AI::StartThinkingLoop(ABActorFightingField* FightingField) {
+    AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, FightingField]() {
+        this->Think(FightingField);
+
+        AsyncTask(ENamedThreads::GameThread, [this, FightingField]() {
+            this->Act(FightingField);
+            if (this->HasFinishedTurn(FightingField)) {
+                FightingField->PassTurn();
+            }
+            else {
+                this->StartThinkingLoop(FightingField);
+            }
+            });
+        });
+}
+
+void AI::YourTurn(ABActorFightingField* FightingField) {
+    InitNextTurn(FightingField);
+    StartThinkingLoop(FightingField);
+}
+
+// TODO implement AI below
+void AI::InitNextTurn(ABActorFightingField* FightingField)
+{
+    MovingPlayerCoordinates = { 0, 0, 0 };
+}
+
+void AI::Think(ABActorFightingField* FightingField)
+{
+    FPlatformProcess::Sleep(2.0f);
+    
+    TTuple<int, int, int> CurrentCoordinates = FightingField->PlayerUnitOpponent->CurrentCell->GetCoordinates();
+    TArray<TTuple<int, int, int>> NeighboursCoordinates = FightingField->PlayerUnitOpponent->CurrentCell->GetNeighboursCoordinates(FightingField->RADIUS);
+    for (auto t : NeighboursCoordinates) {
+        UE_LOG(LogTemp, Error, TEXT("AI possible neighbour: %d %d %d"), t.Get<0>(), t.Get<1>(), t.Get<2>());
+    }
+    MovingPlayerCoordinates = NeighboursCoordinates[1];
+}
+
+void AI::Act(ABActorFightingField* FightingField)
+{
+    auto [x, y, z ] = MovingPlayerCoordinates;
+    UE_LOG(LogTemp, Error, TEXT("AI acting by walking to %d %d %d"), x, y, z);
+    FightingField->MoveUnit(FightingField->PlayerUnitOpponent, FightingField->ArrayCells[x][y][z]);
+}
+
+bool AI::HasFinishedTurn(ABActorFightingField* FightingField)
+{
+    return FightingField->PlayerUnitOpponent->UnitParameters->CurrentMovement == 0;
 }

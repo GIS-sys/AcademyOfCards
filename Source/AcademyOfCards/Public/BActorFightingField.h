@@ -11,6 +11,23 @@
 #include "StatStructs.h"
 #include "BActorFightingField.generated.h"
 
+class ABActorFightingField;
+
+class AI {
+	TTuple<int, int, int> MovingPlayerCoordinates;
+
+	void InitNextTurn(ABActorFightingField* FightingField);
+	
+	void Think(ABActorFightingField* FightingField);
+	void Act(ABActorFightingField* FightingField);
+	bool HasFinishedTurn(ABActorFightingField* FightingField);
+
+	void StartThinkingLoop(ABActorFightingField* FightingField);
+
+public:
+	void YourTurn(ABActorFightingField* FightingField);
+};
+
 UCLASS()
 class ACADEMYOFCARDS_API ABActorFightingField : public ABActorEnhanced
 {
@@ -111,4 +128,6 @@ public:
 	FString AbilityGetManaIce();
 	UFUNCTION(BlueprintCallable, Category = "Abilities")
 	FString PassTurn();
+
+	AI AIOpponent;
 };
