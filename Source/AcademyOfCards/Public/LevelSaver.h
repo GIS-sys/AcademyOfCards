@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LevelSaveInstance.h"
 
 /**
  * 
@@ -10,6 +11,8 @@
 class ACADEMYOFCARDS_API LevelSaver
 {
 public:
-	LevelSaver();
-	~LevelSaver();
+	LevelSaver() = default;
+	~LevelSaver() = default;
+
+	TMap<FString, LevelSaveInstance> Saves;
 };

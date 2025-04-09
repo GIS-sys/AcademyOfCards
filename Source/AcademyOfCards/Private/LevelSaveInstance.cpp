@@ -3,10 +3,4 @@
 
 #include "LevelSaveInstance.h"
 
-LevelSaveInstance::LevelSaveInstance()
-{
-}
-
-LevelSaveInstance::~LevelSaveInstance()
-{
-}
+const FString LevelSaveInstance::DEFAULT_NAME = "DEFAULT_NAME";

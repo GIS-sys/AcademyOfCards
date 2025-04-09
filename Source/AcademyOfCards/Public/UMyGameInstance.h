@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include <LevelSaveInstance.h>
+#include <LevelSaver.h>
 #include "UMyGameInstance.generated.h"
 
 /**
@@ -23,12 +23,24 @@ class ACADEMYOFCARDS_API UUMyGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
-	LevelSaveInstance WalkingSave;
+	static const FString SAVE_WALKING_PLAYER_STATS;
+	static const FString SAVE_WALKING_FIGHT_RESULT;
+	static const FString SAVE_WALKING_DEALER;
+	static const FString SAVE_FIGHTING_PLAYER_STATS;
+	static const FString SAVE_FIGHTING_FIGHT_OUTCOME;
 
-	LevelSaveInstance FightingSave;
+	LevelSaver WalkingSave;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Persistent Data")
-	bool NotLoadedWalkingBefore = true; // TODO
+	LevelSaver FightingSave;
+
+	UFUNCTION(BlueprintCallable, Category = "Persistent Data")
+	bool HasWalkingsave() const {
+		return !WalkingSave.Saves.IsEmpty();
+	}
+	UFUNCTION(BlueprintCallable, Category = "Persistent Data")
+	bool HasFightingsave() const {
+		return !FightingSave.Saves.IsEmpty();
+	}
 
 	UPROPERTY(BlueprintReadWrite, Category = "Persistent Data")
 	EnumStage PersistentStage = EnumStage::WALKING;

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LevelSaveInstance.h"
 #include "StatStructs.generated.h"
 
 USTRUCT(BlueprintType)
@@ -101,5 +102,29 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Util")
 	static FString ToString(const FMana& Mana) {
 		return FString::Printf(TEXT("%d LD%d-%d FI%d-%d"), Mana.General, Mana.Light, Mana.Dark, Mana.Fire, Mana.Ice);
+	}
+
+	static LevelSaveInstance SavePlayerStats(const FPlayerStats& X) {
+		LevelSaveInstance SaveInstance;
+		SaveInstance.SetCopy("AlignmentDark", X.AlignmentDark);
+		SaveInstance.SetCopy("AlignmentFire", X.AlignmentFire);
+		SaveInstance.SetCopy("AlignmentIce", X.AlignmentIce);
+		SaveInstance.SetCopy("AlignmentLight", X.AlignmentLight);
+		SaveInstance.SetCopy("Health", X.Health);
+		SaveInstance.SetCopy("Energy", X.Energy);
+		SaveInstance.SetCopy("Gold", X.Gold);
+		return SaveInstance;
+	}
+
+	static FPlayerStats LoadPlayerStats(LevelSaveInstance* SaveInstance) {
+		FPlayerStats X;
+		X.AlignmentDark = SaveInstance->GetAsCopy<float>("AlignmentDark");
+		X.AlignmentFire = SaveInstance->GetAsCopy<float>("AlignmentFire");
+		X.AlignmentIce = SaveInstance->GetAsCopy<float>("AlignmentIce");
+		X.AlignmentLight = SaveInstance->GetAsCopy<float>("AlignmentLight");
+		X.Health = SaveInstance->GetAsCopy<float>("Health");
+		X.Energy = SaveInstance->GetAsCopy<int32>("Energy");
+		X.Gold = SaveInstance->GetAsCopy<int32>("Gold");
+		return X;
 	}
 };

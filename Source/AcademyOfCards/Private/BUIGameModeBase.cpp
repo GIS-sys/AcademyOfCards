@@ -11,18 +11,23 @@
 #include "WalkingResultFight.h"
 #include "BActorFightingField.h"
 #include "BActorEnhanced.h"
+#include "BActorWalkingDealer.h"
+#include "LevelSaveInstance.h"
 
 
 void ABUIGameModeBase::SwitchToFight(WalkingResultFight* FightResult) {
 	AActor* PlayerModelRaw = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
 	ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(PlayerModelRaw);
+	AActor* DealerRaw = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingDealer::StaticClass());
+	ABActorWalkingDealer* Dealer = Cast<ABActorWalkingDealer>(DealerRaw);
 
 	// Change data in persistent stage
 	UUMyGameInstance* MyGameInstance = Cast<UUMyGameInstance>(GetGameInstance());
 	MyGameInstance->PersistentStage = EnumStage::FIGHTING;
 
-	MyGameInstance->WalkingSave.Data.Add("PlayerStats", new TSharedPtr<FPlayerStats>(new FPlayerStats(PlayerModel->PlayerStats)));
-	MyGameInstance->WalkingSave.Data.Add("FightResult", new TSharedPtr<WalkingResultFight>(new WalkingResultFight(*FightResult)));
+	MyGameInstance->WalkingSave.Saves.Add(UUMyGameInstance::SAVE_WALKING_PLAYER_STATS, UStatStructs::SavePlayerStats(PlayerModel->PlayerStats));
+	MyGameInstance->WalkingSave.Saves.Add(UUMyGameInstance::SAVE_WALKING_FIGHT_RESULT, FightResult->Save());
+	//MyGameInstance->WalkingSave.Saves.Add(UUMyGameInstance::SAVE_WALKING_DEALER, Dealer->Save()); // TODO
 
 	UE_LOG(LogTemp, Error, TEXT("Switch To Fight"));
 
@@ -70,10 +75,9 @@ void ABUIGameModeBase::SwitchToWalking(ABActorFightingField* FightField)
 	// Change data in persistent stage
 	UUMyGameInstance* MyGameInstance = Cast<UUMyGameInstance>(GetGameInstance());
 	MyGameInstance->PersistentStage = EnumStage::WALKING;
-	MyGameInstance->NotLoadedWalkingBefore = false;
 
-	MyGameInstance->WalkingSave.Data.Add("PlayerStats", new TSharedPtr<FPlayerStats>(new FPlayerStats(PlayerModel->PlayerStats)));
-	MyGameInstance->WalkingSave.Data.Add("FightOutcome", new TSharedPtr<bool>(new bool(FightField->IsPlayerWinner))); // TODO use that
+	MyGameInstance->FightingSave.Saves.Add(UUMyGameInstance::SAVE_FIGHTING_PLAYER_STATS, UStatStructs::SavePlayerStats(PlayerModel->PlayerStats));
+	MyGameInstance->FightingSave.Saves.Add(UUMyGameInstance::SAVE_FIGHTING_FIGHT_OUTCOME, LevelSaveInstance(FightField->IsPlayerWinner));
 
 	UE_LOG(LogTemp, Error, TEXT("Switch To Walking"));
 

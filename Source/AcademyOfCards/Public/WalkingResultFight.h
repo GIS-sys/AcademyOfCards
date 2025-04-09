@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include <WalkingResult.h>
 #include <BUIWalkingEvent.h>
+#include "LevelSaveInstance.h"
 class ABActorWalkingPlayerModel;
 
 /**
@@ -21,6 +22,16 @@ public:
 
 	FString GetOpponent() const {
 		return Opponent;
+	}
+
+	LevelSaveInstance Save() {
+		LevelSaveInstance SaveInstance;
+		SaveInstance.Set(LevelSaveInstance::DEFAULT_NAME, new WalkingResultFight(*this));
+		return SaveInstance;
+	}
+
+	static WalkingResultFight* Load(LevelSaveInstance* SaveInstance) {
+		return SaveInstance->Get<WalkingResultFight>(LevelSaveInstance::DEFAULT_NAME);
 	}
 protected:
 	FString Opponent;

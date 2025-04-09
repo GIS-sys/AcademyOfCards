@@ -2,11 +2,3 @@
 
 
 #include "LevelSaver.h"
-
-LevelSaver::LevelSaver()
-{
-}
-
-LevelSaver::~LevelSaver()
-{
-}

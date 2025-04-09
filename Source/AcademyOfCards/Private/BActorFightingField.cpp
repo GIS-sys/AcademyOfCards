@@ -175,13 +175,13 @@ void ABActorFightingField::InitLoadFromWalking()
 {
     // Load
     UUMyGameInstance* MyGameInstance = Cast<UUMyGameInstance>(GetGameInstance());
-    TSharedPtr<FPlayerStats>* WalkingPlayerStats = (TSharedPtr<FPlayerStats>*)(MyGameInstance->WalkingSave.Data["PlayerStats"]);
-    TSharedPtr<WalkingResultFight>* WalkingFight = (TSharedPtr<WalkingResultFight>*)(MyGameInstance->WalkingSave.Data["FightResult"]);
+    FPlayerStats WalkingPlayerStats = UStatStructs::LoadPlayerStats(MyGameInstance->WalkingSave.Saves.Find(UUMyGameInstance::SAVE_WALKING_PLAYER_STATS));
+    WalkingResultFight* WalkingFight = WalkingResultFight::Load(MyGameInstance->WalkingSave.Saves.Find(UUMyGameInstance::SAVE_WALKING_FIGHT_RESULT));
     
     // Set back
-    OpponentName = (*WalkingFight)->GetOpponent();
+    OpponentName = WalkingFight->GetOpponent();
 
-    *GetPlayerStats(true) = **WalkingPlayerStats;
+    *GetPlayerStats(true) = WalkingPlayerStats;
 }
 
 void ABActorFightingField::Init()
