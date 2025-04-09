@@ -34,6 +34,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	int GetCurrentBoardPositionX() const { return CurrentBoardPositionX;  }
+	int GetCurrentBoardPositionY() const { return CurrentBoardPositionY; }
+
 	bool Move(FVector LocationTo, int BoardPositionX, int BoardPositionY, ABActorWalkingDealer* DealerPtr);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")

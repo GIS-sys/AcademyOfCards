@@ -17,6 +17,10 @@
 #include <random>
 #include <UMyGameInstance.h>
 #include "StatStructs.h"
+#include <BUIHUD.h>
+#include "BWalking_UI.h"
+#include <BUIWalkingEvent.h>
+#include <WalkingResultFight.h>
 
 // Sets default values
 ABActorWalkingDealer::ABActorWalkingDealer()
@@ -56,12 +60,12 @@ void ABActorWalkingDealer::Tick(float DeltaTime)
 	if (DealtCardThisTick && DealingCardSpawnRestTime.IsEmpty()) {
 		SetActorHiddenInGame(true);
 
-		// TODO LOAD HERE JUST FOR DEBUG
+		// TODO LOAD SOMEWHERE ELSE
 		UUMyGameInstance* MyGameInstance = Cast<UUMyGameInstance>(GetGameInstance());
 		if (MyGameInstance->HasWalkingSave() && MyGameInstance->HasFightingSave()) {
-			LevelSaveInstance* FightResultSave = MyGameInstance->FightingSave.Saves.Find(UUMyGameInstance::SAVE_FIGHTING_FIGHT_OUTCOME);
-			bool FightResult = FightResultSave->GetAsCopy<bool>(LevelSaveInstance::DEFAULT_NAME);
-			UE_LOG(LogTemp, Error, TEXT("Fight Result: %d"), FightResult);
+			LevelSaveInstance* FightOutcomeSave = MyGameInstance->FightingSave.Saves.Find(UUMyGameInstance::SAVE_FIGHTING_FIGHT_OUTCOME);
+			bool FightOutcome = FightOutcomeSave->GetAsCopy<bool>(LevelSaveInstance::DEFAULT_NAME);
+			UE_LOG(LogTemp, Error, TEXT("Fight Result: %d"), FightOutcome);
 
 			LevelSaveInstance* PlayerStatsSave = MyGameInstance->FightingSave.Saves.Find(UUMyGameInstance::SAVE_FIGHTING_PLAYER_STATS);
 			FPlayerStats PlayerStats = UStatStructs::LoadPlayerStats(PlayerStatsSave);
@@ -74,6 +78,16 @@ void ABActorWalkingDealer::Tick(float DeltaTime)
 			AActor* PlayerModelRaw = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
 			ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(PlayerModelRaw);
 			PlayerModel->Load(PlayerModelSave);
+
+			LevelSaveInstance* FightResultSave = MyGameInstance->WalkingSave.Saves.Find(UUMyGameInstance::SAVE_WALKING_FIGHT_RESULT);
+			WalkingResultFight* FightResult = WalkingResultFight::Load(FightResultSave);
+			APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+			if (!PlayerController) return;
+			ABUIHUD* HUD = Cast<ABUIHUD>(PlayerController->GetHUD());
+			if (!HUD) return;
+			TObjectPtr<UBWalking_UI> MainMenu = Cast<UBWalking_UI>(HUD->MainMenu);
+			UBUIWalkingEvent* EventUI = MainMenu->BUIWalkingEvent;
+			FightResult->ExecuteAfterFight(EventUI, *CardsDealt.Find({ PlayerModel->GetCurrentBoardPositionX(), PlayerModel->GetCurrentBoardPositionY() }));
 		}
 	}
 }

@@ -24,10 +24,11 @@ void UBUIWalkingEvent::NewEventPopup_Finish(ABActorWalkingCard* WalkingCard)
     EventIsShown = true;
     CurrentWalkingCard = WalkingCard;
     CurrentWalkingCard->SetCloseUpLook(true);
-    if (!EventPopupVerticalBox->HasAnyChildren()) {
+    if (!EventPopupVerticalBox->HasAnyChildren() && IsAddCloseButtonAuto) {
         TSharedPtr<WalkingOption> Option = WalkingOption::FactoryCreateCloseOption();
         NewEventPopup_AddButton(Option->Text, Option->Results);
     }
+    IsAddCloseButtonAuto = true;
 }
 
 void UBUIWalkingEvent::NewEventPopup_SetText(FString Text)

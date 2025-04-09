@@ -24,16 +24,13 @@ void WalkingResultFight::Execute(UBUIWalkingEvent* walking_event, ABActorWalking
 {
 	FWorldContext* world = GEngine->GetWorldContextFromGameViewport(GEngine->GameViewport);
 	ABUIGameModeBase* MyMode = Cast<ABUIGameModeBase>(UGameplayStatics::GetGameMode(world->World()));
+	walking_event->DontAddCloseButtonOnce();
 	MyMode->SwitchToFight(this);
 	//WalkingOption::FactoryCreateCloseOption()->Results[0]->Execute(walking_event, player_model); // TODO
 }
 
-void WalkingResultFight::ExecuteAfterFight(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model)
+void WalkingResultFight::ExecuteAfterFight(UBUIWalkingEvent* walking_event, ABActorWalkingCard* current_card)
 {
-	// TODO call this
-	walking_event->TextFromResult += "Fight: " + Opponent + "\n";
-	walking_event->TextFromResult += "You won!\n";
-	for (auto& Result : ResultsWin) {
-		Result->Execute(walking_event, player_model);
-	}
+	walking_event->CurrentWalkingCard = current_card;
+	walking_event->EventPopupButtonOnClicked("", ResultsWin);
 }

@@ -18,7 +18,7 @@ public:
 	~WalkingResultFight();
 
 	virtual void Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model);
-	void ExecuteAfterFight(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model);
+	void ExecuteAfterFight(UBUIWalkingEvent* walking_event, ABActorWalkingCard* current_card);
 
 	FString GetOpponent() const {
 		return Opponent;
