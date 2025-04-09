@@ -63,20 +63,22 @@ void ABActorWalkingDealer::Tick(float DeltaTime)
 		// TODO LOAD SOMEWHERE ELSE
 		UUMyGameInstance* MyGameInstance = Cast<UUMyGameInstance>(GetGameInstance());
 		if (MyGameInstance->HasWalkingSave() && MyGameInstance->HasFightingSave()) {
+			AActor* PlayerModelRaw = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
+			ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(PlayerModelRaw);
+
+
 			LevelSaveInstance* FightOutcomeSave = MyGameInstance->FightingSave.Saves.Find(UUMyGameInstance::SAVE_FIGHTING_FIGHT_OUTCOME);
 			bool FightOutcome = FightOutcomeSave->GetAsCopy<bool>(LevelSaveInstance::DEFAULT_NAME);
 			UE_LOG(LogTemp, Error, TEXT("Fight Result: %d"), FightOutcome);
 
 			LevelSaveInstance* PlayerStatsSave = MyGameInstance->FightingSave.Saves.Find(UUMyGameInstance::SAVE_FIGHTING_PLAYER_STATS);
 			FPlayerStats PlayerStats = UStatStructs::LoadPlayerStats(PlayerStatsSave);
-			UE_LOG(LogTemp, Error, TEXT("Fight Result: %f"), PlayerStats.Health);
+			PlayerModel->PlayerStats = PlayerStats;
 
 			LevelSaveInstance* WalkingDealerSave = MyGameInstance->WalkingSave.Saves.Find(UUMyGameInstance::SAVE_WALKING_DEALER);
 			Load(WalkingDealerSave);
 
 			LevelSaveInstance* PlayerModelSave = MyGameInstance->WalkingSave.Saves.Find(UUMyGameInstance::SAVE_WALKING_PLAYER_MODEL);
-			AActor* PlayerModelRaw = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
-			ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(PlayerModelRaw);
 			PlayerModel->Load(PlayerModelSave);
 
 			LevelSaveInstance* FightResultSave = MyGameInstance->WalkingSave.Saves.Find(UUMyGameInstance::SAVE_WALKING_FIGHT_RESULT);
