@@ -27,7 +27,8 @@ void ABUIGameModeBase::SwitchToFight(WalkingResultFight* FightResult) {
 
 	MyGameInstance->WalkingSave.Saves.Add(UUMyGameInstance::SAVE_WALKING_PLAYER_STATS, UStatStructs::SavePlayerStats(PlayerModel->PlayerStats));
 	MyGameInstance->WalkingSave.Saves.Add(UUMyGameInstance::SAVE_WALKING_FIGHT_RESULT, FightResult->Save());
-	//MyGameInstance->WalkingSave.Saves.Add(UUMyGameInstance::SAVE_WALKING_DEALER, Dealer->Save()); // TODO
+	MyGameInstance->WalkingSave.Saves.Add(UUMyGameInstance::SAVE_WALKING_DEALER, Dealer->Save());
+	MyGameInstance->WalkingSave.Saves.Add(UUMyGameInstance::SAVE_WALKING_PLAYER_MODEL, PlayerModel->Save());
 
 	UE_LOG(LogTemp, Error, TEXT("Switch To Fight"));
 

@@ -77,7 +77,7 @@ void ABActorEnhanced::OnChangeHighlight()
 
 void ABActorEnhanced::Highlight()
 {
-	TicksNotHighlighted = 0;
+	if (TicksNotHighlighted != -1) TicksNotHighlighted = 0;
 	IsHighlighted = true;
 }
 

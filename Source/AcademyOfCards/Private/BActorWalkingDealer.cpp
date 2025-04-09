@@ -15,6 +15,8 @@
 #include <map>
 #include <set>
 #include <random>
+#include <UMyGameInstance.h>
+#include "StatStructs.h"
 
 // Sets default values
 ABActorWalkingDealer::ABActorWalkingDealer()
@@ -53,6 +55,26 @@ void ABActorWalkingDealer::Tick(float DeltaTime)
 
 	if (DealtCardThisTick && DealingCardSpawnRestTime.IsEmpty()) {
 		SetActorHiddenInGame(true);
+
+		// TODO LOAD HERE JUST FOR DEBUG
+		UUMyGameInstance* MyGameInstance = Cast<UUMyGameInstance>(GetGameInstance());
+		if (MyGameInstance->HasWalkingSave() && MyGameInstance->HasFightingSave()) {
+			LevelSaveInstance* FightResultSave = MyGameInstance->FightingSave.Saves.Find(UUMyGameInstance::SAVE_FIGHTING_FIGHT_OUTCOME);
+			bool FightResult = FightResultSave->GetAsCopy<bool>(LevelSaveInstance::DEFAULT_NAME);
+			UE_LOG(LogTemp, Error, TEXT("Fight Result: %d"), FightResult);
+
+			LevelSaveInstance* PlayerStatsSave = MyGameInstance->FightingSave.Saves.Find(UUMyGameInstance::SAVE_FIGHTING_PLAYER_STATS);
+			FPlayerStats PlayerStats = UStatStructs::LoadPlayerStats(PlayerStatsSave);
+			UE_LOG(LogTemp, Error, TEXT("Fight Result: %f"), PlayerStats.Health);
+
+			LevelSaveInstance* WalkingDealerSave = MyGameInstance->WalkingSave.Saves.Find(UUMyGameInstance::SAVE_WALKING_DEALER);
+			Load(WalkingDealerSave);
+
+			LevelSaveInstance* PlayerModelSave = MyGameInstance->WalkingSave.Saves.Find(UUMyGameInstance::SAVE_WALKING_PLAYER_MODEL);
+			AActor* PlayerModelRaw = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
+			ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(PlayerModelRaw);
+			PlayerModel->Load(PlayerModelSave);
+		}
 	}
 }
 
@@ -277,4 +299,32 @@ void ABActorWalkingDealer::DealCards()
 	CreateBoard();
 
 	SetTimersForCardDeal();
+}
+
+LevelSaveInstance ABActorWalkingDealer::Save() {
+	// Save deck
+	LevelSaveInstance SaveInstanceDeck;
+	SaveInstanceDeck.SetCopy("Deck", Deck->Save());
+	// Save cards dealt
+	TArray<TPair<TPair<int, int>, LevelSaveInstance>> SavedCardsDealt;
+	for (const auto& pair : CardsDealt) {
+		SavedCardsDealt.Add({ pair.Get<0>(), pair.Get<1>()->Save() });
+	}
+	LevelSaveInstance SaveInstanceCardsDealt;
+	SaveInstanceCardsDealt.SetCopy("CardsDealt", SavedCardsDealt);
+	// Merge
+	return SaveInstanceDeck + SaveInstanceCardsDealt;
+}
+
+void ABActorWalkingDealer::Load(LevelSaveInstance* SaveInstance) {
+	// Load deck
+	Deck->Load(SaveInstance->Get<LevelSaveInstance>("Deck"));
+	// Load cards dealt
+	// TODO MAYBE CREATE CARDS BEFORE LOADING?
+	auto SavedCardsDealt = SaveInstance->GetAsCopy<TArray<TPair<TPair<int, int>, LevelSaveInstance>>>("CardsDealt");
+	for (const auto& card_info : SavedCardsDealt) {
+		TPair<int, int> CardPos = card_info.Get<0>();
+		LevelSaveInstance CardSaveInstance = card_info.Get<1>();
+		CardsDealt[CardPos]->Load(&CardSaveInstance);
+	}
 }

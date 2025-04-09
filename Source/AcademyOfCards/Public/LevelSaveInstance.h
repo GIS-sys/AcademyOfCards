@@ -26,7 +26,7 @@ public:
 	~LevelSaveInstance() = default;
 
 	template <typename T>
-	LevelSaveInstance(const T& X) {
+	explicit LevelSaveInstance(const T& X) {
 		SetCopy(DEFAULT_NAME, X);
 	}
 
@@ -78,4 +78,21 @@ public:
 	bool IsDataCopy(const FString& Name) const { return *DataTypes.Find(Name) == DataType::COPY; }
 	bool IsDataPointer(const FString& Name) const { return *DataTypes.Find(Name) == DataType::POINTER; }
 	bool IsDataSharedPtr(const FString& Name) const { return *DataTypes.Find(Name) == DataType::SHAREDPTR; }
+
+	LevelSaveInstance operator+(const LevelSaveInstance& other) const {
+		LevelSaveInstance result;
+		for (const auto& pair : Data) {
+			result.Data.Add(pair.Get<0>(), pair.Get<1>());
+		}
+		for (const auto& pair : DataTypes) {
+			result.DataTypes.Add(pair.Get<0>(), pair.Get<1>());
+		}
+		for (const auto& pair : other.Data) {
+			result.Data.Add(pair.Get<0>(), pair.Get<1>());
+		}
+		for (const auto& pair : other.DataTypes) {
+			result.DataTypes.Add(pair.Get<0>(), pair.Get<1>());
+		}
+		return result;
+	}
 };

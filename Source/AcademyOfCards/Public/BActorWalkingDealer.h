@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "LevelSaveInstance.h"
 
 class WalkingDeck;
 class ABActorWalkingCard;
@@ -81,4 +82,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DealCards();
 	bool CheckAbleToGo(int CurrentBoardPositionX, int CurrentBoardPositionY, int BoardPositionX, int BoardPositionY);
+
+	LevelSaveInstance Save();
+	void Load(LevelSaveInstance* SaveInstance);
 };

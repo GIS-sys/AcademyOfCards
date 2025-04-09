@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "BActorEnhanced.h"
+#include "LevelSaveInstance.h"
 #include "BActorWalkingCard.generated.h"
 class WalkingDeck;
 class WalkingCardConfig;
@@ -90,4 +91,16 @@ public:
 
 	TSharedPtr<WalkingCardConfig> CardConfig;
 	TSharedPtr<WalkingDeck> WalkingDeck;
+
+	LevelSaveInstance Save() {
+		LevelSaveInstance SaveInstanceDeck;
+		SaveInstanceDeck.SetCopy("Walls", Walls);
+		SaveInstanceDeck.SetCopy("IsCloseUpLook", IsCloseUpLook);
+		return SaveInstanceDeck;
+	}; // TODO implement
+	void Load(LevelSaveInstance* SaveInstance) {
+		Walls = SaveInstance->GetAsCopy<WallsStruct>("Walls");
+		IsCloseUpLook = SaveInstance->GetAsCopy<bool>("IsCloseUpLook");
+		UE_LOG(LogTemp, Error, TEXT("ABActorWalkingCard Load: %d"), IsCloseUpLook);
+	};
 };

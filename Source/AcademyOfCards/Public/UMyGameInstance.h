@@ -26,6 +26,7 @@ public:
 	static const FString SAVE_WALKING_PLAYER_STATS;
 	static const FString SAVE_WALKING_FIGHT_RESULT;
 	static const FString SAVE_WALKING_DEALER;
+	static const FString SAVE_WALKING_PLAYER_MODEL;
 	static const FString SAVE_FIGHTING_PLAYER_STATS;
 	static const FString SAVE_FIGHTING_FIGHT_OUTCOME;
 
@@ -34,11 +35,11 @@ public:
 	LevelSaver FightingSave;
 
 	UFUNCTION(BlueprintCallable, Category = "Persistent Data")
-	bool HasWalkingsave() const {
+	bool HasWalkingSave() const {
 		return !WalkingSave.Saves.IsEmpty();
 	}
 	UFUNCTION(BlueprintCallable, Category = "Persistent Data")
-	bool HasFightingsave() const {
+	bool HasFightingSave() const {
 		return !FightingSave.Saves.IsEmpty();
 	}
 

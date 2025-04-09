@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "BActorEnhanced.h"
 #include "StatStructs.h"
+#include "LevelSaveInstance.h"
 #include "BActorWalkingPlayerModel.generated.h"
 class ABActorWalkingDealer;
 
@@ -37,4 +38,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")
 	FPlayerStats PlayerStats;
+
+	LevelSaveInstance Save() {
+		LevelSaveInstance SaveInstanceDeck;
+		SaveInstanceDeck.SetCopy("CurrentBoardPositionX", CurrentBoardPositionX);
+		SaveInstanceDeck.SetCopy("CurrentBoardPositionY", CurrentBoardPositionY);
+		return SaveInstanceDeck;
+	};
+	void Load(LevelSaveInstance* SaveInstance) {
+		CurrentBoardPositionX = SaveInstance->GetAsCopy<int>("CurrentBoardPositionX");
+		CurrentBoardPositionY = SaveInstance->GetAsCopy<int>("CurrentBoardPositionY");
+	};
 };

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LevelSaveInstance.h"
 class WalkingEvent;
 class WalkingCardConfig;
 
@@ -26,4 +27,7 @@ public:
 	TSharedPtr<WalkingCardConfig> GetCardByID(FString ID) const;
 	TSharedPtr<WalkingEvent> GetEventByName(FString Name) const;
 	TSharedPtr<WalkingEvent> GetEventByID(FString ID) const;
+
+	LevelSaveInstance Save() { return LevelSaveInstance(); };
+	void Load(LevelSaveInstance* SaveInstance) {};
 };
