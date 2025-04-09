@@ -96,11 +96,13 @@ public:
 		LevelSaveInstance SaveInstanceDeck;
 		SaveInstanceDeck.SetCopy("Walls", Walls);
 		SaveInstanceDeck.SetCopy("IsCloseUpLook", IsCloseUpLook);
+		SaveInstanceDeck.SetCopy("IsDiscovered", IsDiscovered);
 		return SaveInstanceDeck;
 	}; // TODO implement
 	void Load(LevelSaveInstance* SaveInstance) {
 		Walls = SaveInstance->GetAsCopy<WallsStruct>("Walls");
 		IsCloseUpLook = SaveInstance->GetAsCopy<bool>("IsCloseUpLook");
+		IsDiscovered = SaveInstance->GetAsCopy<bool>("IsDiscovered");
 		UE_LOG(LogTemp, Error, TEXT("ABActorWalkingCard Load: %d"), IsCloseUpLook);
 	};
 };

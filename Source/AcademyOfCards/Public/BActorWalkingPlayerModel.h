@@ -46,10 +46,12 @@ public:
 		LevelSaveInstance SaveInstanceDeck;
 		SaveInstanceDeck.SetCopy("CurrentBoardPositionX", CurrentBoardPositionX);
 		SaveInstanceDeck.SetCopy("CurrentBoardPositionY", CurrentBoardPositionY);
+		SaveInstanceDeck.SetCopy("LocationOriginal", LocationOriginal);
 		return SaveInstanceDeck;
 	};
 	void Load(LevelSaveInstance* SaveInstance) {
 		CurrentBoardPositionX = SaveInstance->GetAsCopy<int>("CurrentBoardPositionX");
 		CurrentBoardPositionY = SaveInstance->GetAsCopy<int>("CurrentBoardPositionY");
+		LocationOriginal = SaveInstance->GetAsCopy<FVector>("LocationOriginal");
 	};
 };
