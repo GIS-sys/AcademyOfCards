@@ -42,7 +42,7 @@ public:
 	TSubclassOf<ABActorFightingCard> ActorToSpawnCard;
 
 	UFUNCTION(BlueprintCallable, Category = "Base")
-	void DrawCard(int index);
+	void DrawCard();
 
 	UFUNCTION(BlueprintCallable, Category = "Base")
 	ABActorFightingUnitBase* PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell);

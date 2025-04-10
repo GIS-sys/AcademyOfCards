@@ -111,13 +111,13 @@ bool ABActorFightingField::PlayCard(ABActorFightingCard* Card, ABActorFightingCe
 {
     if (ABActorFightingCellBase::Distance(GetCurrentPlayerUnit()->CurrentCell, Cell) > 1) return false;
     if (IsOccupied(Cell)) return false;
-    FMana ManaRest = PlayerMana - Card->ManaCost;
+    FMana ManaRest = *GetCurrentPlayerMana() - Card->ManaCost;
     if (!ManaRest) return false;
-    ABActorFightingUnitBase* NewUnit = DeckMy->PlayCard(Card, Cell);
+    ABActorFightingUnitBase* NewUnit = GetCurrentPlayerDeck()->PlayCard(Card, Cell);
     if (!NewUnit) return false;
     ArrayUnits.Add(NewUnit);
-    PlayerMana -= Card->ManaCost;
-    PlayerMana += Card->ManaGain;
+    *GetCurrentPlayerMana() -= Card->ManaCost;
+    *GetCurrentPlayerMana() += Card->ManaGain;
     return true;
 }
 
@@ -200,7 +200,7 @@ FString ABActorFightingField::AbilityDrawCard()
 {
     if (PlayerMana.General >= 4) {
         PlayerMana.General -= 4;
-        DeckMy->DrawCard(0);
+        DeckMy->DrawCard();
         return "";
     }
     return "Not enough mana";
@@ -239,17 +239,12 @@ FString ABActorFightingField::AbilityGetManaIce()
 FString ABActorFightingField::PassTurn()
 {
     IsPlayerTurn = !IsPlayerTurn;
-
-    FPlayerMana* CurrentPlayerMana;
-    if (IsPlayerTurn) {
-        CurrentPlayerMana = &PlayerMana;
-    } else {
-        CurrentPlayerMana = &OpponentMana;
-    }
     
-    CurrentPlayerMana->GeneralMax += 2;
-    CurrentPlayerMana->General += CurrentPlayerMana->GeneralMax;
-    if (CurrentPlayerMana->General > CurrentPlayerMana->GeneralMax) CurrentPlayerMana->General = CurrentPlayerMana->GeneralMax;
+    GetCurrentPlayerMana()->GeneralMax += 2;
+    GetCurrentPlayerMana()->General += GetCurrentPlayerMana()->GeneralMax;
+    if (GetCurrentPlayerMana()->General > GetCurrentPlayerMana()->GeneralMax) GetCurrentPlayerMana()->General = GetCurrentPlayerMana()->GeneralMax;
+
+    GetCurrentPlayerDeck()->DrawCard();
 
     for (ABActorFightingUnitBase* Unit : ArrayUnits) {
         Unit->OnTurnEnd(IsPlayerTurn != Unit->IsControlledByPlayer);
@@ -292,29 +287,73 @@ void AI::YourTurn(ABActorFightingField* FightingField) {
 // TODO implement AI below
 void AI::InitNextTurn(ABActorFightingField* FightingField)
 {
-    MovingPlayerCoordinates = { 0, 0, 0 };
+    WasThinkingFor = 0;
+    FightingField->OpponentMana.General = 4;
+    FightingField->OpponentMana.Fire = 1;
+    FightingField->OpponentMana.Ice = 1;
+    FightingField->OpponentMana.Light = 1;
+    FightingField->OpponentMana.Dark = 1;
 }
 
 void AI::Think(ABActorFightingField* FightingField)
 {
-    FPlatformProcess::Sleep(2.0f);
-    
+    FPlatformProcess::Sleep(0.5f);
+
     TTuple<int, int, int> CurrentCoordinates = FightingField->PlayerUnitOpponent->CurrentCell->GetCoordinates();
     TArray<TTuple<int, int, int>> NeighboursCoordinates = FightingField->PlayerUnitOpponent->CurrentCell->GetNeighboursCoordinates(FightingField->RADIUS);
-    for (auto t : NeighboursCoordinates) {
-        UE_LOG(LogTemp, Error, TEXT("AI possible neighbour: %d %d %d"), t.Get<0>(), t.Get<1>(), t.Get<2>());
+    TArray<TTuple<int, int, int>> FreeNeighboursCoordinates;
+    for (auto coordinates : NeighboursCoordinates) {
+        if (!FightingField->IsOccupied(coordinates)) {
+            FreeNeighboursCoordinates.Add(coordinates);
+        }
     }
-    MovingPlayerCoordinates = NeighboursCoordinates[1];
+    
+    NeedLoop = false;
+
+    // Play card
+    if (!FightingField->DeckOpponent->CardActors.IsEmpty() && !FreeNeighboursCoordinates.IsEmpty()) {
+        int RandomFreeNieghbourIndex = FMath::RandRange(0, FreeNeighboursCoordinates.Num() - 1);
+        PlayCardCoordinates = FreeNeighboursCoordinates[RandomFreeNieghbourIndex];
+        CardToPlay = nullptr;
+        for (auto* card : FightingField->DeckOpponent->CardActors) {
+            if (FightingField->OpponentMana - card->ManaCost) {
+                CardToPlay = card;
+                FreeNeighboursCoordinates.RemoveAt(RandomFreeNieghbourIndex);
+                break;
+            }
+        }
+    } else {
+        CardToPlay = nullptr;
+    }
+
+    // Move player
+    if (!FreeNeighboursCoordinates.IsEmpty()) {
+        MovingPlayerCoordinates = FreeNeighboursCoordinates[FMath::RandRange(0, FreeNeighboursCoordinates.Num() - 1)];
+    } else {
+        MovingPlayerCoordinates = { -1, -1, -1 };
+    }
 }
 
 void AI::Act(ABActorFightingField* FightingField)
 {
-    auto [x, y, z ] = MovingPlayerCoordinates;
-    UE_LOG(LogTemp, Error, TEXT("AI acting by walking to %d %d %d"), x, y, z);
-    FightingField->MoveUnit(FightingField->PlayerUnitOpponent, FightingField->ArrayCells[x][y][z]);
+    if (CardToPlay) {
+        int x = PlayCardCoordinates.Get<0>(); int y = PlayCardCoordinates.Get<1>(); int z = PlayCardCoordinates.Get<2>();
+        UE_LOG(LogTemp, Error, TEXT("AI acting by playing card to %d %d %d"), x, y, z);
+        FightingField->PlayCard(CardToPlay, FightingField->ArrayCells[x][y][z]);
+
+        NeedLoop |= (FightingField->PlayerUnitOpponent->UnitParameters->CurrentMovement != 0);
+    }
+    
+    if (MovingPlayerCoordinates != TTuple<int, int, int>({ -1, -1, -1 })) {
+        int x = MovingPlayerCoordinates.Get<0>(); int y = MovingPlayerCoordinates.Get<1>(); int z = MovingPlayerCoordinates.Get<2>();
+        UE_LOG(LogTemp, Error, TEXT("AI acting by walking to %d %d %d"), x, y, z);
+        FightingField->MoveUnit(FightingField->PlayerUnitOpponent, FightingField->ArrayCells[x][y][z]);
+    }
 }
 
 bool AI::HasFinishedTurn(ABActorFightingField* FightingField)
 {
-    return FightingField->PlayerUnitOpponent->UnitParameters->CurrentMovement == 0;
+    ++WasThinkingFor;
+    if (WasThinkingFor > 10) return true;
+    return !NeedLoop;
 }

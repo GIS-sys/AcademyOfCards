@@ -14,7 +14,11 @@
 class ABActorFightingField;
 
 class AI {
+	bool NeedLoop = false;
+	int WasThinkingFor = 0;
 	TTuple<int, int, int> MovingPlayerCoordinates;
+	TTuple<int, int, int> PlayCardCoordinates;
+	ABActorFightingCard* CardToPlay;
 
 	void InitNextTurn(ABActorFightingField* FightingField);
 	
@@ -38,15 +42,29 @@ public:
 		if (IsPlayerTurn) return PlayerUnitMy;
 		return PlayerUnitOpponent;
 	}
+	FPlayerStats* GetPlayerStats(bool IsPlayerMe);
+	FPlayerStats* GetCurrentPlayerStats() {
+		return GetPlayerStats(IsPlayerTurn);
+	}
+	FPlayerMana* GetCurrentPlayerMana() {
+		if (IsPlayerTurn) return &PlayerMana;
+		return &OpponentMana;
+	}
+	ABActorFightingDeck* GetCurrentPlayerDeck() {
+		if (IsPlayerTurn) return DeckMy;
+		return DeckOpponent;
+	}
+	bool IsOccupied(const TTuple<int, int, int>& Coordinates) const {
+		for (ABActorFightingUnitBase* Unit : ArrayUnits) {
+			if (Unit->CurrentCell->GetCoordinates() == Coordinates) return true;
+		}
+		return false;
+	}
 	bool IsOccupied(ABActorFightingCellBase* Cell) const {
 		for (ABActorFightingUnitBase* Unit : ArrayUnits) {
 			if (Unit->CurrentCell == Cell) return true;
 		}
 		return false;
-	}
-	FPlayerStats* GetPlayerStats(bool IsPlayerMe);
-	FPlayerStats* GetCurrentPlayerStats() {
-		return GetPlayerStats(IsPlayerTurn);
 	}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")

@@ -10,14 +10,14 @@ void ABActorFightingDeck::DealCards()
         FTimerHandle TimerHandle;
         GetWorld()->GetTimerManager().SetTimer(
             TimerHandle,
-            [this, i]() { DrawCard(i); },
+            [this]() { DrawCard(); },
             DRAWING_TIME * i + 0.001,
             false
         );
     }
 }
 
-void ABActorFightingDeck::DrawCard(int index)
+void ABActorFightingDeck::DrawCard()
 {
     FActorSpawnParameters SpawnParams;
     SpawnParams.Owner = this;
