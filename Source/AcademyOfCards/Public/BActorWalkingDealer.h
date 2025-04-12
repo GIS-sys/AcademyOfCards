@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "LevelSaveInstance.h"
 
-class WalkingDeck;
 class ABActorWalkingCard;
 
 #include "BActorWalkingDealer.generated.h"
@@ -51,8 +50,6 @@ protected:
 	TArray<TTuple<float, int, int>> DealingCardSpawnRestTime;
 
 public:
-	TSharedPtr<WalkingDeck> Deck;
-
 	TMap<TPair<int, int>, ABActorWalkingCard*> CardsDealt;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Debug")

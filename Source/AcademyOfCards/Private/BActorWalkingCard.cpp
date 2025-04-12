@@ -7,6 +7,7 @@
 #include <Kismet/GameplayStatics.h>
 #include "WalkingDeck.h"
 #include "WalkingCardConfig.h"
+#include "UMyGameInstance.h"
 
 // Sets default values
 ABActorWalkingCard::ABActorWalkingCard()
@@ -31,12 +32,14 @@ void ABActorWalkingCard::Tick(float DeltaTime)
 }
 
 int ABActorWalkingCard::MoveTo() {
+	TSharedPtr<WalkingDeck> Deck = Cast<UUMyGameInstance>(GetGameInstance())->Deck;
+
 	AActor* FoundActor = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
 	ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(FoundActor);
 	if (PlayerModel->Move(GetActorLocation(), BoardPositionX, BoardPositionY, DealerPtr)) {
 		if (!IsDiscovered) {
 			IsDiscovered = true;
-			WalkingDeck->GetEventByID(CardConfig->GetEventFired(PlayerModel->PlayerStats))->Fire(DealerPtr, this);
+			Deck->GetEventByID(CardConfig->GetEventFired(PlayerModel->PlayerStats))->Fire(DealerPtr, this);
 			return 1;
 		} else {
 			return 2;

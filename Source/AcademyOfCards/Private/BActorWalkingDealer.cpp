@@ -5,7 +5,6 @@
 #include <BActorWalkingCard.h>
 #include <BActorWalkingPlayerModel.h>
 #include <WalkingCardConfig.h>
-#include <WalkingDeck.h>
 #include <WalkingEvent.h>
 #include <Kismet/GameplayStatics.h>
 #include "Serialization/JsonSerializer.h"
@@ -20,6 +19,7 @@
 #include <BUIHUD.h>
 #include "BWalking_UI.h"
 #include <BUIWalkingEvent.h>
+#include <WalkingDeck.h>
 #include <WalkingResultFight.h>
 
 // Sets default values
@@ -27,10 +27,6 @@ ABActorWalkingDealer::ABActorWalkingDealer()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	Deck = MakeShareable(new WalkingDeck());
-	Deck->LoadConfigCards();
-	Deck->LoadConfigEvents();
 }
 
 // Called when the game starts or when spawned
@@ -129,6 +125,8 @@ ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked()
 	AActor* actor = GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), GetActorRotation());
 	ABActorWalkingCard* actor_wc = dynamic_cast<ABActorWalkingCard*>(actor);
 
+	TSharedPtr<WalkingDeck> Deck = Cast<UUMyGameInstance>(GetGameInstance())->Deck;
+
 	actor_wc->DealerPtr = this;
 	if (DEBUG_CARD_ID == "") {
 		actor_wc->CardConfig = Deck->GetRandomCard();
@@ -143,7 +141,6 @@ ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked()
 		}
 	}
 	actor_wc->MainCardMaterial = MaterialArray[MaterialIndex];
-	actor_wc->WalkingDeck = Deck;
 
 	actor_wc->Walls.bottom = true;
 	actor_wc->Walls.top = true;
@@ -318,9 +315,6 @@ void ABActorWalkingDealer::DealCards()
 }
 
 LevelSaveInstance ABActorWalkingDealer::Save() {
-	// Save deck
-	LevelSaveInstance SaveInstanceDeck;
-	SaveInstanceDeck.SetCopy("Deck", Deck->Save());
 	// Save cards dealt
 	TArray<TPair<TPair<int, int>, LevelSaveInstance>> SavedCardsDealt;
 	for (const auto& pair : CardsDealt) {
@@ -329,12 +323,10 @@ LevelSaveInstance ABActorWalkingDealer::Save() {
 	LevelSaveInstance SaveInstanceCardsDealt;
 	SaveInstanceCardsDealt.SetCopy("CardsDealt", SavedCardsDealt);
 	// Merge
-	return SaveInstanceDeck + SaveInstanceCardsDealt;
+	return SaveInstanceCardsDealt;
 }
 
 void ABActorWalkingDealer::Load(LevelSaveInstance* SaveInstance) {
-	// Load deck
-	Deck->Load(SaveInstance->Get<LevelSaveInstance>("Deck"));
 	// Load cards dealt
 	// TODO MAYBE CREATE CARDS BEFORE LOADING?
 	auto SavedCardsDealt = SaveInstance->GetAsCopy<TArray<TPair<TPair<int, int>, LevelSaveInstance>>>("CardsDealt");

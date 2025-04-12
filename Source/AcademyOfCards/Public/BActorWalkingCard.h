@@ -90,19 +90,17 @@ public:
 	WallsStruct Walls;
 
 	TSharedPtr<WalkingCardConfig> CardConfig;
-	TSharedPtr<WalkingDeck> WalkingDeck;
 
 	LevelSaveInstance Save() {
-		LevelSaveInstance SaveInstanceDeck;
-		SaveInstanceDeck.SetCopy("Walls", Walls);
-		SaveInstanceDeck.SetCopy("IsCloseUpLook", IsCloseUpLook);
-		SaveInstanceDeck.SetCopy("IsDiscovered", IsDiscovered);
-		return SaveInstanceDeck;
-	}; // TODO implement
+		LevelSaveInstance SaveInstance;
+		SaveInstance.SetCopy("Walls", Walls);
+		SaveInstance.SetCopy("IsCloseUpLook", IsCloseUpLook);
+		SaveInstance.SetCopy("IsDiscovered", IsDiscovered);
+		return SaveInstance;
+	};
 	void Load(LevelSaveInstance* SaveInstance) {
 		Walls = SaveInstance->GetAsCopy<WallsStruct>("Walls");
 		IsCloseUpLook = SaveInstance->GetAsCopy<bool>("IsCloseUpLook");
 		IsDiscovered = SaveInstance->GetAsCopy<bool>("IsDiscovered");
-		UE_LOG(LogTemp, Error, TEXT("ABActorWalkingCard Load: %d"), IsCloseUpLook);
 	};
 };

@@ -7,6 +7,7 @@
 #include <LevelSaver.h>
 #include "UMyGameInstance.generated.h"
 
+class WalkingDeck;
 /**
  * 
  */
@@ -23,6 +24,7 @@ class ACADEMYOFCARDS_API UUMyGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
+	// Saves
 	static const FString SAVE_WALKING_PLAYER_STATS;
 	static const FString SAVE_WALKING_FIGHT_RESULT;
 	static const FString SAVE_WALKING_DEALER;
@@ -31,7 +33,6 @@ public:
 	static const FString SAVE_FIGHTING_FIGHT_OUTCOME;
 
 	LevelSaver WalkingSave;
-
 	LevelSaver FightingSave;
 
 	UFUNCTION(BlueprintCallable, Category = "Persistent Data")
@@ -45,4 +46,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Persistent Data")
 	EnumStage PersistentStage = EnumStage::WALKING;
+
+	// Configs
+	TSharedPtr<WalkingDeck> Deck;
+	virtual void Init() override;
 };

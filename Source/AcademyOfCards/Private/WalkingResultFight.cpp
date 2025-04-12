@@ -26,7 +26,6 @@ void WalkingResultFight::Execute(UBUIWalkingEvent* walking_event, ABActorWalking
 	ABUIGameModeBase* MyMode = Cast<ABUIGameModeBase>(UGameplayStatics::GetGameMode(world->World()));
 	walking_event->DontAddCloseButtonOnce();
 	MyMode->SwitchToFight(this);
-	//WalkingOption::FactoryCreateCloseOption()->Results[0]->Execute(walking_event, player_model); // TODO
 }
 
 void WalkingResultFight::ExecuteAfterFight(UBUIWalkingEvent* walking_event, ABActorWalkingCard* current_card)

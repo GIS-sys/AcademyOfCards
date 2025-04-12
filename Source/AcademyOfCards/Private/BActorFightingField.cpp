@@ -284,7 +284,7 @@ void AI::YourTurn(ABActorFightingField* FightingField) {
     StartThinkingLoop(FightingField);
 }
 
-// TODO implement AI below
+// Implement AI logic below
 void AI::InitNextTurn(ABActorFightingField* FightingField)
 {
     WasThinkingFor = 0;

@@ -1,0 +1,87 @@
+[
+  {
+    "ID": "XXX",
+    "Type": "YYY",
+    "Arguments": {
+      "anything": anything
+    }
+  },
+
+  {
+    "ID": "ab000",
+    "Type": "Give ability",
+    "Description": "",
+    "Arguments": {
+      "ability_id": "",
+      "when": "",
+      "target": {
+        "type": "",
+        "zone": "",
+        "range": 0
+      },
+      "condition": {
+
+      }
+    }
+  },
+
+  {
+    "ID": "ab001",
+    "Type": "Deal_damage",
+    "Description": "",
+    "Arguments": {
+      "when": "",
+      "target": {
+        "type": "",
+        "zone": "",
+        "range": 0
+      },
+      "damage": 0,
+      "condition": {
+
+      }
+    }
+  },
+  {
+    "ID": "ab002",
+    "Type": "Jump",
+    "Description": "Unit with this ability can move to any hex in (1 or 2)-ring, when it moves",
+    "Arguments": {
+      "condition": {
+
+      }
+    }
+  },
+  {
+    "ID": "ab003",
+    "Type": "Get stats",
+    "Description": "",
+    "Arguments": {
+      "Health": 0,
+      "Power": 0,
+      "when": "",
+      "condition": {
+
+      }
+    }
+  },
+  {
+    "ID": "ab004",
+    "Type": "Give stats",
+    "Description": "",
+    "Arguments": {
+      "Health": 0,
+      "Power": 0,
+      "when": "",
+      "target": {
+        "type": "",
+        "zone": "",
+        "range": 0
+      },
+      "condition": {
+
+      }
+    }
+  },
+  
+]
