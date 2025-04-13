@@ -6,7 +6,7 @@
 #include "WalkingCardConfig.h"
 
 void WalkingConfigs::LoadConfigEvents() {
-	FString FilePath = FPaths::ProjectContentDir() / TEXT("WalkingStage/Configs/config_walking_events_new.json");
+	FString FilePath = FPaths::ProjectContentDir() / TEXT("WalkingStage/Configs/events.json");
 	FString JsonString;
 	if (FFileHelper::LoadFileToString(JsonString, *FilePath))
 	{
@@ -26,7 +26,7 @@ void WalkingConfigs::LoadConfigEvents() {
 }
 
 void WalkingConfigs::LoadConfigCards() {
-	FString FilePath = FPaths::ProjectContentDir() / TEXT("WalkingStage/Configs/event_cards_config_new.json");
+	FString FilePath = FPaths::ProjectContentDir() / TEXT("WalkingStage/Configs/cards.json");
 	FString JsonString;
 	if (FFileHelper::LoadFileToString(JsonString, *FilePath))
 	{

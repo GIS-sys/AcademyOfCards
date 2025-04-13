@@ -3,8 +3,9 @@
 
 #include "FightingCard.h"
 
-FightingCard::FightingCard()
+FightingCard::FightingCard(TSharedPtr<FJsonObject> data)
 {
+	// TODOIMPORTANT
 }
 
 FightingCard::~FightingCard()

@@ -10,7 +10,7 @@
 class ACADEMYOFCARDS_API FightingAbility
 {
 public:
-	FightingAbility();
+	FightingAbility(TSharedPtr<FJsonObject> data);
 	~FightingAbility();
 
 	// TODOIMPORTANT

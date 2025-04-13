@@ -3,8 +3,9 @@
 
 #include "FightingAbility.h"
 
-FightingAbility::FightingAbility()
+FightingAbility::FightingAbility(TSharedPtr<FJsonObject> data)
 {
+	// TODOIMPORTANT
 }
 
 FightingAbility::~FightingAbility()
