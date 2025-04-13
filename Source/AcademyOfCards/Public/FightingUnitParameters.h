@@ -38,6 +38,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int Range = 0;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	FString Name;
+
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")

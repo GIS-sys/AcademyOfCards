@@ -35,4 +35,5 @@ void ABActorFightingCard::FromConfig(TSharedPtr<FightingCard> CardConfig)
     ManaGain = UStatStructs::FManaConstructor(CardConfig->AlignmentKind);
     UnitParameters = NewObject<UFightingUnitParameters>(this, UFightingUnitParameters::StaticClass());
     UnitParameters->FromFUnitParameters(CardConfig->UnitParameters);
+    UnitParameters->Name = Name;
 }
