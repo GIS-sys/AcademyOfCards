@@ -26,19 +26,22 @@ public:
 	bool IsBeingPlayed = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	FString ID;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	FString Name;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	FString Cardtext;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	FString Type;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	FString AlignmentKind;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	FMana ManaCost;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
-	FMana ManaGain;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
-	FString AlignmentKind;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
-	FString Name;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	UFightingUnitParameters* UnitParameters;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	FMana ManaGain;
 
 	ABActorFightingUnitBase* SpawnUnit(ABActorFightingCellBase* Cell, TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit);
 

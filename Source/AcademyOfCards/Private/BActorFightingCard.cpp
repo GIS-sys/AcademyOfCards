@@ -27,6 +27,11 @@ ABActorFightingUnitBase* ABActorFightingCard::SpawnUnit(ABActorFightingCellBase*
 void ABActorFightingCard::FromConfig(TSharedPtr<FightingCard> CardConfig)
 {
     ManaCost = CardConfig->ManaCost;
+    ID = CardConfig->ID;
+    Name = CardConfig->Name;
+    Cardtext = CardConfig->Cardtext;
+    Type = CardConfig->Type;
+    AlignmentKind = CardConfig->AlignmentKind;
     ManaGain = UStatStructs::FManaConstructor(CardConfig->AlignmentKind);
     UnitParameters = NewObject<UFightingUnitParameters>(this, UFightingUnitParameters::StaticClass());
     UnitParameters->FromFUnitParameters(CardConfig->UnitParameters);
