@@ -127,4 +127,29 @@ public:
 		X.Gold = SaveInstance->GetAsCopy<int32>("Gold");
 		return X;
 	}
+
+	static FMana FManaConstructor(FString AlignmentKind) {
+		if (AlignmentKind == "Neutral") {
+			return FMana();
+		} else if (AlignmentKind == "Light") {
+			return FMana{ .Light = 1 };
+		} else if (AlignmentKind == "Dark") {
+			return FMana{ .Dark = 1 };
+		} else if (AlignmentKind == "Fire") {
+			return FMana{ .Fire = 1 };
+		} else if (AlignmentKind == "Ice") {
+			return FMana{ .Ice = 1 };
+		}
+		throw ("FManaConstructor got unexpected alignment kind: " + AlignmentKind);
+	}
+
+	static FMana FManaConstructor(TSharedPtr<FJsonObject> data) {
+		return FMana{
+			.General = (int)(data->GetNumberField("General")),
+			.Light = (int)(data->GetNumberField("Light")),
+			.Dark = (int)(data->GetNumberField("Dark")),
+			.Fire = (int)(data->GetNumberField("Fire")),
+			.Ice = (int)(data->GetNumberField("Ice"))
+		};
+	}
 };

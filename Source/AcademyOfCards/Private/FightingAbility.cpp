@@ -2,12 +2,23 @@
 
 
 #include "FightingAbility.h"
+#include "UMyGameInstance.h"
 
-FightingAbility::FightingAbility(TSharedPtr<FJsonObject> data)
+FightingAbility::FightingAbility(TSharedPtr<FJsonObject> data, UUMyGameInstance* MyGameInstance)
 {
-	// TODOIMPORTANT
+	ID = data->GetStringField("ID");
+	Type = data->GetStringField("Type");
+	Description = data->GetStringField("Description");
+	Arguments = data->GetObjectField("Arguments");
 }
 
 FightingAbility::~FightingAbility()
 {
+}
+
+FightingAbility FightingAbility::Build(TSharedPtr<FJsonObject> BuildArguments)
+{
+	// TODOIMPORTANT
+	AdditionalArguments = BuildArguments;
+	return *this;
 }

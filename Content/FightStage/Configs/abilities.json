@@ -1,13 +1,5 @@
 [
   {
-    "ID": "XXX",
-    "Type": "YYY",
-    "Arguments": {
-      "anything": anything
-    }
-  },
-
-  {
     "ID": "ab000",
     "Type": "Give ability",
     "Description": "",

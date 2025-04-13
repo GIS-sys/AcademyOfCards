@@ -2,9 +2,10 @@
 
 
 #include "FightingConfigs.h"
+#include "UMyGameInstance.h"
 
-void FightingConfigs::LoadConfigAbilities() {
-	FString FilePath = FPaths::ProjectContentDir() / TEXT("WalkingStage/Configs/abilities.json");
+void FightingConfigs::LoadConfigAbilities(UUMyGameInstance* MyGameInstance) {
+	FString FilePath = FPaths::ProjectContentDir() / TEXT("FightStage/Configs/abilities.json");
 	FString JsonString;
 	if (!FFileHelper::LoadFileToString(JsonString, *FilePath)) {
 		UE_LOG(LogTemp, Error, TEXT("Failed to load JSON file from path: %s"), *FilePath);
@@ -16,13 +17,13 @@ void FightingConfigs::LoadConfigAbilities() {
 	if (FJsonSerializer::Deserialize(Reader, JsonArray))
 	{
 		for (const auto& value : JsonArray) {
-			FightingAbilities.Add(MakeShareable(new FightingAbility(value->AsObject())));
+			FightingAbilities.Add(MakeShareable(new FightingAbility(value->AsObject(), MyGameInstance)));
 		}
 	}
 }
 
-void FightingConfigs::LoadConfigCards() {
-	FString FilePath = FPaths::ProjectContentDir() / TEXT("WalkingStage/Configs/cards.json");
+void FightingConfigs::LoadConfigCards(UUMyGameInstance* MyGameInstance) {
+	FString FilePath = FPaths::ProjectContentDir() / TEXT("FightStage/Configs/cards.json");
 	FString JsonString;
 	if (!FFileHelper::LoadFileToString(JsonString, *FilePath)) {
 		UE_LOG(LogTemp, Error, TEXT("Failed to load JSON file from path: %s"), *FilePath);
@@ -34,7 +35,7 @@ void FightingConfigs::LoadConfigCards() {
 	if (FJsonSerializer::Deserialize(Reader, JsonArray))
 	{
 		for (const auto& value : JsonArray) {
-			FightingCards.Add(MakeShareable(new FightingCard(value->AsObject())));
+			FightingCards.Add(MakeShareable(new FightingCard(value->AsObject(), MyGameInstance)));
 		}
 	}
 }
@@ -42,6 +43,13 @@ void FightingConfigs::LoadConfigCards() {
 TSharedPtr<FightingCard> FightingConfigs::GetCardByID(FString ID) const {
 	for (auto& card : FightingCards) {
 		if (card->ID == ID) return card;
+	}
+	return nullptr;
+}
+
+TSharedPtr<FightingAbility> FightingConfigs::GetAbilityByID(FString ID) const {
+	for (auto& ability : FightingAbilities) {
+		if (ability->ID == ID) return ability;
 	}
 	return nullptr;
 }

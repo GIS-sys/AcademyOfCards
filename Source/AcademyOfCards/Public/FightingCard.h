@@ -3,6 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "StatStructs.h"
+#include "FightingAbility.h"
+#include <FightingUnitParameters.h>
+class UUMyGameInstance;
 
 /**
  * 
@@ -10,9 +14,14 @@
 class ACADEMYOFCARDS_API FightingCard
 {
 public:
-	FightingCard(TSharedPtr<FJsonObject> data);
+	FightingCard(TSharedPtr<FJsonObject> data, UUMyGameInstance* MyGameInstance);
 	~FightingCard();
 
-	// TODOIMPORTANT
-	const FString ID = "";
+	FString ID;
+    FString Name;
+    FString Cardtext;
+    FString Type;
+    FString AlignmentKind;
+    FMana ManaCost;
+    UFightingUnitParameters* UnitParameters;
 };

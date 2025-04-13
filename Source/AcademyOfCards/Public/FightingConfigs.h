@@ -6,6 +6,8 @@
 #include <FightingAbility.h>
 #include <FightingCard.h>
 
+class UUMyGameInstance;
+
 /**
  * 
  */
@@ -16,8 +18,9 @@ protected:
 	TArray<TSharedPtr<FightingCard>> FightingCards;
 
 public:
-	void LoadConfigAbilities();
-	void LoadConfigCards();
+	void LoadConfigAbilities(UUMyGameInstance* MyGameInstance);
+	void LoadConfigCards(UUMyGameInstance* MyGameInstance);
 
 	TSharedPtr<FightingCard> GetCardByID(FString ID) const;
+	TSharedPtr<FightingAbility> GetAbilityByID(FString ID) const;
 };

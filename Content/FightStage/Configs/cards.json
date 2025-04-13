@@ -1,33 +1,5 @@
 [
   {
-    "ID": "XXX",
-    "Name": "YYY",
-    "Cardtext": "",
-    "Type": "",
-    "AlignmentKind": "Light",
-    "ManaCost": {
-      "General": 3,
-      "Light": 1,
-      "Dark": 1,
-      "Fire": 0,
-      "Ice": 0
-    },
-    "UnitParameters": {
-      "Health": 2,
-      "Power": 2,
-      "Range": 7
-    },
-    "Abilities": [
-      {
-        "ID": "ZZZ",
-        "Arguments": {
-          "anything": "anything"
-        }
-      }
-    ]
-  },
-
-  {
     "ID": "c001",
     "Name": "Малый дух",
     "Cardtext": "",

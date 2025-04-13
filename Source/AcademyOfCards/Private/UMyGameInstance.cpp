@@ -19,6 +19,7 @@ void UUMyGameInstance::Init()
 	LoadedWalkingConfigs->LoadConfigEvents();
 
 	LoadedFightingConfigs = MakeShareable(new FightingConfigs());
-	LoadedFightingConfigs->LoadConfigCards();
-	LoadedFightingConfigs->LoadConfigAbilities();
+	LoadedFightingConfigs->LoadConfigAbilities(this);
+	LoadedFightingConfigs->LoadConfigCards(this);
+	LoadedFightingConfigs->GetAbilityByID(""); // Just for breakpoint
 }
