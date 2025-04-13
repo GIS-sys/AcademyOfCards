@@ -23,5 +23,5 @@ public:
     FString Type;
     FString AlignmentKind;
     FMana ManaCost;
-    UFightingUnitParameters* UnitParameters;
+    FUnitParameters UnitParameters;
 };

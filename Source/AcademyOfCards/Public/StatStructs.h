@@ -4,7 +4,31 @@
 
 #include "CoreMinimal.h"
 #include "LevelSaveInstance.h"
+#include "FightingAbility.h"
 #include "StatStructs.generated.h"
+
+USTRUCT(BlueprintType)
+struct FUnitParameters
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	int Movement = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	int Health = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	int Power = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	int Attacks = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	int Range = 0;
+
+	TArray<FightingAbility> Abilities;
+};
 
 USTRUCT(BlueprintType)
 struct FPlayerStats
@@ -151,5 +175,36 @@ public:
 			.Fire = (int)(data->GetNumberField("Fire")),
 			.Ice = (int)(data->GetNumberField("Ice"))
 		};
+	}
+
+	static FUnitParameters FUnitParametersConstructor(const FUnitParameters& other) {
+		FUnitParameters created;
+		created.Movement = other.Movement;
+		created.Health = other.Health;
+		created.Power = other.Power;
+		created.Attacks = other.Attacks;
+		created.Range = other.Range;
+		created.Abilities = other.Abilities;
+		return created;
+	}
+
+	static FUnitParameters FUnitParametersConstructor(TSharedPtr<FJsonObject> data) {
+		FUnitParameters created;
+		if (!data->TryGetNumberField("Movement", created.Movement)) {
+			created.Movement = 1;
+		}
+		if (!data->TryGetNumberField("Health", created.Health)) {
+			created.Health = 1;
+		}
+		if (!data->TryGetNumberField("Power", created.Power)) {
+			created.Power = 1;
+		}
+		if (!data->TryGetNumberField("Attacks", created.Attacks)) {
+			created.Attacks = 1;
+		}
+		if (!data->TryGetNumberField("Range", created.Range)) {
+			created.Range = 1;
+		}
+		return created;
 	}
 };
