@@ -7,7 +7,6 @@
 #include "BActorEnhanced.h"
 #include "LevelSaveInstance.h"
 #include "BActorWalkingCard.generated.h"
-class WalkingDeck;
 class WalkingCardConfig;
 class ABActorWalkingDealer;
 

@@ -5,75 +5,16 @@
 #include "WalkingEvent.h"
 #include "WalkingCardConfig.h"
 
-WalkingDeck::WalkingDeck()
+WalkingDeck::WalkingDeck(UUMyGameInstance* GameInstance) : MyGameInstance(GameInstance)
 {
+	CardIDs = { "001u", "002u", "003u", "001c", "002c" };
 }
 
 WalkingDeck::~WalkingDeck()
 {
 }
 
-void WalkingDeck::LoadConfigEvents() {
-	FString FilePath = FPaths::ProjectContentDir() / TEXT("WalkingStage/Configs/config_walking_events_new.json");
-	FString JsonString;
-	if (FFileHelper::LoadFileToString(JsonString, *FilePath))
-	{
-		TSharedPtr<FJsonObject> JsonObject;
-		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(*JsonString);
-		if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
-		{
-			for (const auto& [x, y] : JsonObject->Values) {
-				Events.Add(MakeShareable(new WalkingEvent(x, y->AsObject())));
-			}
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to load JSON file from path: %s"), *FilePath);
-	}
-}
-
-void WalkingDeck::LoadConfigCards() {
-	FString FilePath = FPaths::ProjectContentDir() / TEXT("WalkingStage/Configs/event_cards_config_new.json");
-	FString JsonString;
-	if (FFileHelper::LoadFileToString(JsonString, *FilePath))
-	{
-		TArray<TSharedPtr<FJsonValue>> JsonArray;
-		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(*JsonString);
-		if (FJsonSerializer::Deserialize(Reader, JsonArray))
-		{
-			for (const auto& card_value : JsonArray) {
-				CardConfigs.Add(MakeShareable(new WalkingCardConfig(card_value->AsObject())));
-			}
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to load JSON file from path: %s"), *FilePath);
-	}
-}
-
-TSharedPtr<WalkingCardConfig> WalkingDeck::GetCardByID(FString ID) const {
-	for (auto& card : CardConfigs) {
-		if (card->ID == ID) return card;
-	}
-	return nullptr;
-}
-
 TSharedPtr<WalkingCardConfig> WalkingDeck::GetRandomCard() const {
-	return CardConfigs[FMath::Rand() % CardConfigs.Num()];
-}
-
-TSharedPtr<WalkingEvent> WalkingDeck::GetEventByName(FString Name) const {
-	for (const auto& event : Events) {
-		if (event->Name == Name) return event;
-	}
-	return WalkingEvent::CreateDefault();
-}
-
-TSharedPtr<WalkingEvent> WalkingDeck::GetEventByID(FString ID) const {
-	for (const auto& event : Events) {
-		if (event->ID == ID) return event;
-	}
-	return WalkingEvent::CreateDefault();
+	FString RandomId = CardIDs[FMath::Rand() % CardIDs.Num()];
+	return MyGameInstance->LoadedWalkingConfigs->GetCardByID(RandomId);
 }

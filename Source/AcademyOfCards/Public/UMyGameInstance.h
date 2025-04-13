@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include <LevelSaver.h>
+#include "WalkingConfigs.h"
+#include <FightingConfigs.h>
 #include "UMyGameInstance.generated.h"
 
 class WalkingDeck;
@@ -48,6 +50,7 @@ public:
 	EnumStage PersistentStage = EnumStage::WALKING;
 
 	// Configs
-	TSharedPtr<WalkingDeck> Deck;
+	TSharedPtr<WalkingConfigs> LoadedWalkingConfigs;
+	TSharedPtr<FightingConfigs> LoadedFightingConfigs;
 	virtual void Init() override;
 };

@@ -2,7 +2,6 @@
 
 
 #include "UMyGameInstance.h"
-#include "WalkingDeck.h"
 
 const FString UUMyGameInstance::SAVE_WALKING_PLAYER_STATS = "SAVE_WALKING_PLAYER_STATS";
 const FString UUMyGameInstance::SAVE_WALKING_FIGHT_RESULT = "SAVE_WALKING_FIGHT_RESULT";
@@ -15,9 +14,11 @@ void UUMyGameInstance::Init()
 {
 	Super::Init();
 
-	Deck = MakeShareable(new WalkingDeck());
-	Deck->LoadConfigCards();
-	Deck->LoadConfigEvents();
+	LoadedWalkingConfigs = MakeShareable(new WalkingConfigs());
+	LoadedWalkingConfigs->LoadConfigCards();
+	LoadedWalkingConfigs->LoadConfigEvents();
 
-	// TODO load unit/abilities config
+	LoadedFightingConfigs = MakeShareable(new FightingConfigs());
+	LoadedFightingConfigs->LoadConfigCards();
+	LoadedFightingConfigs->LoadConfigAbilities();
 }

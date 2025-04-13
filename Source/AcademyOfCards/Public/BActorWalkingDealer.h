@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "LevelSaveInstance.h"
+#include "WalkingDeck.h"
 
 class ABActorWalkingCard;
 
@@ -29,6 +30,8 @@ protected:
 	const int ALLOWED_RANDOM_MISTAKES = 1000;
 	const float TIME_CARD_DEALING_MOVEMENT = 0.2;
 	const float TIME_BETWEEN_CARD_DEAL = 0.08;
+
+	TSharedPtr<WalkingDeck> Deck;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

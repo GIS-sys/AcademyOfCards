@@ -19,7 +19,6 @@
 #include <BUIHUD.h>
 #include "BWalking_UI.h"
 #include <BUIWalkingEvent.h>
-#include <WalkingDeck.h>
 #include <WalkingResultFight.h>
 
 // Sets default values
@@ -33,7 +32,7 @@ ABActorWalkingDealer::ABActorWalkingDealer()
 void ABActorWalkingDealer::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	Deck = MakeShareable(new WalkingDeck(Cast<UUMyGameInstance>(GetGameInstance())));
 }
 
 // Called every frame
@@ -125,13 +124,13 @@ ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked()
 	AActor* actor = GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), GetActorRotation());
 	ABActorWalkingCard* actor_wc = dynamic_cast<ABActorWalkingCard*>(actor);
 
-	TSharedPtr<WalkingDeck> Deck = Cast<UUMyGameInstance>(GetGameInstance())->Deck;
+	TSharedPtr<WalkingConfigs> Configs = Cast<UUMyGameInstance>(GetGameInstance())->LoadedWalkingConfigs;
 
 	actor_wc->DealerPtr = this;
 	if (DEBUG_CARD_ID == "") {
 		actor_wc->CardConfig = Deck->GetRandomCard();
 	} else {
-		actor_wc->CardConfig = Deck->GetCardByID(DEBUG_CARD_ID);
+		actor_wc->CardConfig = Configs->GetCardByID(DEBUG_CARD_ID);
 	}
 	int MaterialIndex = 0;
 	for (int i = 0; i < MaterialIDsArray.Num(); ++i) {

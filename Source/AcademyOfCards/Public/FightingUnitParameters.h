@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FightingAbility.h"
 #include "FightingUnitParameters.generated.h"
 
 /**
@@ -44,6 +45,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int CurrentRange = 0;
+
+	TArray<FightingAbility> Abilities;
 
 	void ResetCurrent();
 };

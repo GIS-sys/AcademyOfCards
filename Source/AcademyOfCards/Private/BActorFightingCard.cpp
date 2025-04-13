@@ -23,3 +23,16 @@ ABActorFightingUnitBase* ABActorFightingCard::SpawnUnit(ABActorFightingCellBase*
     NewActor->OnSpawn();
     return NewActor;
 }
+
+void ABActorFightingCard::FromConfig(TSharedPtr<FightingCard> CardConfig)  // TODOIMPORTANT
+{
+    ManaCost = FMana(rand() % 6, rand() % 2, rand() % 2, rand() % 2, rand() % 2); // TODO proper card parameters ^
+    ManaGain = FMana(0, rand() % 2, rand() % 2, rand() % 2, rand() % 2);
+    UnitParameters = NewObject<UFightingUnitParameters>(this, UFightingUnitParameters::StaticClass());
+    UnitParameters->Health = rand() % 10 + 1;
+    UnitParameters->Power = rand() % 10 + 1;
+    UnitParameters->Movement = rand() % 2 + 1;
+    UnitParameters->Attacks = rand() % 2 + 1;
+    UnitParameters->Range = rand() % 2 + 1;
+    UnitParameters->Abilities = {};
+}

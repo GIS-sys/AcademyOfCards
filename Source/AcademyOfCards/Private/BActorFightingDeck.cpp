@@ -3,6 +3,13 @@
 
 #include "BActorFightingDeck.h"
 #include <BActorFightingField.h>
+#include <UMyGameInstance.h>
+
+void ABActorFightingDeck::BeginPlay()
+{
+    Super::BeginPlay();
+    MyGameInstance = Cast<UUMyGameInstance>(GetGameInstance());
+}
 
 void ABActorFightingDeck::DealCards()
 {
@@ -32,14 +39,9 @@ void ABActorFightingDeck::DrawCard()
     NewActor->WhenHighlightedScaleRelative = WhenHighlightedScaleRelative;
     NewActor->WhenHighlightedLocationDelta = WhenHighlightedLocationDelta;
     NewActor->SetActorLocation(GetActorLocation());
-    NewActor->ManaCost = FMana(rand() % 6, rand() % 2, rand() % 2, rand() % 2, rand() % 2); // TODO proper card parameters
-    NewActor->ManaGain = FMana(0, rand() % 2, rand() % 2, rand() % 2, rand() % 2);
-    NewActor->UnitParameters = NewObject<UFightingUnitParameters>(this, UFightingUnitParameters::StaticClass());
-    NewActor->UnitParameters->Health = rand() % 10 + 1;
-    NewActor->UnitParameters->Power = rand() % 10 + 1;
-    NewActor->UnitParameters->Movement = rand() % 2 + 1;
-    NewActor->UnitParameters->Attacks = rand() % 2 + 1;
-    NewActor->UnitParameters->Range = rand() % 2 + 1;
+
+    NewActor->FromConfig(MyGameInstance->LoadedFightingConfigs->GetCardByID(GetRandomCardId()));
+
     NewActor->IsControlledByPlayer = IsControlledByPlayer;
     CardActors.Add(NewActor);
 

@@ -6,6 +6,7 @@
 #include "BActorEnhanced.h"
 #include <BActorFightingUnitBase.h>
 #include <StatStructs.h>
+#include <FightingCard.h>
 #include "BActorFightingCard.generated.h"
 
 class ABActorFightingCellBase;
@@ -40,4 +41,6 @@ public:
 	UFightingUnitParameters* UnitParameters;
 
 	ABActorFightingUnitBase* SpawnUnit(ABActorFightingCellBase* Cell, TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit);
+
+	void FromConfig(TSharedPtr<FightingCard> CardConfig);
 };

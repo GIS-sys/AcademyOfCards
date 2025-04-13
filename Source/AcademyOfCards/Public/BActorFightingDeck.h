@@ -6,6 +6,7 @@
 #include "BActorEnhanced.h"
 #include <BActorFightingCard.h>
 #include <BActorFightingCellBase.h>
+#include <UMyGameInstance.h>
 #include "BActorFightingDeck.generated.h"
 
 class ABActorFightingField;
@@ -17,8 +18,15 @@ UCLASS()
 class ACADEMYOFCARDS_API ABActorFightingDeck : public ABActorEnhanced
 {
 	GENERATED_BODY()
-	
+
 public:
+	UUMyGameInstance* MyGameInstance;
+	TArray<FString> CardIDs = { "c001", "c002", "c003", "c004", "c005", "c006", "c007", "c008", "c009", "c010" };
+
+	virtual void BeginPlay() override;
+
+	FString GetRandomCardId() const { return CardIDs[FMath::Rand() % CardIDs.Num()]; };
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "Base")
 	void Init();
 
