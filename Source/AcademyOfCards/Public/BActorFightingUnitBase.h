@@ -33,6 +33,8 @@ public:
 
 	void OnSpawn();
 	void OnTurnEnd(bool TurnEndedIsThisOwner);
+	void OnAttackUnit(ABActorFightingUnitBase* Victim);
+	void OnGetAttacked(ABActorFightingUnitBase* Attacker);
 
 	void InitPlayerMy(ABActorFightingCellBase* Cell, const FPlayerStats* Stats);
 	void InitPlayerOpponent(FString OpponentName, ABActorFightingCellBase* Cell, FPlayerStats* Stats);

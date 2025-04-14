@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 
 class UUMyGameInstance;
+class ABActorFightingUnitBase;
+class ABActorFightingCellBase;
 
 /**
  * 
@@ -21,5 +23,11 @@ public:
     TSharedPtr<FJsonObject> Arguments;
 	TSharedPtr<FJsonObject> AdditionalArguments;
 
-	FightingAbility Build(TSharedPtr<FJsonObject> Arguments);
+	TSharedPtr<FightingAbility> Build(TSharedPtr<FJsonObject> Arguments);
+
+	void OnMove(ABActorFightingUnitBase* OwnerUnit, ABActorFightingCellBase* CellFrom, ABActorFightingCellBase* CellTo);
+	void OnSpawn(ABActorFightingUnitBase* OwnerUnit);
+	void OnTurnEnd(ABActorFightingUnitBase* OwnerUnit, bool TurnEndedIsThisOwner);
+	void OnAttackUnit(ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Victim);
+	void OnGetAttacked(ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Attacker);
 };

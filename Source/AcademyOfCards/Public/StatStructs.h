@@ -27,7 +27,7 @@ struct FUnitParameters
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int Range = 0;
 
-	TArray<FightingAbility> Abilities;
+	TArray<TSharedPtr<FightingAbility>> Abilities;
 };
 
 USTRUCT(BlueprintType)

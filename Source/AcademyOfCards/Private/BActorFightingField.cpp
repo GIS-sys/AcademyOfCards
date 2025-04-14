@@ -86,6 +86,9 @@ bool ABActorFightingField::AttackUnit(ABActorFightingUnitBase* Attacker, ABActor
     int Distance = ABActorFightingCellBase::Distance(Attacker->CurrentCell, Victim->CurrentCell);
     if (Distance > Attacker->UnitParameters->Range) return false;
 
+    Attacker->OnAttackUnit(Victim);
+    Victim->OnGetAttacked(Attacker);
+
     Victim->UnitParameters->CurrentHealth -= Attacker->UnitParameters->CurrentPower;
     Attacker->UnitParameters->CurrentAttacks -= 1;
     if (Victim->IsPlayer) {

@@ -16,9 +16,34 @@ FightingAbility::~FightingAbility()
 {
 }
 
-FightingAbility FightingAbility::Build(TSharedPtr<FJsonObject> BuildArguments)
+TSharedPtr<FightingAbility> FightingAbility::Build(TSharedPtr<FJsonObject> BuildArguments)
 {
 	// TODOIMPORTANT
 	AdditionalArguments = BuildArguments;
-	return *this;
+	return MakeShareable(this);
+}
+
+void FightingAbility::OnMove(ABActorFightingUnitBase* OwnerUnit, ABActorFightingCellBase* CellFrom, ABActorFightingCellBase* CellTo)
+{
+	UE_LOG(LogTemp, Error, TEXT("Ability %s(%s)::OnMove was triggered"), *ID, *Type);
+}
+
+void FightingAbility::OnSpawn(ABActorFightingUnitBase* OwnerUnit)
+{
+	UE_LOG(LogTemp, Error, TEXT("Ability %s(%s)::OnSpawn was triggered"), *ID, *Type);
+}
+
+void FightingAbility::OnTurnEnd(ABActorFightingUnitBase* OwnerUnit, bool TurnEndedIsThisOwner)
+{
+	UE_LOG(LogTemp, Error, TEXT("Ability %s(%s)::OnTurnEnd was triggered"), *ID, *Type);
+}
+
+void FightingAbility::OnAttackUnit(ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Victim)
+{
+	UE_LOG(LogTemp, Error, TEXT("Ability %s(%s)::OnAttackUnit was triggered"), *ID, *Type);
+}
+
+void FightingAbility::OnGetAttacked(ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Attacker)
+{
+	UE_LOG(LogTemp, Error, TEXT("Ability %s(%s)::OnGetAttacked was triggered"), *ID, *Type);
 }

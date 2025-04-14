@@ -58,7 +58,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int CurrentRange = 0;
 
-	TArray<FightingAbility> Abilities;
+	TArray<TSharedPtr<FightingAbility>> Abilities;
 
 	void ResetCurrent();
 };

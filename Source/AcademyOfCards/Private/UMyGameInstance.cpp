@@ -21,5 +21,4 @@ void UUMyGameInstance::Init()
 	LoadedFightingConfigs = MakeShareable(new FightingConfigs());
 	LoadedFightingConfigs->LoadConfigAbilities(this);
 	LoadedFightingConfigs->LoadConfigCards(this);
-	LoadedFightingConfigs->GetAbilityByID(""); // Just for breakpoint
 }

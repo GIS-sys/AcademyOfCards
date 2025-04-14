@@ -8,19 +8,43 @@ bool ABActorFightingUnitBase::Move(ABActorFightingCellBase* Cell)
 	if (UnitParameters->CurrentMovement < ABActorFightingCellBase::Distance(Cell, CurrentCell)) return false;
 	UnitParameters->CurrentMovement -= ABActorFightingCellBase::Distance(Cell, CurrentCell);
 	MoveOverTimeTo(LocationOriginal, Cell->GetUnitLocation(), MOVING_TIME);
+	ABActorFightingCellBase* CellFrom = CurrentCell;
 	CurrentCell = Cell;
+	for (const auto& Ability : UnitParameters->Abilities) {
+		Ability->OnMove(this, CellFrom, Cell);
+	}
 	return true;
 }
 
 void ABActorFightingUnitBase::OnSpawn()
 {
 	UnitParameters->ResetCurrent();
+	for (const auto& Ability : UnitParameters->Abilities) {
+		Ability->OnSpawn(this);
+	}
 }
 
 void ABActorFightingUnitBase::OnTurnEnd(bool TurnEndedIsThisOwner)
 {
 	if (!TurnEndedIsThisOwner) {
 		UnitParameters->ResetCurrent();
+	}
+	for (const auto& Ability : UnitParameters->Abilities) {
+		Ability->OnTurnEnd(this, TurnEndedIsThisOwner);
+	}
+}
+
+void ABActorFightingUnitBase::OnAttackUnit(ABActorFightingUnitBase* Victim)
+{
+	for (const auto& Ability : UnitParameters->Abilities) {
+		Ability->OnAttackUnit(this, Victim);
+	}
+}
+
+void ABActorFightingUnitBase::OnGetAttacked(ABActorFightingUnitBase* Attacker)
+{
+	for (const auto& Ability : UnitParameters->Abilities) {
+		Ability->OnGetAttacked(this, Attacker);
 	}
 }
 
