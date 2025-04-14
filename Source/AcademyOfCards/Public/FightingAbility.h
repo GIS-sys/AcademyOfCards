@@ -13,6 +13,9 @@ class ABActorFightingCellBase;
  */
 class ACADEMYOFCARDS_API FightingAbility
 {
+private:
+	FightingAbility() {}
+
 public:
 	FightingAbility(TSharedPtr<FJsonObject> data, UUMyGameInstance* MyGameInstance);
 	~FightingAbility();

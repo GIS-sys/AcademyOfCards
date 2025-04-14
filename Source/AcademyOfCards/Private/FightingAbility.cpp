@@ -20,7 +20,12 @@ TSharedPtr<FightingAbility> FightingAbility::Build(TSharedPtr<FJsonObject> Build
 {
 	// TODOIMPORTANT
 	AdditionalArguments = BuildArguments;
-	return MakeShareable(this);
+	TSharedPtr<FightingAbility> AbilityBuilt = MakeShareable(new FightingAbility());
+	AbilityBuilt->ID = ID;
+	AbilityBuilt->Type = Type;
+	AbilityBuilt->Description = Description;
+	AbilityBuilt->Arguments = Arguments;
+	return AbilityBuilt;
 }
 
 void FightingAbility::OnMove(ABActorFightingUnitBase* OwnerUnit, ABActorFightingCellBase* CellFrom, ABActorFightingCellBase* CellTo)
