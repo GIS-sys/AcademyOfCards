@@ -80,7 +80,7 @@ ABActorFightingUnitBase* ABActorFightingDeck::PlayCard(ABActorFightingCard* Card
             RearrangeCardsInHand();
 
             FTimerHandle TimerHandle;
-            ABActorFightingUnitBase* NewUnit = Card->SpawnUnit(Cell, BActorFightingField->ActorToSpawnUnit);
+            ABActorFightingUnitBase* NewUnit = Card->SpawnUnit(BActorFightingField, Cell, BActorFightingField->ActorToSpawnUnit);
             NewUnit->SetActorHiddenInGame(true);
             GetWorld()->GetTimerManager().SetTimer(
                 TimerHandle,

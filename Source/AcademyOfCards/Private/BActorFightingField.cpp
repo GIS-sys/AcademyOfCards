@@ -76,7 +76,7 @@ void ABActorFightingField::InitDecks()
 bool ABActorFightingField::MoveUnit(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell)
 {
     if (IsOccupied(Cell)) return false;
-    return Unit->Move(Cell);
+    return Unit->Move(this, Cell);
 }
 
 bool ABActorFightingField::AttackUnit(ABActorFightingUnitBase* Attacker, ABActorFightingUnitBase* Victim)
@@ -86,8 +86,8 @@ bool ABActorFightingField::AttackUnit(ABActorFightingUnitBase* Attacker, ABActor
     int Distance = ABActorFightingCellBase::Distance(Attacker->CurrentCell, Victim->CurrentCell);
     if (Distance > Attacker->UnitParameters->Range) return false;
 
-    Attacker->OnAttackUnit(Victim);
-    Victim->OnGetAttacked(Attacker);
+    Attacker->OnAttackUnit(this, Victim);
+    Victim->OnGetAttacked(this, Attacker);
 
     Victim->UnitParameters->CurrentHealth -= Attacker->UnitParameters->CurrentPower;
     Attacker->UnitParameters->CurrentAttacks -= 1;
@@ -150,7 +150,7 @@ void ABActorFightingField::InitPlayers()
         );
         PlayerUnitMy = dynamic_cast<ABActorFightingUnitBase*>(NewActorRaw);
         ABActorFightingCellBase* StartingCell = ArrayCells[PLAYER_START_MY_X][PLAYER_START_MY_Y][PLAYER_START_MY_Z];
-        PlayerUnitMy->InitPlayerMy(StartingCell, GetPlayerStats(true));
+        PlayerUnitMy->InitPlayerMy(this, StartingCell, GetPlayerStats(true));
         ArrayUnits.Add(PlayerUnitMy);
     }
     {
@@ -162,7 +162,7 @@ void ABActorFightingField::InitPlayers()
         );
         PlayerUnitOpponent = dynamic_cast<ABActorFightingUnitBase*>(NewActorRaw);
         ABActorFightingCellBase* StartingCell = ArrayCells[PLAYER_START_OPPONENT_X][PLAYER_START_OPPONENT_Y][PLAYER_START_OPPONENT_Z];
-        PlayerUnitOpponent->InitPlayerOpponent(OpponentName, StartingCell, GetPlayerStats(false));
+        PlayerUnitOpponent->InitPlayerOpponent(this, OpponentName, StartingCell, GetPlayerStats(false));
         ArrayUnits.Add(PlayerUnitOpponent);
     }
 
@@ -250,7 +250,7 @@ FString ABActorFightingField::PassTurn()
     GetCurrentPlayerDeck()->DrawCard();
 
     for (ABActorFightingUnitBase* Unit : ArrayUnits) {
-        Unit->OnTurnEnd(IsPlayerTurn != Unit->IsControlledByPlayer);
+        Unit->OnTurnEnd(this, IsPlayerTurn != Unit->IsControlledByPlayer);
     }
 
     if (!IsPlayerTurn) {

@@ -4,10 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "FightingAbility.h"
+class ABActorFightingField;
 
 /**
  * 
  */
 class ACADEMYOFCARDS_API FightingAbilityJump : public FightingAbility
 {
+protected:
+	virtual void _OnAnything(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) override;
 };

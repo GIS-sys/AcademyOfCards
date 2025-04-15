@@ -2,4 +2,9 @@
 
 
 #include "FightingAbilityJump.h"
+#include "BActorFightingUnitBase.h"
+#include "BActorFightingField.h"
 
+void FightingAbilityJump::_OnAnything(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) {
+	OwnerUnit->UnitParameters->Movement = 2;
+}

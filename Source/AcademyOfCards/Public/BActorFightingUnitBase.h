@@ -29,13 +29,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	UFightingUnitParameters* UnitParameters;
 
-	bool Move(ABActorFightingCellBase* Cell);
+	bool Move(ABActorFightingField* Field, ABActorFightingCellBase* Cell);
 
-	void OnSpawn();
-	void OnTurnEnd(bool TurnEndedIsThisOwner);
-	void OnAttackUnit(ABActorFightingUnitBase* Victim);
-	void OnGetAttacked(ABActorFightingUnitBase* Attacker);
+	void OnSpawn(ABActorFightingField* Field);
+	void OnTurnEnd(ABActorFightingField* Field, bool TurnEndedIsThisOwner);
+	void OnAttackUnit(ABActorFightingField* Field, ABActorFightingUnitBase* Victim);
+	void OnGetAttacked(ABActorFightingField* Field, ABActorFightingUnitBase* Attacker);
 
-	void InitPlayerMy(ABActorFightingCellBase* Cell, const FPlayerStats* Stats);
-	void InitPlayerOpponent(FString OpponentName, ABActorFightingCellBase* Cell, FPlayerStats* Stats);
+	void InitPlayerMy(ABActorFightingField* Field, ABActorFightingCellBase* Cell, const FPlayerStats* Stats);
+	void InitPlayerOpponent(ABActorFightingField* Field, FString OpponentName, ABActorFightingCellBase* Cell, FPlayerStats* Stats);
 };

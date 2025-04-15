@@ -7,6 +7,7 @@
 #include "FightingAbilityJump.h"
 #include "FightingAbilityGetStats.h"
 #include "FightingAbilityGiveStats.h"
+#include "BActorFightingField.h"
 #include "UMyGameInstance.h"
 
 FightingAbility::FightingAbility(TSharedPtr<FJsonObject> data, UUMyGameInstance* MyGameInstance)
@@ -60,42 +61,55 @@ TSharedPtr<FightingAbility> FightingAbility::Build(TSharedPtr<FJsonObject> Build
 	return AbilityBuilt;
 }
 
-void FightingAbility::OnMove(ABActorFightingUnitBase* OwnerUnit, ABActorFightingCellBase* CellFrom, ABActorFightingCellBase* CellTo)
+bool FightingAbility::CheckCondition(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) const {
+	// TODOIMPORTANT
+	return true;
+}
+
+
+
+
+void FightingAbility::OnMove(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, ABActorFightingCellBase* CellFrom, ABActorFightingCellBase* CellTo)
 {
 	if (When != ON_MOVE && When != ALWAYS) return;
+	if (!CheckCondition(Field, OwnerUnit)) return;
 	UE_LOG(LogTemp, Error, TEXT("Ability %s(%s)::OnMove was triggered"), *ID, *Type);
-	_OnAnything(OwnerUnit);
-	_OnMove(OwnerUnit, CellFrom, CellTo);
+	_OnAnything(Field, OwnerUnit);
+	_OnMove(Field, OwnerUnit, CellFrom, CellTo);
 }
 
-void FightingAbility::OnSpawn(ABActorFightingUnitBase* OwnerUnit)
+void FightingAbility::OnSpawn(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit)
 {
 	if (When != INVOCATION && When != SPELL_CAST && When != ALWAYS) return;
+	if (!CheckCondition(Field, OwnerUnit)) return;
 	UE_LOG(LogTemp, Error, TEXT("Ability %s(%s)::OnSpawn was triggered"), *ID, *Type);
-	_OnAnything(OwnerUnit);
-	_OnSpawn(OwnerUnit);
+	_OnAnything(Field, OwnerUnit);
+	_OnSpawn(Field, OwnerUnit);
 }
 
-void FightingAbility::OnTurnEnd(ABActorFightingUnitBase* OwnerUnit, bool TurnEndedIsThisOwner)
+void FightingAbility::OnTurnEnd(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, bool TurnEndedIsThisOwner)
 {
 	if (When != ON_TURN_END && When != ALWAYS) return;
+	if (!CheckCondition(Field, OwnerUnit)) return;
 	UE_LOG(LogTemp, Error, TEXT("Ability %s(%s)::OnTurnEnd was triggered"), *ID, *Type);
-	_OnAnything(OwnerUnit);
-	_OnTurnEnd(OwnerUnit, TurnEndedIsThisOwner);
+	_OnAnything(Field, OwnerUnit);
+	_OnTurnEnd(Field, OwnerUnit, TurnEndedIsThisOwner);
 }
 
-void FightingAbility::OnAttackUnit(ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Victim)
+void FightingAbility::OnAttackUnit(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Victim)
 {
 	if (When != ON_ATTACK && When != ALWAYS) return;
+	if (!CheckCondition(Field, OwnerUnit)) return;
 	UE_LOG(LogTemp, Error, TEXT("Ability %s(%s)::OnAttackUnit was triggered"), *ID, *Type);
-	_OnAnything(OwnerUnit);
-	_OnAttackUnit(OwnerUnit, Victim);
+	_OnAnything(Field, OwnerUnit);
+	_OnAttackUnit(Field, OwnerUnit, Victim);
 }
 
-void FightingAbility::OnGetAttacked(ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Attacker)
+void FightingAbility::OnGetAttacked(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Attacker)
 {
 	if (When != ON_GET_ATTACKED && When != ALWAYS) return;
+	if (!CheckCondition(Field, OwnerUnit)) return;
 	UE_LOG(LogTemp, Error, TEXT("Ability %s(%s)::OnGetAttacked was triggered"), *ID, *Type);
-	_OnAnything(OwnerUnit);
-	_OnGetAttacked(OwnerUnit, Attacker);
+	_OnAnything(Field, OwnerUnit);
+	_OnGetAttacked(Field, OwnerUnit, Attacker);
 }

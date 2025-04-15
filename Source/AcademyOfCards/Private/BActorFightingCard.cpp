@@ -4,7 +4,7 @@
 #include "BActorFightingCard.h"
 #include <BActorFightingCellBase.h>
 
-ABActorFightingUnitBase* ABActorFightingCard::SpawnUnit(ABActorFightingCellBase* Cell, TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit)
+ABActorFightingUnitBase* ABActorFightingCard::SpawnUnit(ABActorFightingField* Field, ABActorFightingCellBase* Cell, TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit)
 {
     FActorSpawnParameters SpawnParams;
     SpawnParams.Owner = this;
@@ -20,7 +20,7 @@ ABActorFightingUnitBase* ABActorFightingCard::SpawnUnit(ABActorFightingCellBase*
     NewActor->CurrentCell = Cell;
     NewActor->UnitParameters = UnitParameters;
     NewActor->IsControlledByPlayer = IsControlledByPlayer;
-    NewActor->OnSpawn();
+    NewActor->OnSpawn(Field);
     return NewActor;
 }
 

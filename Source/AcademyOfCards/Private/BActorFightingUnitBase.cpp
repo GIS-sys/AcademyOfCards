@@ -3,7 +3,7 @@
 
 #include "BActorFightingUnitBase.h"
 
-bool ABActorFightingUnitBase::Move(ABActorFightingCellBase* Cell)
+bool ABActorFightingUnitBase::Move(ABActorFightingField* Field, ABActorFightingCellBase* Cell)
 {
 	if (UnitParameters->CurrentMovement < ABActorFightingCellBase::Distance(Cell, CurrentCell)) return false;
 	UnitParameters->CurrentMovement -= ABActorFightingCellBase::Distance(Cell, CurrentCell);
@@ -11,44 +11,44 @@ bool ABActorFightingUnitBase::Move(ABActorFightingCellBase* Cell)
 	ABActorFightingCellBase* CellFrom = CurrentCell;
 	CurrentCell = Cell;
 	for (const auto& Ability : UnitParameters->Abilities) {
-		Ability->OnMove(this, CellFrom, Cell);
+		Ability->OnMove(Field, this, CellFrom, Cell);
 	}
 	return true;
 }
 
-void ABActorFightingUnitBase::OnSpawn()
+void ABActorFightingUnitBase::OnSpawn(ABActorFightingField* Field)
 {
 	UnitParameters->ResetCurrent();
 	for (const auto& Ability : UnitParameters->Abilities) {
-		Ability->OnSpawn(this);
+		Ability->OnSpawn(Field, this);
 	}
 }
 
-void ABActorFightingUnitBase::OnTurnEnd(bool TurnEndedIsThisOwner)
+void ABActorFightingUnitBase::OnTurnEnd(ABActorFightingField* Field, bool TurnEndedIsThisOwner)
 {
 	if (!TurnEndedIsThisOwner) {
 		UnitParameters->ResetCurrent();
 	}
 	for (const auto& Ability : UnitParameters->Abilities) {
-		Ability->OnTurnEnd(this, TurnEndedIsThisOwner);
+		Ability->OnTurnEnd(Field, this, TurnEndedIsThisOwner);
 	}
 }
 
-void ABActorFightingUnitBase::OnAttackUnit(ABActorFightingUnitBase* Victim)
+void ABActorFightingUnitBase::OnAttackUnit(ABActorFightingField* Field, ABActorFightingUnitBase* Victim)
 {
 	for (const auto& Ability : UnitParameters->Abilities) {
-		Ability->OnAttackUnit(this, Victim);
+		Ability->OnAttackUnit(Field, this, Victim);
 	}
 }
 
-void ABActorFightingUnitBase::OnGetAttacked(ABActorFightingUnitBase* Attacker)
+void ABActorFightingUnitBase::OnGetAttacked(ABActorFightingField* Field, ABActorFightingUnitBase* Attacker)
 {
 	for (const auto& Ability : UnitParameters->Abilities) {
-		Ability->OnGetAttacked(this, Attacker);
+		Ability->OnGetAttacked(Field, this, Attacker);
 	}
 }
 
-void ABActorFightingUnitBase::InitPlayerMy(ABActorFightingCellBase* Cell, const FPlayerStats* Stats)
+void ABActorFightingUnitBase::InitPlayerMy(ABActorFightingField* Field, ABActorFightingCellBase* Cell, const FPlayerStats* Stats)
 {
 	IsPlayer = true;
 	LocationOriginal = Cell->GetUnitLocation();
@@ -57,10 +57,10 @@ void ABActorFightingUnitBase::InitPlayerMy(ABActorFightingCellBase* Cell, const 
 	UnitParameters = NewObject<UFightingUnitParameters>(this, UFightingUnitParameters::StaticClass());
 	UnitParameters->Health = Stats->Health;
 	UnitParameters->Movement = 1; // TODO player stats
-	OnSpawn();
+	OnSpawn(Field);
 }
 
-void ABActorFightingUnitBase::InitPlayerOpponent(FString OpponentName, ABActorFightingCellBase* Cell, FPlayerStats* Stats)
+void ABActorFightingUnitBase::InitPlayerOpponent(ABActorFightingField* Field, FString OpponentName, ABActorFightingCellBase* Cell, FPlayerStats* Stats)
 {
 	IsPlayer = true;
 	LocationOriginal = Cell->GetUnitLocation();
@@ -81,5 +81,5 @@ void ABActorFightingUnitBase::InitPlayerOpponent(FString OpponentName, ABActorFi
 		UnitParameters->Range = 3;
 	}
 	//UnitParameters = UnitParameters;
-	OnSpawn();
+	OnSpawn(Field);
 }

@@ -10,4 +10,5 @@
  */
 class ACADEMYOFCARDS_API FightingAbilityGiveAbility : public FightingAbility
 {
+	// TODOIMPORTANT
 };

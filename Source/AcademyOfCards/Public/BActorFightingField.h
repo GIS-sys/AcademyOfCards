@@ -67,6 +67,15 @@ public:
 		return false;
 	}
 
+	ABActorFightingUnitBase* GetRandomUnitNear(ABActorFightingCellBase* Cell, int Range = 1) {
+		TArray<ABActorFightingUnitBase*> NearUnits;
+		for (ABActorFightingUnitBase* Neighbour : ArrayUnits) {
+			if (ABActorFightingCellBase::Distance(Neighbour->CurrentCell, Cell) <= Range) NearUnits.Add(Neighbour);
+		}
+		if (NearUnits.IsEmpty()) return nullptr;
+		return NearUnits[FMath::Rand() % NearUnits.Num()];
+	}
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")
 	bool IsFinished = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")
