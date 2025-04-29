@@ -42,6 +42,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")
 	FPlayerStats PlayerStats;
 
+	UFUNCTION(BlueprintCallable, Category = "Discover")
+	bool IsNear(int AnotherX, int AnotherY) const {
+		return std::abs(AnotherX - CurrentBoardPositionX) + std::abs(AnotherY - CurrentBoardPositionY) <= 1;
+	}
+
 	LevelSaveInstance Save() {
 		LevelSaveInstance SaveInstanceDeck;
 		SaveInstanceDeck.SetCopy("CurrentBoardPositionX", CurrentBoardPositionX);

@@ -66,8 +66,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 	UMaterialInterface* MainCardMaterial;
 
-	float BoardPositionX;
-	float BoardPositionY;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Position")
+	int BoardPositionX;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Position")
+	int BoardPositionY;
 
 	ABActorWalkingDealer* DealerPtr;
 
