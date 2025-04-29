@@ -42,6 +42,16 @@ void ABActorFightingDeck::DrawCard()
 
     NewActor->FromConfig(MyGameInstance->LoadedFightingConfigs->GetCardByID(GetRandomCardId()));
 
+    // set material
+    int i = 0;
+    if (BActorFightingField->MaterialCardIDsArray.Find(NewActor->ID, i)) {
+        NewActor->MainMaterial = BActorFightingField->MaterialCardArray[i];
+        NewActor->UnitMaterial = BActorFightingField->MaterialUnitArray[i];
+    } else {
+        NewActor->MainMaterial = BActorFightingField->MaterialCardArray[0];
+        NewActor->UnitMaterial = BActorFightingField->MaterialUnitArray[0];
+    }
+
     NewActor->IsControlledByPlayer = IsControlledByPlayer;
     CardActors.Add(NewActor);
 

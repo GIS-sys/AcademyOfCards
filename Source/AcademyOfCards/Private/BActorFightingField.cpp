@@ -165,8 +165,6 @@ void ABActorFightingField::InitPlayers()
         PlayerUnitOpponent->InitPlayerOpponent(this, OpponentName, StartingCell, GetPlayerStats(false));
         ArrayUnits.Add(PlayerUnitOpponent);
     }
-
-    PassTurn();
 }
 
 void ABActorFightingField::InitUnits()
@@ -195,6 +193,7 @@ void ABActorFightingField::Init()
     InitPlayers();
     InitDecks();
     InitUnits();
+    PassTurn();
 }
 
 

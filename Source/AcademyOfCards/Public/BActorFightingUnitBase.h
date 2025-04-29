@@ -29,6 +29,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	UFightingUnitParameters* UnitParameters;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+	UMaterialInterface* MainMaterial;
+
 	bool Move(ABActorFightingField* Field, ABActorFightingCellBase* Cell);
 
 	void OnSpawn(ABActorFightingField* Field);

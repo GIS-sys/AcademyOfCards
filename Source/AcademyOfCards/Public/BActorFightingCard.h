@@ -43,6 +43,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
 	FMana ManaGain;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+	UMaterialInterface* MainMaterial;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+	UMaterialInterface* UnitMaterial;
+
 	ABActorFightingUnitBase* SpawnUnit(ABActorFightingField* Field, ABActorFightingCellBase* Cell, TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit);
 
 	void FromConfig(TSharedPtr<FightingCard> CardConfig);

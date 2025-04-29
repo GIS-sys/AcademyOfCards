@@ -20,6 +20,7 @@ ABActorFightingUnitBase* ABActorFightingCard::SpawnUnit(ABActorFightingField* Fi
     NewActor->CurrentCell = Cell;
     NewActor->UnitParameters = UnitParameters;
     NewActor->IsControlledByPlayer = IsControlledByPlayer;
+    NewActor->MainMaterial = UnitMaterial;
     NewActor->OnSpawn(Field);
     return NewActor;
 }

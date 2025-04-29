@@ -80,6 +80,15 @@ public:
 		return NearUnits[FMath::Rand() % NearUnits.Num()];
 	}
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+	TArray<UMaterialInterface*> MaterialCardArray;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+	TArray<UMaterialInterface*> MaterialUnitArray;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+	TArray<FString> MaterialCardIDsArray;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")
 	bool IsFinished = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")
