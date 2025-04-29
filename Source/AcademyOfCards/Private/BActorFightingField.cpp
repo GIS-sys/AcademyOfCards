@@ -350,6 +350,30 @@ void AI::Think(ABActorFightingField* FightingField)
         int UnitRandomFreeNieghbourIndex = FMath::RandRange(0, UnitFreeNeighboursCoordinates.Num() - 1);
         MoveUnitCoordinates = UnitFreeNeighboursCoordinates[UnitRandomFreeNieghbourIndex];
         MoveUnit = unit;
+        break;
+    }
+
+    // Attack units
+    AttackUnitAttacker = nullptr;
+    AttackUnitVictim = nullptr;
+    if (!MoveUnit) {
+        for (ABActorFightingUnitBase* unit_potential_attacker : FightingField->ArrayUnits) {
+            if (unit_potential_attacker->IsControlledByPlayer) continue;
+            if (unit_potential_attacker->UnitParameters->CurrentAttacks <= 0) continue;
+
+            TArray<ABActorFightingUnitBase*> UnitVictims;
+            for (ABActorFightingUnitBase* unit_potential_victim : FightingField->ArrayUnits) {
+                if (!unit_potential_victim->IsControlledByPlayer) continue;
+                if (ABActorFightingCellBase::Distance(unit_potential_attacker->CurrentCell, unit_potential_victim->CurrentCell) > unit_potential_attacker->UnitParameters->Range) continue;
+                UnitVictims.Add(unit_potential_victim);
+            }
+            if (UnitVictims.Num() == 0) continue;
+
+            AttackUnitAttacker = unit_potential_attacker;
+            int UnitRandomVictimIndex = FMath::RandRange(0, UnitVictims.Num() - 1);
+            AttackUnitVictim = UnitVictims[UnitRandomVictimIndex];
+            break;
+        }
     }
 }
 
@@ -374,10 +398,14 @@ void AI::Act(ABActorFightingField* FightingField)
     if (MoveUnit) {
         int x = MoveUnitCoordinates.Get<0>(); int y = MoveUnitCoordinates.Get<1>(); int z = MoveUnitCoordinates.Get<2>();
         UE_LOG(LogTemp, Error, TEXT("AI acting by moving unit to %d %d %d"), x, y, z);
-        int res = (int)(FightingField->MoveUnit(MoveUnit, FightingField->ArrayCells[x][y][z]));
-        UE_LOG(LogTemp, Error, TEXT("AI acting by moving unit to %d"), res);
+        bool res = FightingField->MoveUnit(MoveUnit, FightingField->ArrayCells[x][y][z]);
 
-        NeedLoop = true;
+        NeedLoop |= res;
+    }
+
+    if (AttackUnitAttacker) {
+        UE_LOG(LogTemp, Error, TEXT("AI acting by attacking"));
+        FightingField->AttackUnit(AttackUnitAttacker, AttackUnitVictim);
     }
 }
 

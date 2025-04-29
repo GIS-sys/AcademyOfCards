@@ -21,6 +21,8 @@ class AI {
 	ABActorFightingCard* CardToPlay;
 	TTuple<int, int, int> MoveUnitCoordinates = { -1, -1, -1 };
 	ABActorFightingUnitBase* MoveUnit = nullptr;
+	ABActorFightingUnitBase* AttackUnitAttacker = nullptr;
+	ABActorFightingUnitBase* AttackUnitVictim = nullptr;
 
 	void InitNextTurn(ABActorFightingField* FightingField);
 	

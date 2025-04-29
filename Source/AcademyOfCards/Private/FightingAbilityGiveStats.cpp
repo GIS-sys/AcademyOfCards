@@ -31,7 +31,8 @@ void FightingAbilityGiveStats::_OnAnything(ABActorFightingField* Field, ABActorF
 	if (TargetType == "select_ally") {
 		TargetUnit = Field->GetRandomUnitNear(OwnerUnit->CurrentCell, TargetRange);
 	} else {
-		throw "Unexpected Target Type";
+		return;
+		//throw "Unexpected Target Type"; // TODO
 	}
 	
 	TargetUnit->UnitParameters->Health += DeltaHealth;
