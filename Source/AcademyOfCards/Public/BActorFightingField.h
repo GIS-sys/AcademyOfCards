@@ -19,6 +19,8 @@ class AI {
 	TTuple<int, int, int> MovingPlayerCoordinates;
 	TTuple<int, int, int> PlayCardCoordinates;
 	ABActorFightingCard* CardToPlay;
+	TTuple<int, int, int> MoveUnitCoordinates = { -1, -1, -1 };
+	ABActorFightingUnitBase* MoveUnit = nullptr;
 
 	void InitNextTurn(ABActorFightingField* FightingField);
 	

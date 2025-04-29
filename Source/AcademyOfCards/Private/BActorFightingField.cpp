@@ -291,11 +291,6 @@ void AI::YourTurn(ABActorFightingField* FightingField) {
 void AI::InitNextTurn(ABActorFightingField* FightingField)
 {
     WasThinkingFor = 0;
-    FightingField->OpponentMana.General = 4;
-    FightingField->OpponentMana.Fire = 1;
-    FightingField->OpponentMana.Ice = 1;
-    FightingField->OpponentMana.Light = 1;
-    FightingField->OpponentMana.Dark = 1;
 }
 
 void AI::Think(ABActorFightingField* FightingField)
@@ -335,6 +330,27 @@ void AI::Think(ABActorFightingField* FightingField)
     } else {
         MovingPlayerCoordinates = { -1, -1, -1 };
     }
+
+    // Move units
+    MoveUnitCoordinates = { -1, -1, -1 };
+    MoveUnit = nullptr;
+    for (ABActorFightingUnitBase* unit : FightingField->ArrayUnits) {
+        if (unit->IsControlledByPlayer) continue;
+        if (unit->UnitParameters->CurrentMovement <= 0) continue;
+
+        TArray<TTuple<int, int, int>> UnitNeighboursCoordinates = unit->CurrentCell->GetNeighboursCoordinates(FightingField->RADIUS);
+        TArray<TTuple<int, int, int>> UnitFreeNeighboursCoordinates;
+        for (auto coordinates : UnitNeighboursCoordinates) {
+            if (!FightingField->IsOccupied(coordinates) && coordinates != MovingPlayerCoordinates && coordinates != PlayCardCoordinates) {
+                UnitFreeNeighboursCoordinates.Add(coordinates);
+            }
+        }
+        if (UnitFreeNeighboursCoordinates.Num() == 0) continue;
+
+        int UnitRandomFreeNieghbourIndex = FMath::RandRange(0, UnitFreeNeighboursCoordinates.Num() - 1);
+        MoveUnitCoordinates = UnitFreeNeighboursCoordinates[UnitRandomFreeNieghbourIndex];
+        MoveUnit = unit;
+    }
 }
 
 void AI::Act(ABActorFightingField* FightingField)
@@ -344,19 +360,30 @@ void AI::Act(ABActorFightingField* FightingField)
         UE_LOG(LogTemp, Error, TEXT("AI acting by playing card to %d %d %d"), x, y, z);
         FightingField->PlayCard(CardToPlay, FightingField->ArrayCells[x][y][z]);
 
-        NeedLoop |= (FightingField->PlayerUnitOpponent->UnitParameters->CurrentMovement != 0);
+        NeedLoop = true;
     }
     
     if (MovingPlayerCoordinates != TTuple<int, int, int>({ -1, -1, -1 })) {
         int x = MovingPlayerCoordinates.Get<0>(); int y = MovingPlayerCoordinates.Get<1>(); int z = MovingPlayerCoordinates.Get<2>();
         UE_LOG(LogTemp, Error, TEXT("AI acting by walking to %d %d %d"), x, y, z);
         FightingField->MoveUnit(FightingField->PlayerUnitOpponent, FightingField->ArrayCells[x][y][z]);
+
+        NeedLoop |= (FightingField->PlayerUnitOpponent->UnitParameters->CurrentMovement != 0);
+    }
+
+    if (MoveUnit) {
+        int x = MoveUnitCoordinates.Get<0>(); int y = MoveUnitCoordinates.Get<1>(); int z = MoveUnitCoordinates.Get<2>();
+        UE_LOG(LogTemp, Error, TEXT("AI acting by moving unit to %d %d %d"), x, y, z);
+        int res = (int)(FightingField->MoveUnit(MoveUnit, FightingField->ArrayCells[x][y][z]));
+        UE_LOG(LogTemp, Error, TEXT("AI acting by moving unit to %d"), res);
+
+        NeedLoop = true;
     }
 }
 
 bool AI::HasFinishedTurn(ABActorFightingField* FightingField)
 {
     ++WasThinkingFor;
-    if (WasThinkingFor > 10) return true;
+    if (WasThinkingFor > 30) return true;
     return !NeedLoop;
 }
