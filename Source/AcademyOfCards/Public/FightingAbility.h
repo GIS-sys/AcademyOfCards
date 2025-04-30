@@ -31,6 +31,7 @@ protected:
 	WHEN When = ALWAYS;
 
 	virtual void _OnAnything(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) {}
+	virtual void _OnAttachAbility(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) {}
 	virtual void _OnMove(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, ABActorFightingCellBase* CellFrom, ABActorFightingCellBase* CellTo) {}
 	virtual void _OnSpawn(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) {}
 	virtual void _OnTurnEnd(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, bool TurnEndedIsThisOwner) {}
@@ -51,6 +52,7 @@ public:
 
 	bool CheckCondition(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) const;
 
+	void OnAttachAbility(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit);
 	void OnMove(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, ABActorFightingCellBase* CellFrom, ABActorFightingCellBase* CellTo);
 	void OnSpawn(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit);
 	void OnTurnEnd(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, bool TurnEndedIsThisOwner);

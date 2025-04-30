@@ -5,7 +5,7 @@
 #include "BActorFightingUnitBase.h"
 #include "BActorFightingField.h"
 
-void FightingAbilityJump::_OnAnything(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) {
+void FightingAbilityJump::_OnSpawn(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) {
 	OwnerUnit->UnitParameters->CurrentMovement += std::max(0, 2 - OwnerUnit->UnitParameters->Movement);
 	OwnerUnit->UnitParameters->Movement = 2;
 }

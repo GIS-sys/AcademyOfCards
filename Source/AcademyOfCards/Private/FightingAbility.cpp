@@ -113,3 +113,10 @@ void FightingAbility::OnGetAttacked(ABActorFightingField* Field, ABActorFighting
 	_OnAnything(Field, OwnerUnit);
 	_OnGetAttacked(Field, OwnerUnit, Attacker);
 }
+
+void FightingAbility::OnAttachAbility(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit)
+{
+	if (!CheckCondition(Field, OwnerUnit)) return;
+	UE_LOG(LogTemp, Error, TEXT("Ability %s(%s)::OnAttachAbility was triggered"), *ID, *Type);
+	_OnAttachAbility(Field, OwnerUnit);
+}

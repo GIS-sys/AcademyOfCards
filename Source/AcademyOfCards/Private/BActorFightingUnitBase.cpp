@@ -57,6 +57,9 @@ void ABActorFightingUnitBase::InitPlayerMy(ABActorFightingField* Field, ABActorF
 	UnitParameters = NewObject<UFightingUnitParameters>(this, UFightingUnitParameters::StaticClass());
 	UnitParameters->Health = Stats->Health;
 	UnitParameters->Movement = 1; // TODO player stats
+	UnitParameters->Attacks = 1;
+	UnitParameters->Power = 1;
+	UnitParameters->Range = 1;
 	OnSpawn(Field);
 }
 

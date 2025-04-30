@@ -10,5 +10,9 @@
  */
 class ACADEMYOFCARDS_API FightingAbilityDealDamage : public FightingAbility
 {
-	// TODOIMPORTANT
+protected:
+	void DealDamage(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit);
+
+	virtual void _OnSpawn(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) override;
+	virtual void _OnAttachAbility(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) override;
 };
