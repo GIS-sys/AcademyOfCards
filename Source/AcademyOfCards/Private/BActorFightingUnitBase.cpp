@@ -72,13 +72,13 @@ void ABActorFightingUnitBase::InitPlayerOpponent(ABActorFightingField* Field, FS
 	UnitParameters = NewObject<UFightingUnitParameters>(this, UFightingUnitParameters::StaticClass());
 	if (OpponentName == "acolyte_easy") { // TODO opponent stats
 		UnitParameters->Attacks = 1;
-		UnitParameters->Health = 10;
+		UnitParameters->Health = 5;
 		UnitParameters->Movement = 2;
 		UnitParameters->Power = 1;
 		UnitParameters->Range = 1;
 	} else {
 		UnitParameters->Attacks = 3;
-		UnitParameters->Health = 50;
+		UnitParameters->Health = 1;
 		UnitParameters->Movement = 2;
 		UnitParameters->Power = 5;
 		UnitParameters->Range = 3;

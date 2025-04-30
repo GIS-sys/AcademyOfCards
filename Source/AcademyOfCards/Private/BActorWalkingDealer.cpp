@@ -119,7 +119,7 @@ void ABActorWalkingDealer::SetPlayerModel(int ix, int iy)
 	PlayerModel->Move(GetCenterCellPosition(ix, iy), ix, iy, this);
 }
 
-ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked()
+ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked(int ix, int iy)
 {
 	AActor* actor = GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), GetActorRotation());
 	ABActorWalkingCard* actor_wc = dynamic_cast<ABActorWalkingCard*>(actor);
@@ -128,7 +128,13 @@ ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked()
 
 	actor_wc->DealerPtr = this;
 	if (DEBUG_CARD_ID == "") {
-		actor_wc->CardConfig = Deck->GetRandomCard();
+		if (IsSaveLoaded) {
+			TPair<int, int> coordinates{ ix, iy };
+			FString CurrentID = *SavedIDs.Find(coordinates);
+			actor_wc->CardConfig = Configs->GetCardByID(CurrentID);
+		} else {
+			actor_wc->CardConfig = Deck->GetRandomCard();
+		}
 	} else {
 		actor_wc->CardConfig = Configs->GetCardByID(DEBUG_CARD_ID);
 	}
@@ -193,14 +199,16 @@ void ABActorWalkingDealer::CreateBoard()
 	// create base labyrinth, fully blocked
 	for (int ix = 0; ix < FieldWidth; ++ix) {
 		for (int iy = 0; iy < FieldHeight; ++iy) {
-			CardsDealt.Add(TPair<int, int>(ix, iy), CreateRandomCardFullyBlocked());
+			CardsDealt.Add(TPair<int, int>(ix, iy), CreateRandomCardFullyBlocked(ix, iy));
 		}
 	}
 	if (!IsInsideFieldNoEnds(StartPosition)) {
-		CardsDealt.Add(StartPosition, CreateRandomCardFullyBlocked());
+		int ix = StartPosition.Get<0>(); int iy = StartPosition.Get<1>();
+		CardsDealt.Add(StartPosition, CreateRandomCardFullyBlocked(ix, iy));
 	}
 	if (!IsInsideFieldNoEnds(FinishPosition)) {
-		CardsDealt.Add(FinishPosition, CreateRandomCardFullyBlocked());
+		int ix = FinishPosition.Get<0>(); int iy = FinishPosition.Get<1>();
+		CardsDealt.Add(FinishPosition, CreateRandomCardFullyBlocked(ix, iy));
 	}
 
 	// use bfs to create random pathway
@@ -286,21 +294,23 @@ bool ABActorWalkingDealer::CheckAbleToGo(int CurrentBoardPositionX, int CurrentB
 
 void ABActorWalkingDealer::SetTimersForCardDeal()
 {
+	float time_delay = TIME_BETWEEN_CARD_DEAL;
+	if (true) time_delay = 0.0001; // TODO
 	float TimeBetweenFactor = 1100.0 / 16.0; // Idk why but I need this factor to make TIME_BETWEEN_CARD_DEAL be in seconds
 	for (int ix = 0; ix < FieldWidth; ++ix) {
 		for (int iy = 0; iy < FieldHeight; ++iy) {
-			DealingCardSpawnRestTime.Add({ ix, iy, (ix + (FieldHeight - 1 - iy)) * TimeBetweenFactor * TIME_BETWEEN_CARD_DEAL });
+			DealingCardSpawnRestTime.Add({ ix, iy, (ix + (FieldHeight - 1 - iy)) * TimeBetweenFactor * time_delay });
 		}
 	}
 	if (!IsInsideFieldNoEnds(StartPosition)) {
 		int ix = StartPosition.Get<0>();
 		int iy = StartPosition.Get<1>();
-		DealingCardSpawnRestTime.Add({ ix, iy, (ix + (FieldHeight - 1 - iy)) * TimeBetweenFactor * TIME_BETWEEN_CARD_DEAL });
+		DealingCardSpawnRestTime.Add({ ix, iy, (ix + (FieldHeight - 1 - iy)) * TimeBetweenFactor * time_delay });
 	}
 	if (!IsInsideFieldNoEnds(FinishPosition)) {
 		int ix = FinishPosition.Get<0>();
 		int iy = FinishPosition.Get<1>();
-		DealingCardSpawnRestTime.Add({ ix, iy, (ix + (FieldHeight - 1 - iy)) * TimeBetweenFactor * TIME_BETWEEN_CARD_DEAL });
+		DealingCardSpawnRestTime.Add({ ix, iy, (ix + (FieldHeight - 1 - iy)) * TimeBetweenFactor * time_delay });
 	}
 }
 
@@ -333,5 +343,7 @@ void ABActorWalkingDealer::Load(LevelSaveInstance* SaveInstance) {
 		TPair<int, int> CardPos = card_info.Get<0>();
 		LevelSaveInstance CardSaveInstance = card_info.Get<1>();
 		CardsDealt[CardPos]->Load(&CardSaveInstance);
+		SavedIDs.Add(CardPos, CardsDealt[CardPos]->CardConfig->ID);
 	}
+	IsSaveLoaded = true;
 }

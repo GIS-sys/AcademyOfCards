@@ -51,3 +51,19 @@ bool ABActorWalkingCard::IsCollectible() {
 	char last_id_letter = CardConfig->ID[CardConfig->ID.Len() - 1];
 	return last_id_letter == 'c';
 }
+
+LevelSaveInstance ABActorWalkingCard::Save() {
+	LevelSaveInstance SaveInstance;
+	SaveInstance.SetCopy("Walls", Walls);
+	SaveInstance.SetCopy("IsCloseUpLook", IsCloseUpLook);
+	SaveInstance.SetCopy("IsDiscovered", IsDiscovered);
+	SaveInstance.SetCopy("ID", CardConfig->ID);
+	return SaveInstance;
+};
+
+void ABActorWalkingCard::Load(LevelSaveInstance* SaveInstance) {
+	Walls = SaveInstance->GetAsCopy<WallsStruct>("Walls");
+	IsCloseUpLook = SaveInstance->GetAsCopy<bool>("IsCloseUpLook");
+	IsDiscovered = SaveInstance->GetAsCopy<bool>("IsDiscovered");
+	CardConfig->ID = SaveInstance->GetAsCopy<FString>("ID");
+};

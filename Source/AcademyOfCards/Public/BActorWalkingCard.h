@@ -92,16 +92,6 @@ public:
 
 	TSharedPtr<WalkingCardConfig> CardConfig;
 
-	LevelSaveInstance Save() {
-		LevelSaveInstance SaveInstance;
-		SaveInstance.SetCopy("Walls", Walls);
-		SaveInstance.SetCopy("IsCloseUpLook", IsCloseUpLook);
-		SaveInstance.SetCopy("IsDiscovered", IsDiscovered);
-		return SaveInstance;
-	};
-	void Load(LevelSaveInstance* SaveInstance) {
-		Walls = SaveInstance->GetAsCopy<WallsStruct>("Walls");
-		IsCloseUpLook = SaveInstance->GetAsCopy<bool>("IsCloseUpLook");
-		IsDiscovered = SaveInstance->GetAsCopy<bool>("IsDiscovered");
-	};
+	LevelSaveInstance Save();
+	void Load(LevelSaveInstance* SaveInstance);
 };

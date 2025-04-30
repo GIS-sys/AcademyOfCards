@@ -44,7 +44,7 @@ protected:
 	void DealCard(int ix, int iy);
 	void SetTimersForCardDeal();
 	void SetPlayerModel(int ix, int iy);
-	ABActorWalkingCard* CreateRandomCardFullyBlocked();
+	ABActorWalkingCard* CreateRandomCardFullyBlocked(int ix, int iy);
 
 	FVector GetCenterCellPosition(int ix, int iy);
 
@@ -83,6 +83,8 @@ public:
 	void DealCards();
 	bool CheckAbleToGo(int CurrentBoardPositionX, int CurrentBoardPositionY, int BoardPositionX, int BoardPositionY);
 
+	bool IsSaveLoaded = false;
+	TMap<TPair<int, int>, FString> SavedIDs;
 	LevelSaveInstance Save();
 	void Load(LevelSaveInstance* SaveInstance);
 };
