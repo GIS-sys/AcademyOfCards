@@ -18,7 +18,7 @@ bool ABActorFightingUnitBase::Move(ABActorFightingField* Field, ABActorFightingC
 
 void ABActorFightingUnitBase::OnSpawn(ABActorFightingField* Field)
 {
-	UnitParameters->ResetCurrent();
+	UnitParameters->ResetCurrent(true);
 	for (const auto& Ability : UnitParameters->Abilities) {
 		Ability->OnSpawn(Field, this);
 	}

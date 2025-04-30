@@ -3,11 +3,13 @@
 
 #include "FightingUnitParameters.h"
 
-void UFightingUnitParameters::ResetCurrent()
+void UFightingUnitParameters::ResetCurrent(bool full)
 {
+	if (full) {
+		CurrentHealth = Health;
+		CurrentPower = Power;
+	}
 	CurrentMovement = Movement;
-	// CurrentHealth = Health;
-	// CurrentPower = Power;
 	CurrentAttacks = Attacks;
 	CurrentRange = Range;
 }
