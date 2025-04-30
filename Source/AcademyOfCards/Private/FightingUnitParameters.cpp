@@ -7,8 +7,8 @@ void UFightingUnitParameters::ResetCurrent(bool full)
 {
 	if (full) {
 		CurrentHealth = Health;
-		CurrentPower = Power;
 	}
+	CurrentPower = Power;
 	CurrentMovement = Movement;
 	CurrentAttacks = Attacks;
 	CurrentRange = Range;
