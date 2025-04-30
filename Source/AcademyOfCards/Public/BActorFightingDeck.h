@@ -21,7 +21,8 @@ class ACADEMYOFCARDS_API ABActorFightingDeck : public ABActorEnhanced
 
 public:
 	UUMyGameInstance* MyGameInstance;
-	TArray<FString> CardIDs = { "c001", "c002", "c003", "c004", "c005", "c006", "c007", "c008", "c009", "c010" };
+	//TArray<FString> CardIDs = { "c001", "c002", "c003", "c004", "c005", "c006", "c007", "c008", "c009", "c010" };
+	TArray<FString> CardIDs = { "c001" };
 
 	virtual void BeginPlay() override;
 
