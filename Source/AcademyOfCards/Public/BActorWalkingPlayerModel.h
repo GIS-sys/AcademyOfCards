@@ -5,36 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "BActorEnhanced.h"
+#include "StatStructs.h"
+#include "LevelSaveInstance.h"
 #include "BActorWalkingPlayerModel.generated.h"
 class ABActorWalkingDealer;
-
-
-USTRUCT(BlueprintType)
-struct FPlayerStats
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	int32 Energy = 10;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float Health = 100.0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	int32 Gold = 50;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float AlignmentLight = 0.5;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float AlignmentDark = 0.5;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float AlignmentFire = 0.0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float AlignmentIce = 0.0;
-};
 
 
 UCLASS()
@@ -60,8 +34,29 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	int GetCurrentBoardPositionX() const { return CurrentBoardPositionX;  }
+	int GetCurrentBoardPositionY() const { return CurrentBoardPositionY; }
+
 	bool Move(FVector LocationTo, int BoardPositionX, int BoardPositionY, ABActorWalkingDealer* DealerPtr);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")
 	FPlayerStats PlayerStats;
+
+	UFUNCTION(BlueprintCallable, Category = "Discover")
+	bool IsNear(int AnotherX, int AnotherY) const {
+		return std::abs(AnotherX - CurrentBoardPositionX) + std::abs(AnotherY - CurrentBoardPositionY) <= 1;
+	}
+
+	LevelSaveInstance Save() {
+		LevelSaveInstance SaveInstanceDeck;
+		SaveInstanceDeck.SetCopy("CurrentBoardPositionX", CurrentBoardPositionX);
+		SaveInstanceDeck.SetCopy("CurrentBoardPositionY", CurrentBoardPositionY);
+		SaveInstanceDeck.SetCopy("LocationOriginal", LocationOriginal);
+		return SaveInstanceDeck;
+	};
+	void Load(LevelSaveInstance* SaveInstance) {
+		CurrentBoardPositionX = SaveInstance->GetAsCopy<int>("CurrentBoardPositionX");
+		CurrentBoardPositionY = SaveInstance->GetAsCopy<int>("CurrentBoardPositionY");
+		LocationOriginal = SaveInstance->GetAsCopy<FVector>("LocationOriginal");
+	};
 };

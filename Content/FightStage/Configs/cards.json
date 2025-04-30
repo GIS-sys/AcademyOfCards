@@ -1,0 +1,328 @@
+[
+  {
+    "ID": "c001",
+    "Name": "Малый дух",
+    "Cardtext": "",
+    "Type": "Дух",
+    "AlignmentKind": "Neutral",
+    "ManaCost": {
+      "General": 2,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "UnitParameters": {
+      "Health": 3,
+      "Power": 3,
+      "Range": 1
+    },
+    "Abilities": [
+
+    ]
+  },
+
+  {
+    "ID": "c002",
+    "Name": "Элементальный дух",
+    "Cardtext": "",
+    "Type": "Дух",
+    "AlignmentKind": "Neutral",
+    "ManaCost": {
+      "General": 4,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "UnitParameters": {
+      "Health": 5,
+      "Power": 5,
+      "Range": 1
+    },
+    "Abilities": [
+
+    ]
+  },
+
+  {
+    "ID": "c003",
+    "Name": "Высший дух",
+    "Cardtext": "",
+    "Type": "Дух",
+    "AlignmentKind": "Neutral",
+    "ManaCost": {
+      "General": 6,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "UnitParameters": {
+      "Health": 7,
+      "Power": 7,
+      "Range": 1
+    },
+    "Abilities": [
+
+    ]
+  },
+
+  {
+    "ID": "c004",
+    "Name": "Паук охотник",
+    "Cardtext": "'Прыжок'",
+    "Type": "Зверь",
+    "AlignmentKind": "Neutral",
+    "ManaCost": {
+      "General": 3,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "UnitParameters": {
+      "Health": 3,
+      "Power": 4,
+      "Range": 1
+    },
+    "Abilities": [
+      {
+        "ID": "ab002",
+        "Arguments": {
+
+        }
+      }
+    ]
+  },
+
+  {
+    "ID": "c005",
+    "Name": "Гиена",
+    "Cardtext": "Воззвание: если на этом ходу погиб ваш фамильяр, получает +2/+2",
+    "Type": "Зверь",
+    "AlignmentKind": "Dark",
+    "ManaCost": {
+      "General": 3,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "UnitParameters": {
+      "Health": 3,
+      "Power": 3,
+      "Range": 1
+    },
+    "Abilities": [
+      {
+        "ID": "ab003",
+        "Arguments": {
+          "Health": 2,
+          "Power": 2,
+          "when": "Invocation",
+          "condition": {
+            "Allied_familiar_died_this_turn": { "greater": 0 }
+          }
+        }
+      }
+    ]
+  },
+
+  {
+    "ID": "c006",
+    "Name": "Саламандра",
+    "Cardtext": "Воззвание: наносит 2 урона противнику на прямой линии",
+    "Type": "Зверь",
+    "AlignmentKind": "Fire",
+    "ManaCost": {
+      "General": 3,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "UnitParameters": {
+      "Health": 3,
+      "Power": 3,
+      "Range": 1
+    },
+    "Abilities": [
+      {
+        "ID": "ab001",
+        "Arguments": {
+          "when": "Invocation",
+          "target": {
+            "type": "select_enemy",
+            "zone": "line",
+            "range": 7
+          },
+          "damage": 2,
+          "condition": {
+
+          }
+        }
+      }
+    ]
+  },
+
+  {
+    "ID": "c007",
+    "Name": "Ледяной волк",
+    "Cardtext": "Когда атакует фамильяра, снижает его силу на 2",
+    "Type": "Зверь",
+    "AlignmentKind": "Ice",
+    "ManaCost": {
+      "General": 3,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "UnitParameters": {
+      "Health": 3,
+      "Power": 3,
+      "Range": 1
+    },
+    "Abilities": [
+      {
+        "ID": "ab004",
+        "Arguments": {
+          "Health": 0,
+          "Power": -2,
+          "when": "on_attack",
+          "target": {
+            "type": "attack_target",
+            "zone": "any",
+            "range": 7
+          },
+          "condition": {
+
+          }
+        }
+      }
+    ]
+  },
+
+  {
+    "ID": "c008",
+    "Name": "Белый лис",
+    "Cardtext": "Воззвание: ваш выбранный фамильяр получает +2/+2",
+    "Type": "Зверь",
+    "AlignmentKind": "Light",
+    "ManaCost": {
+      "General": 3,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "UnitParameters": {
+      "Health": 2,
+      "Power": 2,
+      "Range": 1
+    },
+    "Abilities": [
+      {
+        "ID": "ab004",
+        "Arguments": {
+          "Health": 2,
+          "Power": 2,
+          "when": "Invocation",
+          "target": {
+            "type": "select_ally",
+            "zone": "any",
+            "range": 7
+          },
+          "condition": {
+
+          }
+        }
+      }
+    ]
+  },
+
+  {
+    "ID": "c009",
+    "Name": "Волшебная стрела",
+    "Cardtext": "Наносит 2 урона противнику на прямой линии",
+    "Type": "Магия",
+    "AlignmentKind": "Neutral",
+    "ManaCost": {
+      "General": 1,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "Abilities": [
+      {
+        "ID": "ab001",
+        "Arguments": {
+          "when": "spell_cast",
+          "target": {
+            "type": "select_enemy",
+            "zone": "line",
+            "range": 7
+          },
+          "damage": 2,
+          "condition": {
+
+          }
+        }
+      }
+    ]
+  },
+
+  {
+    "ID": "c010",
+    "Name": "Увеличение",
+    "Cardtext": "Фамильяр получает +5/+5 и 'Прыжок'",
+    "Type": "Магия",
+    "AlignmentKind": "Neutral",
+    "ManaCost": {
+      "General": 5,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "Abilities": [
+      {
+        "ID": "ab004",
+        "Arguments": {
+          "Health": 5,
+          "Power": 5,
+          "when": "spell_cast",
+          "target": {
+            "type": "select",
+            "zone": "any",
+            "range": 7
+          },
+          "condition": {
+
+          }
+        }
+      },
+      {
+        "ID": "ab000",
+        "Arguments": {
+          "ability_id": "ab002",
+          "when": "spell_cast",
+          "target": {
+            "type": "as_previous",
+            "zone": "any",
+            "range": 7
+          },
+          "condition": {
+
+          }
+        }
+      }
+
+    ]
+  }
+
+
+] 
+

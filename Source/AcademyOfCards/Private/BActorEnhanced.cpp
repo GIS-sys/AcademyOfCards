@@ -17,6 +17,7 @@ void ABActorEnhanced::BeginPlay()
 	Super::BeginPlay();
 	
 	LocationOriginal = GetActorLocation();
+	ScaleOriginal = GetActorScale3D();
 }
 
 void ABActorEnhanced::MoveOverTimeTo(FVector FromLocation, FVector NewLocation, float DeltaTime)
@@ -32,6 +33,8 @@ void ABActorEnhanced::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	AnimateHighlight();
+
 	if (DeltaTimeMoveOver > 0 && DeltaTimeMoveOverSpent < DeltaTimeMoveOver) {
 		DeltaTimeMoveOverSpent += DeltaTime;
 		if (DeltaTimeMoveOverSpent > DeltaTimeMoveOver) DeltaTimeMoveOverSpent = DeltaTimeMoveOver;
@@ -40,6 +43,9 @@ void ABActorEnhanced::Tick(float DeltaTime)
 		LocationOriginal = FromLocationMovingTo * (1 - alpha) + NewLocationMovingTo * alpha;
 		SetActorLocation(LocationOriginal);
 	}
+
+	SetActorLocation(LocationOriginal + LocationDelta);
+	SetActorRelativeScale3D(ScaleOriginal * ScaleRelative);
 }
 
 void ABActorEnhanced::MoveOutOfFrame(float DeltaTime) {
@@ -49,4 +55,51 @@ void ABActorEnhanced::MoveOutOfFrame(float DeltaTime) {
 
 void ABActorEnhanced::MoveIntoFrame(float DeltaTime) {
 	MoveOverTimeTo(LocationOriginal, LocationBeforeOutOfFrame, DeltaTime);
+}
+
+void ABActorEnhanced::AnimateHighlight()
+{
+	if (TicksNotHighlighted == -1) return;
+	TicksNotHighlighted += 1;
+	if (TicksNotHighlighted > 1) {
+		OnChangeHighlight();
+		OnHighlight();
+	} else {
+		IsHighlighted = false;
+		OnChangeHighlight();
+		OnDisHighlight();
+	}
+}
+void ABActorEnhanced::OnChangeHighlight()
+{
+	
+}
+
+void ABActorEnhanced::Highlight()
+{
+	if (TicksNotHighlighted != -1) TicksNotHighlighted = 0;
+	IsHighlighted = true;
+}
+
+void ABActorEnhanced::PermanentlyHighlight()
+{
+	TicksNotHighlighted = -1;
+	IsHighlighted = true;
+}
+
+void ABActorEnhanced::ResetPermanentHighlight()
+{
+	TicksNotHighlighted = 0;
+}
+
+void ABActorEnhanced::OnHighlight()
+{
+	LocationDelta = FVector(0.0);
+	ScaleRelative = FVector(1.0);
+}
+
+void ABActorEnhanced::OnDisHighlight()
+{
+	LocationDelta = WhenHighlightedLocationDelta;
+	ScaleRelative = WhenHighlightedScaleRelative;
 }

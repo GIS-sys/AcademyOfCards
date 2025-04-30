@@ -5,7 +5,6 @@
 #include <BActorWalkingCard.h>
 #include <BActorWalkingPlayerModel.h>
 #include <WalkingCardConfig.h>
-#include <WalkingDeck.h>
 #include <WalkingEvent.h>
 #include <Kismet/GameplayStatics.h>
 #include "Serialization/JsonSerializer.h"
@@ -15,23 +14,25 @@
 #include <map>
 #include <set>
 #include <random>
+#include <UMyGameInstance.h>
+#include "StatStructs.h"
+#include <BUIHUD.h>
+#include "BWalking_UI.h"
+#include <BUIWalkingEvent.h>
+#include <WalkingResultFight.h>
 
 // Sets default values
 ABActorWalkingDealer::ABActorWalkingDealer()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	Deck = MakeShareable(new WalkingDeck());
-	Deck->LoadConfigCards();
-	Deck->LoadConfigEvents();
 }
 
 // Called when the game starts or when spawned
 void ABActorWalkingDealer::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	Deck = MakeShareable(new WalkingDeck(Cast<UUMyGameInstance>(GetGameInstance())));
 }
 
 // Called every frame
@@ -53,6 +54,38 @@ void ABActorWalkingDealer::Tick(float DeltaTime)
 
 	if (DealtCardThisTick && DealingCardSpawnRestTime.IsEmpty()) {
 		SetActorHiddenInGame(true);
+
+		// TODO LOAD SOMEWHERE ELSE
+		UUMyGameInstance* MyGameInstance = Cast<UUMyGameInstance>(GetGameInstance());
+		if (MyGameInstance->HasWalkingSave() && MyGameInstance->HasFightingSave()) {
+			AActor* PlayerModelRaw = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
+			ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(PlayerModelRaw);
+
+
+			LevelSaveInstance* FightOutcomeSave = MyGameInstance->FightingSave.Saves.Find(UUMyGameInstance::SAVE_FIGHTING_FIGHT_OUTCOME);
+			bool FightOutcome = FightOutcomeSave->GetAsCopy<bool>(LevelSaveInstance::DEFAULT_NAME);
+			UE_LOG(LogTemp, Error, TEXT("Fight Result: %d"), FightOutcome);
+
+			LevelSaveInstance* PlayerStatsSave = MyGameInstance->FightingSave.Saves.Find(UUMyGameInstance::SAVE_FIGHTING_PLAYER_STATS);
+			FPlayerStats PlayerStats = UStatStructs::LoadPlayerStats(PlayerStatsSave);
+			PlayerModel->PlayerStats = PlayerStats;
+
+			LevelSaveInstance* WalkingDealerSave = MyGameInstance->WalkingSave.Saves.Find(UUMyGameInstance::SAVE_WALKING_DEALER);
+			Load(WalkingDealerSave);
+
+			LevelSaveInstance* PlayerModelSave = MyGameInstance->WalkingSave.Saves.Find(UUMyGameInstance::SAVE_WALKING_PLAYER_MODEL);
+			PlayerModel->Load(PlayerModelSave);
+
+			LevelSaveInstance* FightResultSave = MyGameInstance->WalkingSave.Saves.Find(UUMyGameInstance::SAVE_WALKING_FIGHT_RESULT);
+			WalkingResultFight* FightResult = WalkingResultFight::Load(FightResultSave);
+			APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+			if (!PlayerController) return;
+			ABUIHUD* HUD = Cast<ABUIHUD>(PlayerController->GetHUD());
+			if (!HUD) return;
+			TObjectPtr<UBWalking_UI> MainMenu = Cast<UBWalking_UI>(HUD->MainMenu);
+			UBUIWalkingEvent* EventUI = MainMenu->BUIWalkingEvent;
+			FightResult->ExecuteAfterFight(EventUI, *CardsDealt.Find({ PlayerModel->GetCurrentBoardPositionX(), PlayerModel->GetCurrentBoardPositionY() }));
+		}
 	}
 }
 
@@ -91,11 +124,13 @@ ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked()
 	AActor* actor = GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), GetActorRotation());
 	ABActorWalkingCard* actor_wc = dynamic_cast<ABActorWalkingCard*>(actor);
 
+	TSharedPtr<WalkingConfigs> Configs = Cast<UUMyGameInstance>(GetGameInstance())->LoadedWalkingConfigs;
+
 	actor_wc->DealerPtr = this;
 	if (DEBUG_CARD_ID == "") {
 		actor_wc->CardConfig = Deck->GetRandomCard();
 	} else {
-		actor_wc->CardConfig = Deck->GetCardByID(DEBUG_CARD_ID);
+		actor_wc->CardConfig = Configs->GetCardByID(DEBUG_CARD_ID);
 	}
 	int MaterialIndex = 0;
 	for (int i = 0; i < MaterialIDsArray.Num(); ++i) {
@@ -105,7 +140,6 @@ ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked()
 		}
 	}
 	actor_wc->MainCardMaterial = MaterialArray[MaterialIndex];
-	actor_wc->WalkingDeck = Deck;
 
 	actor_wc->Walls.bottom = true;
 	actor_wc->Walls.top = true;
@@ -277,4 +311,27 @@ void ABActorWalkingDealer::DealCards()
 	CreateBoard();
 
 	SetTimersForCardDeal();
+}
+
+LevelSaveInstance ABActorWalkingDealer::Save() {
+	// Save cards dealt
+	TArray<TPair<TPair<int, int>, LevelSaveInstance>> SavedCardsDealt;
+	for (const auto& pair : CardsDealt) {
+		SavedCardsDealt.Add({ pair.Get<0>(), pair.Get<1>()->Save() });
+	}
+	LevelSaveInstance SaveInstanceCardsDealt;
+	SaveInstanceCardsDealt.SetCopy("CardsDealt", SavedCardsDealt);
+	// Merge
+	return SaveInstanceCardsDealt;
+}
+
+void ABActorWalkingDealer::Load(LevelSaveInstance* SaveInstance) {
+	// Load cards dealt
+	// TODO MAYBE CREATE CARDS BEFORE LOADING?
+	auto SavedCardsDealt = SaveInstance->GetAsCopy<TArray<TPair<TPair<int, int>, LevelSaveInstance>>>("CardsDealt");
+	for (const auto& card_info : SavedCardsDealt) {
+		TPair<int, int> CardPos = card_info.Get<0>();
+		LevelSaveInstance CardSaveInstance = card_info.Get<1>();
+		CardsDealt[CardPos]->Load(&CardSaveInstance);
+	}
 }

@@ -5,8 +5,8 @@
 #include <WalkingEvent.h>
 #include <BActorWalkingPlayerModel.h>
 #include <Kismet/GameplayStatics.h>
-#include "WalkingDeck.h"
 #include "WalkingCardConfig.h"
+#include "UMyGameInstance.h"
 
 // Sets default values
 ABActorWalkingCard::ABActorWalkingCard()
@@ -21,41 +21,24 @@ void ABActorWalkingCard::BeginPlay()
 	Super::BeginPlay();
 }
 
-void ABActorWalkingCard::AnimateHighlight()
-{
-	TicksNotHighlighted += 1;
-	if (TicksNotHighlighted > 1) {
-		LocationDelta = FVector(0.0);
-		ScaleRelative = FVector(1.0);
-	}
-	else {
-		LocationDelta = FVector(0.0, 0.0, 1.0);
-		ScaleRelative = FVector(1.1, 1.1, 1.0);
-	}
-}
-
 // Called every frame
 void ABActorWalkingCard::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	AnimateHighlight();
-
 	SetActorLocation(LocationOriginal + LocationDelta);
 	SetActorRelativeScale3D(ScaleRelative);
 }
 
-void ABActorWalkingCard::Highlight() {
-	TicksNotHighlighted = 0;
-}
-
 int ABActorWalkingCard::MoveTo() {
+	TSharedPtr<WalkingConfigs> Configs = Cast<UUMyGameInstance>(GetGameInstance())->LoadedWalkingConfigs;
+
 	AActor* FoundActor = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
 	ABActorWalkingPlayerModel* PlayerModel = Cast<ABActorWalkingPlayerModel>(FoundActor);
 	if (PlayerModel->Move(GetActorLocation(), BoardPositionX, BoardPositionY, DealerPtr)) {
 		if (!IsDiscovered) {
 			IsDiscovered = true;
-			WalkingDeck->GetEventByID(CardConfig->GetEventFired(PlayerModel->PlayerStats))->Fire(DealerPtr, this);
+			Configs->GetEventByID(CardConfig->GetEventFired(PlayerModel->PlayerStats))->Fire(DealerPtr, this);
 			return 1;
 		} else {
 			return 2;

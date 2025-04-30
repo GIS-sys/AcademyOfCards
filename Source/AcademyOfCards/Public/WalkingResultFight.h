@@ -4,7 +4,8 @@
 
 #include "CoreMinimal.h"
 #include <WalkingResult.h>
-class UBUIWalkingEvent;
+#include <BUIWalkingEvent.h>
+#include "LevelSaveInstance.h"
 class ABActorWalkingPlayerModel;
 
 /**
@@ -17,7 +18,21 @@ public:
 	~WalkingResultFight();
 
 	virtual void Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model);
+	void ExecuteAfterFight(UBUIWalkingEvent* walking_event, ABActorWalkingCard* current_card);
 
+	FString GetOpponent() const {
+		return Opponent;
+	}
+
+	LevelSaveInstance Save() {
+		LevelSaveInstance SaveInstance;
+		SaveInstance.Set(LevelSaveInstance::DEFAULT_NAME, new WalkingResultFight(*this));
+		return SaveInstance;
+	}
+
+	static WalkingResultFight* Load(LevelSaveInstance* SaveInstance) {
+		return SaveInstance->Get<WalkingResultFight>(LevelSaveInstance::DEFAULT_NAME);
+	}
 protected:
 	FString Opponent;
 	TArray<TSharedPtr<WalkingResult>> ResultsWin;

@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "BActorEnhanced.h"
+#include "LevelSaveInstance.h"
 #include "BActorWalkingCard.generated.h"
-class WalkingDeck;
 class WalkingCardConfig;
 class ABActorWalkingDealer;
 
@@ -23,11 +23,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void AnimateHighlight();
-
-	int TicksNotHighlighted = 1;
-	FVector ScaleRelative;
-	FVector LocationDelta;
+	bool IsCloseUpLook = false;
 
 public:
 	struct WallsStruct {
@@ -56,9 +52,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
-	void Highlight();
-
-	UFUNCTION(BlueprintCallable)
 	int MoveTo(); // returns 0 if move is unavailable, 1 if moved and discovered new card, 2 if moved on already discovered card
 
 	UFUNCTION(BlueprintCallable)
@@ -73,8 +66,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 	UMaterialInterface* MainCardMaterial;
 
-	float BoardPositionX;
-	float BoardPositionY;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Position")
+	int BoardPositionX;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Position")
+	int BoardPositionY;
 
 	ABActorWalkingDealer* DealerPtr;
 
@@ -82,7 +77,13 @@ public:
 	bool IsDiscovered = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")
-	bool IsCloseUpLook = false;
+	bool IsMovingCloseUpLook = false;
+
+	UFUNCTION(BlueprintCallable, Category = "Actor")
+	bool GetCloseUpLook() const { return IsCloseUpLook; }
+
+	UFUNCTION(BlueprintCallable, Category = "Actor")
+	void SetCloseUpLook(bool NewCloseUpLook) { IsCloseUpLook = NewCloseUpLook; IsMovingCloseUpLook = true; }
 
 	UFUNCTION(BlueprintCallable)
 	bool IsCollectible();
@@ -90,5 +91,17 @@ public:
 	WallsStruct Walls;
 
 	TSharedPtr<WalkingCardConfig> CardConfig;
-	TSharedPtr<WalkingDeck> WalkingDeck;
+
+	LevelSaveInstance Save() {
+		LevelSaveInstance SaveInstance;
+		SaveInstance.SetCopy("Walls", Walls);
+		SaveInstance.SetCopy("IsCloseUpLook", IsCloseUpLook);
+		SaveInstance.SetCopy("IsDiscovered", IsDiscovered);
+		return SaveInstance;
+	};
+	void Load(LevelSaveInstance* SaveInstance) {
+		Walls = SaveInstance->GetAsCopy<WallsStruct>("Walls");
+		IsCloseUpLook = SaveInstance->GetAsCopy<bool>("IsCloseUpLook");
+		IsDiscovered = SaveInstance->GetAsCopy<bool>("IsDiscovered");
+	};
 };

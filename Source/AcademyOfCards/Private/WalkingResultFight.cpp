@@ -4,6 +4,7 @@
 #include "WalkingResultFight.h"
 #include "BUIWalkingEvent.h"
 #include "BActorWalkingPlayerModel.h"
+#include "WalkingOption.h"
 #include <Kismet/GameplayStatics.h>
 #include <BUIGameModeBase.h>
 
@@ -21,14 +22,14 @@ WalkingResultFight::~WalkingResultFight()
 
 void WalkingResultFight::Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model)
 {
-	// TODO !!! fight result
 	FWorldContext* world = GEngine->GetWorldContextFromGameViewport(GEngine->GameViewport);
 	ABUIGameModeBase* MyMode = Cast<ABUIGameModeBase>(UGameplayStatics::GetGameMode(world->World()));
-	MyMode->SwitchToFight();
+	walking_event->DontAddCloseButtonOnce();
+	MyMode->SwitchToFight(this);
+}
 
-	walking_event->TextFromResult += "Fight: " + Opponent + "\n";
-	walking_event->TextFromResult += "You won!\n";
-	for (auto& Result : ResultsWin) {
-		Result->Execute(walking_event, player_model);
-	}
+void WalkingResultFight::ExecuteAfterFight(UBUIWalkingEvent* walking_event, ABActorWalkingCard* current_card)
+{
+	walking_event->CurrentWalkingCard = current_card;
+	walking_event->EventPopupButtonOnClicked("", ResultsWin);
 }

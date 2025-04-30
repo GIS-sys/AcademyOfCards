@@ -19,6 +19,8 @@ class ACADEMYOFCARDS_API UBUIWalkingEvent : public UUserWidget
 {
 	GENERATED_BODY()
 	
+	bool IsAddCloseButtonAuto = true;
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Popup Widgets")
 	UVerticalBox* EventPopupVerticalBox;
@@ -31,6 +33,8 @@ public:
 	void NewEventPopup_Finish(ABActorWalkingCard* WalkingCard);
 	void NewEventPopup_SetText(FString Text);
 	void NewEventPopup_AddButton(FString ButtonName, TArray<TSharedPtr<WalkingResult>> ButtonResults);
+
+	void DontAddCloseButtonOnce() { IsAddCloseButtonAuto = false; }
 
 	void EventPopupButtonOnClicked(FString ButtonName, TArray<TSharedPtr<WalkingResult>> ButtonResults);
 

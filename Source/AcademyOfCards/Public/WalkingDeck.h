@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-class WalkingEvent;
-class WalkingCardConfig;
+#include "UMyGameInstance.h"
+#include "LevelSaveInstance.h"
 
 /**
  * 
@@ -12,18 +12,16 @@ class WalkingCardConfig;
 class ACADEMYOFCARDS_API WalkingDeck
 {
 protected:
-	TArray<TSharedPtr<WalkingEvent>> Events;
-	TArray<TSharedPtr<WalkingCardConfig>> CardConfigs;
+	TArray<FString> CardIDs;
 
 public:
-	WalkingDeck();
+	WalkingDeck(UUMyGameInstance* GameInstance);
 	~WalkingDeck();
 
-	void LoadConfigEvents();
-	void LoadConfigCards();
+	UUMyGameInstance* MyGameInstance;
 
 	TSharedPtr<WalkingCardConfig> GetRandomCard() const;
-	TSharedPtr<WalkingCardConfig> GetCardByID(FString ID) const;
-	TSharedPtr<WalkingEvent> GetEventByName(FString Name) const;
-	TSharedPtr<WalkingEvent> GetEventByID(FString ID) const;
+
+	LevelSaveInstance Save() { return LevelSaveInstance(); };
+	void Load(LevelSaveInstance* SaveInstance) {};
 };

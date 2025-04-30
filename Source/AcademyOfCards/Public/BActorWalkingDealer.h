@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "LevelSaveInstance.h"
+#include "WalkingDeck.h"
 
-class WalkingDeck;
 class ABActorWalkingCard;
 
 #include "BActorWalkingDealer.generated.h"
@@ -30,6 +31,8 @@ protected:
 	const float TIME_CARD_DEALING_MOVEMENT = 0.2;
 	const float TIME_BETWEEN_CARD_DEAL = 0.08;
 
+	TSharedPtr<WalkingDeck> Deck;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -50,8 +53,6 @@ protected:
 	TArray<TTuple<float, int, int>> DealingCardSpawnRestTime;
 
 public:
-	TSharedPtr<WalkingDeck> Deck;
-
 	TMap<TPair<int, int>, ABActorWalkingCard*> CardsDealt;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Debug")
@@ -81,4 +82,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DealCards();
 	bool CheckAbleToGo(int CurrentBoardPositionX, int CurrentBoardPositionY, int BoardPositionX, int BoardPositionY);
+
+	LevelSaveInstance Save();
+	void Load(LevelSaveInstance* SaveInstance);
 };
