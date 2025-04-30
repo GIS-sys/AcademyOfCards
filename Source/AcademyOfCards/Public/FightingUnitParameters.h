@@ -16,6 +16,7 @@ class ACADEMYOFCARDS_API UFightingUnitParameters : public UObject
 	GENERATED_BODY()
 public:
 	void FromFUnitParameters(const FUnitParameters& other) {
+		IsUnit = other.IsUnit;
 		Movement = other.Movement;
 		Health = other.Health;
 		Power = other.Power;
@@ -23,6 +24,10 @@ public:
 		Range = other.Range;
 		Abilities = other.Abilities;
 	}
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	bool IsUnit = true;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int Movement = 0;
 

@@ -149,8 +149,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	class USceneComponent* SceneComponentCells;
 	void InitCells();
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	float COLUMN_SHOW_HEIGHT = 20.0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	float COLUMN_SHOW_HEIGHT = 160.0;
 
 	UFUNCTION(BlueprintCallable, Category = "Base")
 	void Init();
@@ -168,6 +168,10 @@ public:
 	FString AbilityGetManaIce();
 	UFUNCTION(BlueprintCallable, Category = "Abilities")
 	FString PassTurn();
+
+	//TriggersDispatcher;
+	//UIManager;
+
 
 	AI AIOpponent;
 };

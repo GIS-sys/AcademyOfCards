@@ -13,6 +13,9 @@ struct FUnitParameters
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	bool IsUnit = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int Movement = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
@@ -123,6 +126,12 @@ class ACADEMYOFCARDS_API UStatStructs : public UObject
 	GENERATED_BODY()
 
 public:
+	static FUnitParameters FactoryCreateNotUnit() {
+		FUnitParameters param;
+		param.IsUnit = false;
+		return param;
+	}
+
 	UFUNCTION(BlueprintCallable, Category = "Util")
 	static FString ToString(const FMana& Mana) {
 		return FString::Printf(TEXT("%d LD%d-%d FI%d-%d"), Mana.General, Mana.Light, Mana.Dark, Mana.Fire, Mana.Ice);
@@ -179,6 +188,7 @@ public:
 
 	static FUnitParameters FUnitParametersConstructor(const FUnitParameters& other) {
 		FUnitParameters created;
+		created.IsUnit = created.IsUnit;
 		created.Movement = other.Movement;
 		created.Health = other.Health;
 		created.Power = other.Power;
@@ -189,6 +199,7 @@ public:
 	}
 
 	static FUnitParameters FUnitParametersConstructor(TSharedPtr<FJsonObject> data) {
+		if (!data || data->Values.Num() == 0) return FactoryCreateNotUnit();
 		FUnitParameters created;
 		if (!data->TryGetNumberField("Movement", created.Movement)) {
 			created.Movement = 1;
