@@ -22,7 +22,13 @@ class ACADEMYOFCARDS_API ABActorFightingDeck : public ABActorEnhanced
 public:
 	UUMyGameInstance* MyGameInstance;
 	//TArray<FString> CardIDs = { "c001", "c002", "c003", "c004", "c005", "c006", "c007", "c008", "c009", "c010" };
-	TArray<FString> CardIDs = { "c004" };
+	TArray<FString> CardIDs = { "c010" };
+	// c005 - died
+	// c006 - deal damage, random enemy, invocation
+	// c007 - on attack, reduce power (current and absolute) by X (min 0)
+	// c008 - invocation, random your, +stats
+	// c009 - spell, random enemy, damage
+	// c010 - spell, random your, +stats, ONATTACHABILITY???
 
 	virtual void BeginPlay() override;
 
