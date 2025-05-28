@@ -360,8 +360,11 @@ void ABActorWalkingDealer::Load(LevelSaveInstance* SaveInstance) {
 void ABActorWalkingDealer::UpdateOpenlyVisible(ABActorWalkingCard* Card)
 {
 	for (auto& it : CardsDealt) {
-		if (it.Value->BoardPositionX == Card->BoardPositionX && it.Value->BoardPositionY == Card->BoardPositionY) continue;
-		if (std::abs(it.Value->BoardPositionX - Card->BoardPositionX) + std::abs(it.Value->BoardPositionY - Card->BoardPositionY) != 1) continue;
+		int dx = it.Value->BoardPositionX - Card->BoardPositionX;
+		int dy = it.Value->BoardPositionY - Card->BoardPositionY;
+		if (dx == 0 && dy == 0) continue;
+		if (std::abs(dx) + std::abs(dy) != 1) continue;
+		if (!Card->Walls.IsAllowedMovement(dx, dy)) continue;
 		it.Value->IsOpenlyVisible = true;
 	}
 }
