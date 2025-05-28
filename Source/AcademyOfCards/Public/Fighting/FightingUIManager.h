@@ -11,6 +11,7 @@ class ABActorFightingField;
 class ABActorFightingCellBase;
 class ABActorFightingUnitBase;
 class ABActorFightingCard;
+class FightingUIManager;
 
 enum FightingUIManagerClickType {
 	OnCell = 0,
@@ -20,7 +21,7 @@ enum FightingUIManagerClickType {
 	OnPassTurn,
 };
 
-using CallbackType = std::function<bool(FightingUIManagerClickType, ABActorFightingCellBase*, ABActorFightingUnitBase*, TriggersDispatcherEvent_EnumAbility, ABActorFightingCard*)>;
+using CallbackType = std::function<FString(FightingUIManagerClickType, FightingUIManager*, ABActorFightingCellBase*, ABActorFightingUnitBase*, TriggersDispatcherEvent_EnumAbility, ABActorFightingCard*)>;
 
 /**
  * 
@@ -32,6 +33,8 @@ class ACADEMYOFCARDS_API FightingUIManager
 	bool wait = false;
 
 public:
+	std::map<FString, std::any> state;
+
 	FightingUIManager();
 	~FightingUIManager();
 
@@ -41,14 +44,14 @@ public:
 
 	bool IsWaitingPlayerResponse() const;
 
-	bool ClickedOnCell(ABActorFightingCellBase* target);
-	bool ClickedOnUnit(ABActorFightingUnitBase* target);
-	bool ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target);
-	bool ClickedOnCard(ABActorFightingCard* target);
-	bool ClickedOnPassTurn();
+	FString ClickedOnCell(ABActorFightingCellBase* target);
+	FString ClickedOnUnit(ABActorFightingUnitBase* target);
+	FString ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target);
+	FString ClickedOnCard(ABActorFightingCard* target);
+	FString ClickedOnPassTurn();
 
 	void WaitForInput();
-	void Clear();
+	FightingUIManager* Clear();
 
-	void RegisterCallback(CallbackType callback_foo, std::vector<FightingUIManagerClickType> callback_types);
+	FightingUIManager* RegisterCallback(CallbackType callback_foo, std::vector<FightingUIManagerClickType> click_types);
 };

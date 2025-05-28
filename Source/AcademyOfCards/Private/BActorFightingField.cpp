@@ -286,31 +286,31 @@ FString ABActorFightingField::PassTurn()
 
 
 
-bool ABActorFightingField::ClickedOnCell(ABActorFightingCellBase* target) {
+FString ABActorFightingField::ClickedOnCell(ABActorFightingCellBase* target) {
     // cell, unit, card, buttons for abilities, button for passing turn
     // returns bool (ok/not ok) and message/error
     return UIManager.ClickedOnCell(target);
 }
 
-bool ABActorFightingField::ClickedOnUnit(ABActorFightingUnitBase* target) {
+FString ABActorFightingField::ClickedOnUnit(ABActorFightingUnitBase* target) {
     // cell, unit, card, buttons for abilities, button for passing turn
     // returns bool (ok/not ok) and message/error
     return UIManager.ClickedOnUnit(target);
 }
 
-bool ABActorFightingField::ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target) {
+FString ABActorFightingField::ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target) {
     // cell, unit, card, buttons for abilities, button for passing turn
     // returns bool (ok/not ok) and message/error
     return UIManager.ClickedOnAbility(target);
 }
 
-bool ABActorFightingField::ClickedOnCard(ABActorFightingCard* target) {
+FString ABActorFightingField::ClickedOnCard(ABActorFightingCard* target) {
     // cell, unit, card, buttons for abilities, button for passing turn
     // returns bool (ok/not ok) and message/error
     return UIManager.ClickedOnCard(target);
 }
 
-bool ABActorFightingField::ClickedOnPassTurn() {
+FString ABActorFightingField::ClickedOnPassTurn() {
     // cell, unit, card, buttons for abilities, button for passing turn
     // returns bool (ok/not ok) and message/error
     return UIManager.ClickedOnPassTurn();

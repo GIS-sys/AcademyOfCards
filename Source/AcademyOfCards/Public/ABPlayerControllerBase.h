@@ -10,34 +10,6 @@
  * 
  */
 
-UCLASS(Blueprintable, BlueprintType)
-class ACADEMYOFCARDS_API UControllerFightState : public UObject
-{
-    GENERATED_BODY()
-
-public:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Helper")
-    int state = 0;
-
-    UFUNCTION(BlueprintCallable, Category = "Helper")
-    bool CanSelectCell()
-    {
-        return state == 1 || state == 2;
-    }
-
-    UFUNCTION(BlueprintCallable, Category = "Helper")
-    bool CanSelectCard()
-    {
-        return state == 0;
-    }
-
-    UFUNCTION(BlueprintCallable, Category = "Helper")
-    bool CanSelectUnit()
-    {
-        return state == 0 || state == 2;
-    }
-};
-
 UCLASS()
 class ACADEMYOFCARDS_API AABPlayerControllerBase : public APlayerController
 {
@@ -45,7 +17,4 @@ class ACADEMYOFCARDS_API AABPlayerControllerBase : public APlayerController
 	
 public:
     virtual void BeginPlay() override;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
-    UControllerFightState* ControllerFightState;
 };

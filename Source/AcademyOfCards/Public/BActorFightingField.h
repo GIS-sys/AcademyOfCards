@@ -164,19 +164,19 @@ public:
 	bool PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell);
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
-	bool ClickedOnCell(ABActorFightingCellBase* target);
+	FString ClickedOnCell(ABActorFightingCellBase* target);
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
-	bool ClickedOnUnit(ABActorFightingUnitBase* target);
+	FString ClickedOnUnit(ABActorFightingUnitBase* target);
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
-	bool ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target);
+	FString ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target);
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
-	bool ClickedOnCard(ABActorFightingCard* target);
+	FString ClickedOnCard(ABActorFightingCard* target);
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
-	bool ClickedOnPassTurn();
+	FString ClickedOnPassTurn();
 
 	FightingTriggersDispatcher TriggersDispatcher;
 	FightingUIManager UIManager;
