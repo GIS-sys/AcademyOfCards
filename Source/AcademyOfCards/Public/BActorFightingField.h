@@ -9,6 +9,8 @@
 #include <BActorFightingCellBase.h>
 #include <BActorFightingDeck.h>
 #include "StatStructs.h"
+#include "fighting/FightingUIManager.h"
+#include "fighting/FightingTriggersDispatcher.h"
 #include "BActorFightingField.generated.h"
 
 class ABActorFightingField;
@@ -169,8 +171,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Abilities")
 	FString PassTurn();
 
-	//TriggersDispatcher;
-	//UIManager;
+	FightingTriggersDispatcher TriggersDispatcher;
+	FightingUIManager UIManager;
 
 
 	AI AIOpponent;
