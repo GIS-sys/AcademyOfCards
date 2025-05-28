@@ -2,6 +2,7 @@
 
 
 #include "Fighting/FightingUIManager.h"
+#include "BActorFightingField.h"
 
 FightingUIManager::FightingUIManager()
 {
@@ -9,4 +10,10 @@ FightingUIManager::FightingUIManager()
 
 FightingUIManager::~FightingUIManager()
 {
+}
+
+void FightingUIManager::Init(ABActorFightingField* NewField)
+{
+    Field = NewField;
+    LetActionsRegular();
 }

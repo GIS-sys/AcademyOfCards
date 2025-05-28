@@ -9,8 +9,8 @@
 #include <BActorFightingCellBase.h>
 #include <BActorFightingDeck.h>
 #include "StatStructs.h"
-#include "fighting/FightingUIManager.h"
-#include "fighting/FightingTriggersDispatcher.h"
+#include "Fighting/FightingUIManager.h"
+#include "Fighting/FightingTriggersDispatcher.h"
 #include "BActorFightingField.generated.h"
 
 class ABActorFightingField;

@@ -118,6 +118,7 @@ bool ABActorFightingField::AttackUnit(ABActorFightingUnitBase* Attacker, ABActor
 
 bool ABActorFightingField::PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell)
 {
+    UIManager.AddTriggerAbilitiesFromUnit(NewUnit);
     return false;
     /*if (ABActorFightingCellBase::Distance(GetCurrentPlayerUnit()->CurrentCell, Cell) > 1) return false;
     if (IsOccupied(Cell)) return false;
@@ -131,6 +132,12 @@ bool ABActorFightingField::PlayCard(ABActorFightingCard* Card, ABActorFightingCe
     return true;*/
 }
 
+TPair<bool, FString> ABActorFightingField::Clicked(target) {
+    // cell, unit, card, buttons for abilities, button for passing turn
+    // returns bool (ok/not ok) and message/error
+    return UIManager.Clicked(target);
+}
+
 
 void ABActorFightingField::Tick(float DeltaTime)
 {
@@ -138,6 +145,8 @@ void ABActorFightingField::Tick(float DeltaTime)
     for (ABActorFightingUnitBase* Unit : ArrayUnits) {
         if (Unit && !Unit->IsMovingOverTime()) Unit->MoveOverTimeTo(Unit->LocationOriginal, Unit->CurrentCell->GetUnitLocation(), 0.1);
     }
+
+    TriggersDispatcher.Tick(DeltaTime);
 }
 
 void ABActorFightingField::InitPlayers()
@@ -159,6 +168,8 @@ void ABActorFightingField::InitPlayers()
         PlayerUnitMy = dynamic_cast<ABActorFightingUnitBase*>(NewActorRaw);
         ABActorFightingCellBase* StartingCell = ArrayCells[PLAYER_START_MY_X][PLAYER_START_MY_Y][PLAYER_START_MY_Z];
         PlayerUnitMy->InitPlayerMy(this, StartingCell, GetPlayerStats(true));
+        PlayerUnitMy->InitAbilities();
+        UIManager.AddTriggerAbilitiesFromUnit(PlayerUnitMy);
         ArrayUnits.Add(PlayerUnitMy);
     }
     {
@@ -171,6 +182,8 @@ void ABActorFightingField::InitPlayers()
         PlayerUnitOpponent = dynamic_cast<ABActorFightingUnitBase*>(NewActorRaw);
         ABActorFightingCellBase* StartingCell = ArrayCells[PLAYER_START_OPPONENT_X][PLAYER_START_OPPONENT_Y][PLAYER_START_OPPONENT_Z];
         PlayerUnitOpponent->InitPlayerOpponent(this, OpponentName, StartingCell, GetPlayerStats(false));
+        PlayerUnitOpponent->InitAbilities();
+        UIManager.AddTriggerAbilitiesFromUnit(PlayerUnitOpponent);
         ArrayUnits.Add(PlayerUnitOpponent);
     }
 }
@@ -195,6 +208,8 @@ void ABActorFightingField::InitLoadFromWalking()
 
 void ABActorFightingField::Init()
 {
+    UIManager.Init(this);
+    TriggersDispatcher.Init(this);
     InitLoadFromWalking();
 
     InitCells();
@@ -203,12 +218,15 @@ void ABActorFightingField::Init()
     InitUnits();
     PassTurn();
 
+    UIManager.LetActionsRegular();
+
     OpponentStats.Health = 0;
 }
 
 
 FString ABActorFightingField::AbilityDrawCard()
 {
+    TriggersDispatcher.AddEvent(TriggersDispatcherEvent.MakeAbility(TriggersDispatcherEvent.Ability.DrawCard));
     return "";
     /*if (PlayerMana.General >= 4) {
         PlayerMana.General -= 4;
@@ -255,6 +273,7 @@ FString ABActorFightingField::AbilityGetManaIce()
 
 FString ABActorFightingField::PassTurn()
 {
+    TriggersDispatcher.AddEvent(TriggersDispatcherEvent.MakeAbility(TriggersDispatcherEvent.Ability.DrawCard));
     //throw std::exception("TODO");
     IsPlayerTurn = !IsPlayerTurn;
     
