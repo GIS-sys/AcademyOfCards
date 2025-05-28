@@ -178,6 +178,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
 	FString ClickedOnPassTurn();
 
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	FString ClickedOnOutside();
+
 	FightingTriggersDispatcher TriggersDispatcher;
 	FightingUIManager UIManager;
 

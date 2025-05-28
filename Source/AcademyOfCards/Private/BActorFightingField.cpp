@@ -316,6 +316,11 @@ FString ABActorFightingField::ClickedOnPassTurn() {
     return UIManager.ClickedOnPassTurn();
 }
 
+FString ABActorFightingField::ClickedOnOutside() {
+    // cell, unit, card, buttons for abilities, button for passing turn
+    // returns bool (ok/not ok) and message/error
+    return UIManager.ClickedOnOutside();
+}
 
 
 

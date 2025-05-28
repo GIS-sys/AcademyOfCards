@@ -19,6 +19,7 @@ enum FightingUIManagerClickType {
 	OnAbility,
 	OnCard,
 	OnPassTurn,
+	OnOutside,
 };
 
 using CallbackType = std::function<FString(FightingUIManagerClickType, FightingUIManager*, ABActorFightingCellBase*, ABActorFightingUnitBase*, TriggersDispatcherEvent_EnumAbility, ABActorFightingCard*)>;
@@ -28,12 +29,12 @@ using CallbackType = std::function<FString(FightingUIManagerClickType, FightingU
  */
 class ACADEMYOFCARDS_API FightingUIManager
 {
-	ABActorFightingField* Field = nullptr;
 	std::map<FightingUIManagerClickType, CallbackType> Callbacks;
 	bool wait = false;
 
 public:
 	std::map<FString, std::any> state;
+	ABActorFightingField* Field = nullptr;
 
 	FightingUIManager();
 	~FightingUIManager();
@@ -49,6 +50,7 @@ public:
 	FString ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target);
 	FString ClickedOnCard(ABActorFightingCard* target);
 	FString ClickedOnPassTurn();
+	FString ClickedOnOutside();
 
 	void WaitForInput();
 	FightingUIManager* Clear();

@@ -48,6 +48,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 	UMaterialInterface* UnitMaterial;
 
+	bool CanTargetCell() { return true; } // TODO IMPORTANT
+	bool CanTargetUnit() { return true; } // TODO IMPORTANT
+
 	ABActorFightingUnitBase* SpawnUnit(ABActorFightingField* Field, ABActorFightingCellBase* Cell, TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit);
 
 	void FromConfig(TSharedPtr<FightingCard> CardConfig);
