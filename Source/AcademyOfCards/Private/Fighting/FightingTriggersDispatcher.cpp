@@ -24,21 +24,21 @@ void FightingTriggersDispatcher::Tick(float DeltaTime)
 
     if (Field->UIManager.IsWaitingPlayerResponse() || !Field->IsPlayerTurn || all_events.empty()) return;
 
-    TriggersDispatcherTrigger* trigger = CheckTriggers(triggered);
+    TriggersDispatcherTrigger* trigger = CheckTriggers();
     if (trigger && triggered < MAX_TRIGGERS_PER_EVENT) {
         ++triggered;
-        all_events.push_back(TriggersDispatcherEvent.MakeTriggerTriggered(trigger));
+        all_events.push_back(TriggersDispatcherEvent::MakeTriggerTriggered(trigger));
         trigger->Exec(Field, all_events[0]);
         return;
     }
 
-    FlushTriggers(triggered);
+    FlushTriggers();
     triggered = 0;
     all_events.pop_front();
-    UIManager.LetActionsRegular();
+    Field->UIManager.LetActionsRegular();
 }
 
-Trigger* FightingTriggersDispatcher::CheckTriggers(int triggered)
+TriggersDispatcherTrigger* FightingTriggersDispatcher::CheckTriggers()
 {
     int i = 0;
     for (auto& trigger : all_triggers) {
@@ -48,7 +48,7 @@ Trigger* FightingTriggersDispatcher::CheckTriggers(int triggered)
     return nullptr;
 }
 
-void FightingTriggersDispatcher::FlushTriggers(int triggered)
+void FightingTriggersDispatcher::FlushTriggers()
 {
     for (auto& trigger : all_triggers) {
         trigger.Flush(Field, all_events[0]);
@@ -56,7 +56,11 @@ void FightingTriggersDispatcher::FlushTriggers(int triggered)
 }
 
 void FightingTriggersDispatcher::AddTriggerAbilitiesFromUnit(ABActorFightingUnitBase* Unit) {
-    for (auto& ability : Unit->UnitParameters->Abilities) {
-        AddTriggerAbility(ability);
+    for (auto& Ability : Unit->UnitParameters->Abilities) {
+        AddTriggerAbility(Unit, Ability);
     }
+}
+
+void FightingTriggersDispatcher::AddTriggerAbility(ABActorFightingUnitBase* Unit, TSharedPtr<FightingAbility> Ability) {
+    all_triggers.push_back(TriggersDispatcherTrigger::MakeAbility(Unit, Ability));
 }

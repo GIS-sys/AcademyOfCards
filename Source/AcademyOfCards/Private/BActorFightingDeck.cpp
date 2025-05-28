@@ -24,7 +24,7 @@ void ABActorFightingDeck::DealCards()
     }
 }
 
-void ABActorFightingDeck::DrawCard()
+ABActorFightingCard* ABActorFightingDeck::DrawCard()
 {
     FActorSpawnParameters SpawnParams;
     SpawnParams.Owner = this;
@@ -56,6 +56,7 @@ void ABActorFightingDeck::DrawCard()
     CardActors.Add(NewActor);
 
     RearrangeCardsInHand();
+    return NewActor;
 }
 
 void VectorClamp(FVector& VOriginal, const FVector& VMin, const FVector& VMax)

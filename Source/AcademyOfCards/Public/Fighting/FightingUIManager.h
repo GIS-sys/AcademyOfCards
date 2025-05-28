@@ -5,6 +5,9 @@
 #include "CoreMinimal.h"
 
 class ABActorFightingField;
+class ABActorFightingCellBase;
+class ABActorFightingUnitBase;
+class ABActorFightingCard;
 
 /**
  * 
@@ -18,4 +21,14 @@ public:
 	~FightingUIManager();
 
 	void Init(ABActorFightingField* NewField);
+
+	void LetActionsRegular();
+
+	bool IsWaitingPlayerResponse() const;
+
+	bool ClickedOnCell(ABActorFightingCellBase* target);
+	bool ClickedOnUnit(ABActorFightingUnitBase* target);
+	bool ClickedOnAbility(FString target);
+	bool ClickedOnCard(ABActorFightingCard* target);
+	bool ClickedOnPassTurn();
 };

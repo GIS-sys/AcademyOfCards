@@ -6,6 +6,7 @@
 #include <WalkingResultFight.h>
 #include <Kismet/GameplayStatics.h>
 #include "BActorWalkingPlayerModel.h"
+#include <any>
 
 FPlayerStats* ABActorFightingField::GetPlayerStats(bool IsPlayerMe) {
     if (!IsPlayerMe) return &OpponentStats;
@@ -73,21 +74,107 @@ void ABActorFightingField::InitDecks()
     DeckOpponent->DealCards();
 }
 
+void ABActorFightingField::InitPlayers()
+{
+    IsPlayerTurn = false;
+
+    PlayerMana.GeneralMax = 0;
+    OpponentMana.GeneralMax = 0;
+
+    FActorSpawnParameters SpawnParams;
+    SpawnParams.Owner = this;
+    {
+        AActor* NewActorRaw = GetWorld()->SpawnActor<AActor>(
+            ActorToSpawnUnit,
+            FVector(0, 0, 0),
+            GetActorRotation(),
+            SpawnParams
+        );
+        PlayerUnitMy = dynamic_cast<ABActorFightingUnitBase*>(NewActorRaw);
+        ABActorFightingCellBase* StartingCell = ArrayCells[PLAYER_START_MY_X][PLAYER_START_MY_Y][PLAYER_START_MY_Z];
+        PlayerUnitMy->InitPlayerMy(this, StartingCell, GetPlayerStats(true));
+        TriggersDispatcher.AddTriggerAbilitiesFromUnit(PlayerUnitMy);
+        ArrayUnits.Add(PlayerUnitMy);
+    }
+    {
+        AActor* NewActorRaw = GetWorld()->SpawnActor<AActor>(
+            ActorToSpawnUnit,
+            FVector(0, 0, 0),
+            GetActorRotation(),
+            SpawnParams
+        );
+        PlayerUnitOpponent = dynamic_cast<ABActorFightingUnitBase*>(NewActorRaw);
+        ABActorFightingCellBase* StartingCell = ArrayCells[PLAYER_START_OPPONENT_X][PLAYER_START_OPPONENT_Y][PLAYER_START_OPPONENT_Z];
+        PlayerUnitOpponent->InitPlayerOpponent(this, OpponentName, StartingCell, GetPlayerStats(false));
+        TriggersDispatcher.AddTriggerAbilitiesFromUnit(PlayerUnitOpponent);
+        ArrayUnits.Add(PlayerUnitOpponent);
+    }
+}
+
+void ABActorFightingField::InitUnits()
+{
+
+}
+
+void ABActorFightingField::InitLoadFromWalking()
+{
+    // Load
+    UUMyGameInstance* MyGameInstance = Cast<UUMyGameInstance>(GetGameInstance());
+    FPlayerStats WalkingPlayerStats = UStatStructs::LoadPlayerStats(MyGameInstance->WalkingSave.Saves.Find(UUMyGameInstance::SAVE_WALKING_PLAYER_STATS));
+    WalkingResultFight* WalkingFight = WalkingResultFight::Load(MyGameInstance->WalkingSave.Saves.Find(UUMyGameInstance::SAVE_WALKING_FIGHT_RESULT));
+
+    // Set back
+    OpponentName = WalkingFight->GetOpponent();
+
+    *GetPlayerStats(true) = WalkingPlayerStats;
+}
+
+void ABActorFightingField::Init()
+{
+    UIManager.Init(this);
+    TriggersDispatcher.Init(this);
+    InitLoadFromWalking();
+
+    InitCells();
+    InitPlayers();
+    InitDecks();
+    InitUnits();
+    PassTurn();
+
+    UIManager.LetActionsRegular();
+
+    OpponentStats.Health = 0;
+}
+
+
+
+void ABActorFightingField::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+    for (ABActorFightingUnitBase* Unit : ArrayUnits) {
+        if (Unit && !Unit->IsMovingOverTime()) Unit->MoveOverTimeTo(Unit->LocationOriginal, Unit->CurrentCell->GetUnitLocation(), 0.1);
+    }
+
+    TriggersDispatcher.Tick(DeltaTime);
+}
+
+
+
+
 
 bool ABActorFightingField::MoveUnit(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell)
 {
-    IsFinished = true;
-    IsPlayerWinner = true;
-    return true;
-    //throw std::exception("TODO");
-    /*if (IsOccupied(Cell)) return false;
-    return Unit->Move(this, Cell);*/
+    if (IsOccupied(Cell)) return false;
+    bool res = Unit->Move(this, Cell);
+    if (res) {
+        TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(TriggersDispatcherEvent::EnumEvent::MOVE, TArray<std::any>{ Unit, Cell }));
+    }
+    return res;
 }
 
 bool ABActorFightingField::AttackUnit(ABActorFightingUnitBase* Attacker, ABActorFightingUnitBase* Victim)
 {
-    return false;
-    /*if (Attacker == Victim) return false;
+    if (Attacker == Victim) return false;
     if (Attacker->UnitParameters->CurrentAttacks <= 0) return false;
     int Distance = ABActorFightingCellBase::Distance(Attacker->CurrentCell, Victim->CurrentCell);
     if (Distance > Attacker->UnitParameters->Range) return false;
@@ -113,14 +200,13 @@ bool ABActorFightingField::AttackUnit(ABActorFightingUnitBase* Attacker, ABActor
             IsPlayerWinner = (Victim != PlayerUnitMy);
         }
     }
-    return true;*/
+    TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(TriggersDispatcherEvent::EnumEvent::ATTACK, TArray<std::any>{ Attacker, Victim, Attacker->UnitParameters->CurrentPower }));
+    return true;
 }
 
 bool ABActorFightingField::PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell)
 {
-    UIManager.AddTriggerAbilitiesFromUnit(NewUnit);
-    return false;
-    /*if (ABActorFightingCellBase::Distance(GetCurrentPlayerUnit()->CurrentCell, Cell) > 1) return false;
+    if (ABActorFightingCellBase::Distance(GetCurrentPlayerUnit()->CurrentCell, Cell) > 1) return false;
     if (IsOccupied(Cell)) return false;
     FMana ManaRest = *GetCurrentPlayerMana() - Card->ManaCost;
     if (!ManaRest) return false;
@@ -129,159 +215,64 @@ bool ABActorFightingField::PlayCard(ABActorFightingCard* Card, ABActorFightingCe
     ArrayUnits.Add(NewUnit);
     *GetCurrentPlayerMana() -= Card->ManaCost;
     *GetCurrentPlayerMana() += Card->ManaGain;
-    return true;*/
+    TriggersDispatcher.AddTriggerAbilitiesFromUnit(NewUnit);
+    TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(TriggersDispatcherEvent::EnumEvent::PLAYCARD, TArray<std::any>{ Card, Cell }));
+    return true;
 }
-
-TPair<bool, FString> ABActorFightingField::Clicked(target) {
-    // cell, unit, card, buttons for abilities, button for passing turn
-    // returns bool (ok/not ok) and message/error
-    return UIManager.Clicked(target);
-}
-
-
-void ABActorFightingField::Tick(float DeltaTime)
-{
-    Super::Tick(DeltaTime);
-    for (ABActorFightingUnitBase* Unit : ArrayUnits) {
-        if (Unit && !Unit->IsMovingOverTime()) Unit->MoveOverTimeTo(Unit->LocationOriginal, Unit->CurrentCell->GetUnitLocation(), 0.1);
-    }
-
-    TriggersDispatcher.Tick(DeltaTime);
-}
-
-void ABActorFightingField::InitPlayers()
-{
-    IsPlayerTurn = false;
-
-    PlayerMana.GeneralMax = 0;
-    OpponentMana.GeneralMax = 0;
-
-    FActorSpawnParameters SpawnParams;
-    SpawnParams.Owner = this;
-    {
-        AActor* NewActorRaw = GetWorld()->SpawnActor<AActor>(
-            ActorToSpawnUnit,
-            FVector(0, 0, 0),
-            GetActorRotation(),
-            SpawnParams
-        );
-        PlayerUnitMy = dynamic_cast<ABActorFightingUnitBase*>(NewActorRaw);
-        ABActorFightingCellBase* StartingCell = ArrayCells[PLAYER_START_MY_X][PLAYER_START_MY_Y][PLAYER_START_MY_Z];
-        PlayerUnitMy->InitPlayerMy(this, StartingCell, GetPlayerStats(true));
-        PlayerUnitMy->InitAbilities();
-        UIManager.AddTriggerAbilitiesFromUnit(PlayerUnitMy);
-        ArrayUnits.Add(PlayerUnitMy);
-    }
-    {
-        AActor* NewActorRaw = GetWorld()->SpawnActor<AActor>(
-            ActorToSpawnUnit,
-            FVector(0, 0, 0),
-            GetActorRotation(),
-            SpawnParams
-        );
-        PlayerUnitOpponent = dynamic_cast<ABActorFightingUnitBase*>(NewActorRaw);
-        ABActorFightingCellBase* StartingCell = ArrayCells[PLAYER_START_OPPONENT_X][PLAYER_START_OPPONENT_Y][PLAYER_START_OPPONENT_Z];
-        PlayerUnitOpponent->InitPlayerOpponent(this, OpponentName, StartingCell, GetPlayerStats(false));
-        PlayerUnitOpponent->InitAbilities();
-        UIManager.AddTriggerAbilitiesFromUnit(PlayerUnitOpponent);
-        ArrayUnits.Add(PlayerUnitOpponent);
-    }
-}
-
-void ABActorFightingField::InitUnits()
-{
-
-}
-
-void ABActorFightingField::InitLoadFromWalking()
-{
-    // Load
-    UUMyGameInstance* MyGameInstance = Cast<UUMyGameInstance>(GetGameInstance());
-    FPlayerStats WalkingPlayerStats = UStatStructs::LoadPlayerStats(MyGameInstance->WalkingSave.Saves.Find(UUMyGameInstance::SAVE_WALKING_PLAYER_STATS));
-    WalkingResultFight* WalkingFight = WalkingResultFight::Load(MyGameInstance->WalkingSave.Saves.Find(UUMyGameInstance::SAVE_WALKING_FIGHT_RESULT));
-    
-    // Set back
-    OpponentName = WalkingFight->GetOpponent();
-
-    *GetPlayerStats(true) = WalkingPlayerStats;
-}
-
-void ABActorFightingField::Init()
-{
-    UIManager.Init(this);
-    TriggersDispatcher.Init(this);
-    InitLoadFromWalking();
-
-    InitCells();
-    InitPlayers();
-    InitDecks();
-    InitUnits();
-    PassTurn();
-
-    UIManager.LetActionsRegular();
-
-    OpponentStats.Health = 0;
-}
-
 
 FString ABActorFightingField::AbilityDrawCard()
 {
-    TriggersDispatcher.AddEvent(TriggersDispatcherEvent.MakeAbility(TriggersDispatcherEvent.Ability.DrawCard));
-    return "";
-    /*if (PlayerMana.General >= 4) {
+    if (PlayerMana.General >= 4) {
         PlayerMana.General -= 4;
-        DeckMy->DrawCard();
+        auto* NewCard = DeckMy->DrawCard();
+        TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeAbility(TriggersDispatcherEvent::EnumAbility::DrawCard, TArray<std::any>{ NewCard }));
         return "";
     }
-    return "Not enough mana";*/
+    return "Not enough mana";
 }
 
-FString ABActorFightingField::AbilityGetMana(int& Mana)
+FString ABActorFightingField::AbilityGetMana(int& Mana, TriggersDispatcherEvent::EnumAbility ManaType)
 {
-    return "";
-    /*if (PlayerMana.General >= 2) {
+    if (PlayerMana.General >= 2) {
         PlayerMana.General -= 2;
         Mana += 1;
+        TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeAbility(ManaType));
         return "";
     }
-    return "Not enough mana";*/
+    return "Not enough mana";
 }
 
 FString ABActorFightingField::AbilityGetManaLight()
 {
-    return "";
-    /*return AbilityGetMana(PlayerMana.Light);*/
+   return AbilityGetMana(PlayerMana.Light, TriggersDispatcherEvent::EnumAbility::GetManaLight);
 }
 
 FString ABActorFightingField::AbilityGetManaDark()
 {
-    return "";
-    /*return AbilityGetMana(PlayerMana.Dark);*/
+    return AbilityGetMana(PlayerMana.Dark, TriggersDispatcherEvent::EnumAbility::GetManaDark);
 }
 
 FString ABActorFightingField::AbilityGetManaFire()
 {
-    return "";
-    /*return AbilityGetMana(PlayerMana.Fire);*/
+    return AbilityGetMana(PlayerMana.Fire, TriggersDispatcherEvent::EnumAbility::GetManaFire);
 }
 
 FString ABActorFightingField::AbilityGetManaIce()
 {
-    return "";
-    /*return AbilityGetMana(PlayerMana.Ice);*/
+    return AbilityGetMana(PlayerMana.Ice, TriggersDispatcherEvent::EnumAbility::GetManaIce);
 }
 
 FString ABActorFightingField::PassTurn()
 {
-    TriggersDispatcher.AddEvent(TriggersDispatcherEvent.MakeAbility(TriggersDispatcherEvent.Ability.DrawCard));
-    //throw std::exception("TODO");
+    TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeAbility(TriggersDispatcherEvent::EnumAbility::PassTurn));
     IsPlayerTurn = !IsPlayerTurn;
-    
+
     GetCurrentPlayerMana()->GeneralMax += 2;
     GetCurrentPlayerMana()->General += GetCurrentPlayerMana()->GeneralMax;
     if (GetCurrentPlayerMana()->General > GetCurrentPlayerMana()->GeneralMax) GetCurrentPlayerMana()->General = GetCurrentPlayerMana()->GeneralMax;
 
-    GetCurrentPlayerDeck()->DrawCard();
+    auto* NewCard = GetCurrentPlayerDeck()->DrawCard();
+    TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(TriggersDispatcherEvent::EnumEvent::DrawCardOnTurnStart, TArray<std::any>{ NewCard }));
 
     for (ABActorFightingUnitBase* Unit : ArrayUnits) {
         Unit->OnTurnEnd(this, IsPlayerTurn != Unit->IsControlledByPlayer);
@@ -294,6 +285,36 @@ FString ABActorFightingField::PassTurn()
 }
 
 
+
+bool ABActorFightingField::ClickedOnCell(ABActorFightingCellBase* target) {
+    // cell, unit, card, buttons for abilities, button for passing turn
+    // returns bool (ok/not ok) and message/error
+    return UIManager.ClickedOnCell(target);
+}
+
+bool ABActorFightingField::ClickedOnUnit(ABActorFightingUnitBase* target) {
+    // cell, unit, card, buttons for abilities, button for passing turn
+    // returns bool (ok/not ok) and message/error
+    return UIManager.ClickedOnUnit(target);
+}
+
+bool ABActorFightingField::ClickedOnAbility(FString target) {
+    // cell, unit, card, buttons for abilities, button for passing turn
+    // returns bool (ok/not ok) and message/error
+    return UIManager.ClickedOnAbility(target);
+}
+
+bool ABActorFightingField::ClickedOnCard(ABActorFightingCard* target) {
+    // cell, unit, card, buttons for abilities, button for passing turn
+    // returns bool (ok/not ok) and message/error
+    return UIManager.ClickedOnCard(target);
+}
+
+bool ABActorFightingField::ClickedOnPassTurn() {
+    // cell, unit, card, buttons for abilities, button for passing turn
+    // returns bool (ok/not ok) and message/error
+    return UIManager.ClickedOnPassTurn();
+}
 
 
 

@@ -132,17 +132,11 @@ public:
 	ABActorFightingDeck* DeckMy;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	ABActorFightingDeck* DeckOpponent;
-	UFUNCTION(BlueprintCallable, Category = "Spawning")
-	bool PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell);
 
 	TArray<ABActorFightingUnitBase*> ArrayUnits;
 	void InitUnits();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit;
-	UFUNCTION(BlueprintCallable, Category = "Spawning")
-	bool MoveUnit(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell);
-	UFUNCTION(BlueprintCallable, Category = "Spawning")
-	bool AttackUnit(ABActorFightingUnitBase* Attacker, ABActorFightingUnitBase* Victim);
 
 	const int RADIUS = 4;
 	TArray<TArray<TArray<ABActorFightingCellBase*>>> ArrayCells;
@@ -157,19 +151,32 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Base")
 	void Init();
 
-	UFUNCTION(BlueprintCallable, Category = "Abilities")
 	FString AbilityDrawCard();
-	FString AbilityGetMana(int& Mana);
-	UFUNCTION(BlueprintCallable, Category = "Abilities")
+	FString AbilityGetMana(int& Mana, TriggersDispatcherEvent::EnumAbility ManaType);
 	FString AbilityGetManaLight();
-	UFUNCTION(BlueprintCallable, Category = "Abilities")
 	FString AbilityGetManaDark();
-	UFUNCTION(BlueprintCallable, Category = "Abilities")
 	FString AbilityGetManaFire();
-	UFUNCTION(BlueprintCallable, Category = "Abilities")
 	FString AbilityGetManaIce();
-	UFUNCTION(BlueprintCallable, Category = "Abilities")
 	FString PassTurn();
+
+	bool MoveUnit(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell);
+	bool AttackUnit(ABActorFightingUnitBase* Attacker, ABActorFightingUnitBase* Victim);
+	bool PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell);
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool ClickedOnCell(ABActorFightingCellBase* target);
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool ClickedOnUnit(ABActorFightingUnitBase* target);
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool ClickedOnAbility(FString target);
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool ClickedOnCard(ABActorFightingCard* target);
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool ClickedOnPassTurn();
 
 	FightingTriggersDispatcher TriggersDispatcher;
 	FightingUIManager UIManager;
