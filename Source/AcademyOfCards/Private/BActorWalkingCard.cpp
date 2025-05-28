@@ -38,6 +38,8 @@ int ABActorWalkingCard::MoveTo() {
 	if (PlayerModel->Move(GetActorLocation(), BoardPositionX, BoardPositionY, DealerPtr)) {
 		if (!IsDiscovered) {
 			IsDiscovered = true;
+			IsOpenlyVisible = true;
+			DealerPtr->UpdateOpenlyVisible(this);
 			Configs->GetEventByID(CardConfig->GetEventFired(PlayerModel->PlayerStats))->Fire(DealerPtr, this);
 			return 1;
 		} else {
@@ -57,6 +59,7 @@ LevelSaveInstance ABActorWalkingCard::Save() {
 	SaveInstance.SetCopy("Walls", Walls);
 	SaveInstance.SetCopy("IsCloseUpLook", IsCloseUpLook);
 	SaveInstance.SetCopy("IsDiscovered", IsDiscovered);
+	SaveInstance.SetCopy("IsOpenlyVisible", IsOpenlyVisible);
 	SaveInstance.SetCopy("ID", CardConfig->ID);
 	return SaveInstance;
 };
@@ -65,6 +68,7 @@ void ABActorWalkingCard::Load(LevelSaveInstance* SaveInstance) {
 	Walls = SaveInstance->GetAsCopy<WallsStruct>("Walls");
 	IsCloseUpLook = SaveInstance->GetAsCopy<bool>("IsCloseUpLook");
 	IsDiscovered = SaveInstance->GetAsCopy<bool>("IsDiscovered");
+	IsOpenlyVisible = SaveInstance->GetAsCopy<bool>("IsOpenlyVisible");
 
 	FString ID = SaveInstance->GetAsCopy<FString>("ID");
 	TSharedPtr<WalkingConfigs> Configs = Cast<UUMyGameInstance>(GetGameInstance())->LoadedWalkingConfigs;

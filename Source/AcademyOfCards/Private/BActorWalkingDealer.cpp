@@ -55,6 +55,10 @@ void ABActorWalkingDealer::Tick(float DeltaTime)
 	if (DealtCardThisTick && DealingCardSpawnRestTime.IsEmpty()) {
 		SetActorHiddenInGame(true);
 
+		for (auto StartCard : CardsDealt)
+			if (StartCard.Value->IsDiscovered)
+				UpdateOpenlyVisible(StartCard.Value);
+
 		// TODO LOAD SOMEWHERE ELSE
 		UUMyGameInstance* MyGameInstance = Cast<UUMyGameInstance>(GetGameInstance());
 		if (MyGameInstance->HasWalkingSave() && MyGameInstance->HasFightingSave()) {
@@ -105,6 +109,7 @@ void ABActorWalkingDealer::DealCard(int ix, int iy)
 	actor_wc->BoardPositionY = iy;
 	if (TPair<int, int>(ix, iy) == StartPosition) {
 		actor_wc->IsDiscovered = true;
+		actor_wc->IsOpenlyVisible = true;
 	}
 	actor_wc->SetActorHiddenInGame(false);
 	FVector CellCenter = GetCenterCellPosition(ix, iy);
@@ -350,4 +355,13 @@ void ABActorWalkingDealer::Load(LevelSaveInstance* SaveInstance) {
 		SavedIDs.Add(CardPos, CardsDealt[CardPos]->CardConfig->ID);
 	}
 	IsSaveLoaded = true;
+}
+
+void ABActorWalkingDealer::UpdateOpenlyVisible(ABActorWalkingCard* Card)
+{
+	for (auto& it : CardsDealt) {
+		if (it.Value->BoardPositionX == Card->BoardPositionX && it.Value->BoardPositionY == Card->BoardPositionY) continue;
+		if (std::abs(it.Value->BoardPositionX - Card->BoardPositionX) + std::abs(it.Value->BoardPositionY - Card->BoardPositionY) != 1) continue;
+		it.Value->IsOpenlyVisible = true;
+	}
 }

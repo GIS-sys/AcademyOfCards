@@ -86,7 +86,7 @@ bool ABActorFightingField::MoveUnit(ABActorFightingUnitBase* Unit, ABActorFighti
 
 bool ABActorFightingField::AttackUnit(ABActorFightingUnitBase* Attacker, ABActorFightingUnitBase* Victim)
 {
-    throw std::exception("AAA");
+    return false;
     /*if (Attacker == Victim) return false;
     if (Attacker->UnitParameters->CurrentAttacks <= 0) return false;
     int Distance = ABActorFightingCellBase::Distance(Attacker->CurrentCell, Victim->CurrentCell);
@@ -118,7 +118,7 @@ bool ABActorFightingField::AttackUnit(ABActorFightingUnitBase* Attacker, ABActor
 
 bool ABActorFightingField::PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell)
 {
-    throw std::exception("TODO");
+    return false;
     /*if (ABActorFightingCellBase::Distance(GetCurrentPlayerUnit()->CurrentCell, Cell) > 1) return false;
     if (IsOccupied(Cell)) return false;
     FMana ManaRest = *GetCurrentPlayerMana() - Card->ManaCost;
@@ -209,7 +209,7 @@ void ABActorFightingField::Init()
 
 FString ABActorFightingField::AbilityDrawCard()
 {
-    throw std::exception("TODO");
+    return "";
     /*if (PlayerMana.General >= 4) {
         PlayerMana.General -= 4;
         DeckMy->DrawCard();
@@ -220,7 +220,7 @@ FString ABActorFightingField::AbilityDrawCard()
 
 FString ABActorFightingField::AbilityGetMana(int& Mana)
 {
-    throw std::exception("TODO");
+    return "";
     /*if (PlayerMana.General >= 2) {
         PlayerMana.General -= 2;
         Mana += 1;
@@ -231,25 +231,25 @@ FString ABActorFightingField::AbilityGetMana(int& Mana)
 
 FString ABActorFightingField::AbilityGetManaLight()
 {
-    throw std::exception("TODO");
+    return "";
     /*return AbilityGetMana(PlayerMana.Light);*/
 }
 
 FString ABActorFightingField::AbilityGetManaDark()
 {
-    throw std::exception("TODO");
+    return "";
     /*return AbilityGetMana(PlayerMana.Dark);*/
 }
 
 FString ABActorFightingField::AbilityGetManaFire()
 {
-    throw std::exception("TODO");
+    return "";
     /*return AbilityGetMana(PlayerMana.Fire);*/
 }
 
 FString ABActorFightingField::AbilityGetManaIce()
 {
-    throw std::exception("TODO");
+    return "";
     /*return AbilityGetMana(PlayerMana.Ice);*/
 }
 

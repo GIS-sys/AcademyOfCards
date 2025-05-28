@@ -77,6 +77,9 @@ public:
 	bool IsDiscovered = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")
+	bool IsOpenlyVisible = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor")
 	bool IsMovingCloseUpLook = false;
 
 	UFUNCTION(BlueprintCallable, Category = "Actor")

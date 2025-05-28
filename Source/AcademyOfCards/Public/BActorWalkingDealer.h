@@ -89,4 +89,6 @@ public:
 	TMap<TPair<int, int>, FString> SavedIDs;
 	LevelSaveInstance Save();
 	void Load(LevelSaveInstance* SaveInstance);
+
+	void UpdateOpenlyVisible(ABActorWalkingCard* Card);
 };
