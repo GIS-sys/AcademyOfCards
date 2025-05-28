@@ -44,7 +44,7 @@ protected:
 	void DealCard(int ix, int iy);
 	void SetTimersForCardDeal();
 	void SetPlayerModel(int ix, int iy);
-	ABActorWalkingCard* CreateRandomCardFullyBlocked(int ix, int iy);
+	ABActorWalkingCard* CreateRandomCardFullyBlocked(int ix, int iy, FString SpecificID = "");
 
 	FVector GetCenterCellPosition(int ix, int iy);
 
@@ -57,6 +57,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Debug")
 	FString DEBUG_CARD_ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Edge Case")
+	FString STARTING_CARD_ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Edge Case")
+	FString FINISH_CARD_ID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	FVector DealingOffset { -660.0, -660.0, -20.0 };

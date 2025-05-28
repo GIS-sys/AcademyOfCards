@@ -54,12 +54,7 @@ void ABActorWalkingDealer::Tick(float DeltaTime)
 
 	if (DealtCardThisTick && DealingCardSpawnRestTime.IsEmpty()) {
 		SetActorHiddenInGame(true);
-
-		for (auto StartCard : CardsDealt)
-			if (StartCard.Value->IsDiscovered)
-				UpdateOpenlyVisible(StartCard.Value);
-
-		// TODO LOAD SOMEWHERE ELSE
+		
 		UUMyGameInstance* MyGameInstance = Cast<UUMyGameInstance>(GetGameInstance());
 		if (MyGameInstance->HasWalkingSave() && MyGameInstance->HasFightingSave()) {
 			AActor* PlayerModelRaw = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorWalkingPlayerModel::StaticClass());
@@ -90,6 +85,15 @@ void ABActorWalkingDealer::Tick(float DeltaTime)
 			UBUIWalkingEvent* EventUI = MainMenu->BUIWalkingEvent;
 			FightResult->ExecuteAfterFight(EventUI, *CardsDealt.Find({ PlayerModel->GetCurrentBoardPositionX(), PlayerModel->GetCurrentBoardPositionY() }));
 		}
+		else {
+			for (auto StartCard : CardsDealt) {
+				if (TPair<int, int>(StartCard.Value->BoardPositionX, StartCard.Value->BoardPositionY) == StartPosition) {
+					StartCard.Value->MoveTo();
+					UpdateOpenlyVisible(StartCard.Value);
+					break;
+				}
+			}
+		}
 	}
 }
 
@@ -107,10 +111,10 @@ void ABActorWalkingDealer::DealCard(int ix, int iy)
 	ABActorWalkingCard* actor_wc = CardsDealt[TPair<int, int>(ix, iy)];
 	actor_wc->BoardPositionX = ix;
 	actor_wc->BoardPositionY = iy;
-	if (TPair<int, int>(ix, iy) == StartPosition) {
+	/*if (TPair<int, int>(ix, iy) == StartPosition) {
 		actor_wc->IsDiscovered = true;
 		actor_wc->IsOpenlyVisible = true;
-	}
+	}*/
 	actor_wc->SetActorHiddenInGame(false);
 	FVector CellCenter = GetCenterCellPosition(ix, iy);
 	actor_wc->MoveOverTimeTo(GetActorLocation(), CellCenter, TIME_CARD_DEALING_MOVEMENT);
@@ -136,7 +140,7 @@ UMaterialInterface* ABActorWalkingDealer::GetMaterialByID(FString ID)
 	return MaterialArray[MaterialIndex];
 }
 
-ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked(int ix, int iy)
+ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked(int ix, int iy, FString SpecificID)
 {
 	AActor* actor = GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), GetActorRotation());
 	ABActorWalkingCard* actor_wc = dynamic_cast<ABActorWalkingCard*>(actor);
@@ -144,7 +148,11 @@ ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked(int ix, i
 	TSharedPtr<WalkingConfigs> Configs = Cast<UUMyGameInstance>(GetGameInstance())->LoadedWalkingConfigs;
 
 	actor_wc->DealerPtr = this;
-	if (DEBUG_CARD_ID == "") {
+	if (SpecificID != "") {
+		actor_wc->CardConfig = Configs->GetCardByID(SpecificID);
+	} else if (DEBUG_CARD_ID != "") {
+		actor_wc->CardConfig = Configs->GetCardByID(DEBUG_CARD_ID);
+	} else {
 		if (IsSaveLoaded) {
 			TPair<int, int> coordinates{ ix, iy };
 			FString CurrentID = *SavedIDs.Find(coordinates);
@@ -152,8 +160,6 @@ ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked(int ix, i
 		} else {
 			actor_wc->CardConfig = Deck->GetRandomCard();
 		}
-	} else {
-		actor_wc->CardConfig = Configs->GetCardByID(DEBUG_CARD_ID);
 	}
 	actor_wc->MainCardMaterial = GetMaterialByID(actor_wc->CardConfig->ID);
 
@@ -214,11 +220,11 @@ void ABActorWalkingDealer::CreateBoard()
 	}
 	if (!IsInsideFieldNoEnds(StartPosition)) {
 		int ix = StartPosition.Get<0>(); int iy = StartPosition.Get<1>();
-		CardsDealt.Add(StartPosition, CreateRandomCardFullyBlocked(ix, iy));
+		CardsDealt.Add(StartPosition, CreateRandomCardFullyBlocked(ix, iy, STARTING_CARD_ID));
 	}
 	if (!IsInsideFieldNoEnds(FinishPosition)) {
 		int ix = FinishPosition.Get<0>(); int iy = FinishPosition.Get<1>();
-		CardsDealt.Add(FinishPosition, CreateRandomCardFullyBlocked(ix, iy));
+		CardsDealt.Add(FinishPosition, CreateRandomCardFullyBlocked(ix, iy, FINISH_CARD_ID));
 	}
 
 	// use bfs to create random pathway
@@ -325,7 +331,7 @@ void ABActorWalkingDealer::SetTimersForCardDeal()
 
 void ABActorWalkingDealer::DealCards()
 {
-	SetPlayerModel(StartPosition.Get<0>(), StartPosition.Get<1>());
+	//SetPlayerModel(StartPosition.Get<0>(), StartPosition.Get<1>());
 
 	CreateBoard();
 
