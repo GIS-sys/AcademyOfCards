@@ -3,11 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include <functional>
+#include <map>
 
 class ABActorFightingField;
 class ABActorFightingCellBase;
 class ABActorFightingUnitBase;
 class ABActorFightingCard;
+
+enum FightingUIManagerClickType {
+	OnCell = 0,
+	OnUnit,
+	OnAbility,
+	OnCard,
+	OnPassTurn,
+};
+
+using CallbackType = std::function<bool(FightingUIManagerClickType, ABActorFightingCellBase*, ABActorFightingUnitBase*, FString, ABActorFightingCard*)>;
 
 /**
  * 
@@ -15,6 +27,8 @@ class ABActorFightingCard;
 class ACADEMYOFCARDS_API FightingUIManager
 {
 	ABActorFightingField* Field = nullptr;
+	std::map<FightingUIManagerClickType, CallbackType> Callbacks;
+	bool wait = false;
 
 public:
 	FightingUIManager();
@@ -31,4 +45,9 @@ public:
 	bool ClickedOnAbility(FString target);
 	bool ClickedOnCard(ABActorFightingCard* target);
 	bool ClickedOnPassTurn();
+
+	void WaitForInput();
+	void Clear();
+
+	void RegisterCallback(CallbackType callback_foo, std::vector<FightingUIManagerClickType> callback_types);
 };

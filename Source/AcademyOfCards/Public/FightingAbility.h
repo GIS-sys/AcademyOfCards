@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Fighting/FightingTriggersDispatcher.h"
 
 class UUMyGameInstance;
 class ABActorFightingUnitBase;
@@ -58,4 +59,9 @@ public:
 	void OnTurnEnd(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, bool TurnEndedIsThisOwner);
 	void OnAttackUnit(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Victim);
 	void OnGetAttacked(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Attacker);
+
+
+	bool CheckEvent(ABActorFightingField* Field, TriggersDispatcherEvent Event, ABActorFightingUnitBase* unit) { return false; } // TODO IMPORTANT
+	void ExecEvent(ABActorFightingField* Field, TriggersDispatcherEvent Event, ABActorFightingUnitBase* unit) { return; } // TODO IMPORTANT
+	void FlushEvent(ABActorFightingField* Field, TriggersDispatcherEvent Event, ABActorFightingUnitBase* unit) { return; } // TODO IMPORTANT
 };

@@ -3,6 +3,7 @@
 
 #include "Fighting/FightingTriggersDispatcher.h"
 #include "BActorFightingField.h"
+#include "FightingAbility.h"
 
 FightingTriggersDispatcher::FightingTriggersDispatcher()
 {
@@ -63,4 +64,60 @@ void FightingTriggersDispatcher::AddTriggerAbilitiesFromUnit(ABActorFightingUnit
 
 void FightingTriggersDispatcher::AddTriggerAbility(ABActorFightingUnitBase* Unit, TSharedPtr<FightingAbility> Ability) {
     all_triggers.push_back(TriggersDispatcherTrigger::MakeAbility(Unit, Ability));
+}
+
+void FightingTriggersDispatcher::AddEvent(TriggersDispatcherEvent Event) {
+    all_events.push_back(Event);
+}
+
+
+
+
+
+
+TriggersDispatcherEvent TriggersDispatcherEvent::MakeTriggerTriggered(TriggersDispatcherTrigger* trigger) {
+    TriggersDispatcherEvent tde;
+    tde.type = 0;
+    tde.trigger = trigger;
+    return tde;
+}
+
+TriggersDispatcherEvent TriggersDispatcherEvent::MakeAbility(EnumAbility enum_ability, std::vector<std::any> args) {
+    TriggersDispatcherEvent tde;
+    tde.type = 1;
+    tde.ability = enum_ability;
+    tde.ability_args = args;
+    return tde;
+}
+
+TriggersDispatcherEvent TriggersDispatcherEvent::MakeEvent(EnumEvent enum_event, std::vector<std::any> args) {
+    TriggersDispatcherEvent tde;
+    tde.type = 2;
+    tde.event = enum_event;
+    tde.event_args = args;
+    return tde;
+}
+
+
+
+
+
+
+bool TriggersDispatcherTrigger::Check(ABActorFightingField* Field, TriggersDispatcherEvent Event) {
+    return ability->CheckEvent(Field, Event, unit);
+}
+
+void TriggersDispatcherTrigger::Exec(ABActorFightingField* Field, TriggersDispatcherEvent Event) {
+    return ability->ExecEvent(Field, Event, unit);
+}
+
+void TriggersDispatcherTrigger::Flush(ABActorFightingField* Field, TriggersDispatcherEvent Event) {
+    return ability->FlushEvent(Field, Event, unit);
+}
+
+TriggersDispatcherTrigger TriggersDispatcherTrigger::MakeAbility(ABActorFightingUnitBase* Unit, TSharedPtr<FightingAbility> Ability) {
+    TriggersDispatcherTrigger tdt;
+    tdt.ability = Ability;
+    tdt.unit = Unit;
+    return tdt;
 }

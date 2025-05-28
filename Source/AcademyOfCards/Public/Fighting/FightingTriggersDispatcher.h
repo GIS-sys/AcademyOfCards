@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include <deque>
 #include <list>
+#include <vector>
 #include <any>
 
 class ABActorFightingField;
@@ -33,11 +34,21 @@ struct TriggersDispatcherEvent {
 		DrawCardOnTurnStart,
 	};
 
+	int type = -1; // 0 = trigger, 1 = ability, 2 = event
+	TriggersDispatcherTrigger* trigger;
+	EnumAbility ability;
+	std::vector<std::any> ability_args;
+	EnumEvent event;
+	std::vector<std::any> event_args;
+
 	static TriggersDispatcherEvent MakeTriggerTriggered(TriggersDispatcherTrigger*);
-	static TriggersDispatcherEvent MakeAbility(EnumAbility, TArray<std::any> args = {});
-	static TriggersDispatcherEvent MakeEvent(EnumEvent, TArray<std::any> args = {});
+	static TriggersDispatcherEvent MakeAbility(EnumAbility, std::vector<std::any> args = {});
+	static TriggersDispatcherEvent MakeEvent(EnumEvent, std::vector<std::any> args = {});
 };
 struct TriggersDispatcherTrigger {
+	ABActorFightingUnitBase* unit;
+	TSharedPtr<FightingAbility> ability;
+
 	bool Check(ABActorFightingField* Field, TriggersDispatcherEvent Event);
 	void Exec(ABActorFightingField* Field, TriggersDispatcherEvent Event);
 	void Flush(ABActorFightingField* Field, TriggersDispatcherEvent Event);
