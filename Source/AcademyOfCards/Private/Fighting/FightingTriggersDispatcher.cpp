@@ -82,7 +82,7 @@ TriggersDispatcherEvent TriggersDispatcherEvent::MakeTriggerTriggered(TriggersDi
     return tde;
 }
 
-TriggersDispatcherEvent TriggersDispatcherEvent::MakeAbility(EnumAbility enum_ability, std::vector<std::any> args) {
+TriggersDispatcherEvent TriggersDispatcherEvent::MakeAbility(TriggersDispatcherEvent_EnumAbility enum_ability, std::vector<std::any> args) {
     TriggersDispatcherEvent tde;
     tde.type = 1;
     tde.ability = enum_ability;
@@ -90,7 +90,7 @@ TriggersDispatcherEvent TriggersDispatcherEvent::MakeAbility(EnumAbility enum_ab
     return tde;
 }
 
-TriggersDispatcherEvent TriggersDispatcherEvent::MakeEvent(EnumEvent enum_event, std::vector<std::any> args) {
+TriggersDispatcherEvent TriggersDispatcherEvent::MakeEvent(TriggersDispatcherEvent_EnumEvent enum_event, std::vector<std::any> args) {
     TriggersDispatcherEvent tde;
     tde.type = 2;
     tde.event = enum_event;

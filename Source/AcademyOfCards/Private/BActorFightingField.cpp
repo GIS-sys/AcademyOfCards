@@ -167,7 +167,7 @@ bool ABActorFightingField::MoveUnit(ABActorFightingUnitBase* Unit, ABActorFighti
     if (IsOccupied(Cell)) return false;
     bool res = Unit->Move(this, Cell);
     if (res) {
-        TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(TriggersDispatcherEvent::EnumEvent::MOVE, std::vector<std::any>{ Unit, Cell }));
+        TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(TriggersDispatcherEvent_EnumEvent::MOVE, std::vector<std::any>{ Unit, Cell }));
     }
     return res;
 }
@@ -200,7 +200,7 @@ bool ABActorFightingField::AttackUnit(ABActorFightingUnitBase* Attacker, ABActor
             IsPlayerWinner = (Victim != PlayerUnitMy);
         }
     }
-    TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(TriggersDispatcherEvent::EnumEvent::ATTACK, std::vector<std::any>{ Attacker, Victim, Attacker->UnitParameters->CurrentPower }));
+    TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(TriggersDispatcherEvent_EnumEvent::ATTACK, std::vector<std::any>{ Attacker, Victim, Attacker->UnitParameters->CurrentPower }));
     return true;
 }
 
@@ -216,7 +216,7 @@ bool ABActorFightingField::PlayCard(ABActorFightingCard* Card, ABActorFightingCe
     *GetCurrentPlayerMana() -= Card->ManaCost;
     *GetCurrentPlayerMana() += Card->ManaGain;
     TriggersDispatcher.AddTriggerAbilitiesFromUnit(NewUnit);
-    TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(TriggersDispatcherEvent::EnumEvent::PLAYCARD, std::vector<std::any>{ Card, Cell }));
+    TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(TriggersDispatcherEvent_EnumEvent::PLAYCARD, std::vector<std::any>{ Card, Cell }));
     return true;
 }
 
@@ -225,13 +225,13 @@ FString ABActorFightingField::AbilityDrawCard()
     if (PlayerMana.General >= 4) {
         PlayerMana.General -= 4;
         auto* NewCard = DeckMy->DrawCard();
-        TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeAbility(TriggersDispatcherEvent::EnumAbility::DrawCard, std::vector<std::any>{ NewCard }));
+        TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeAbility(TriggersDispatcherEvent_EnumAbility::DrawCard, std::vector<std::any>{ NewCard }));
         return "";
     }
     return "Not enough mana";
 }
 
-FString ABActorFightingField::AbilityGetMana(int& Mana, TriggersDispatcherEvent::EnumAbility ManaType)
+FString ABActorFightingField::AbilityGetMana(int& Mana, TriggersDispatcherEvent_EnumAbility ManaType)
 {
     if (PlayerMana.General >= 2) {
         PlayerMana.General -= 2;
@@ -244,27 +244,27 @@ FString ABActorFightingField::AbilityGetMana(int& Mana, TriggersDispatcherEvent:
 
 FString ABActorFightingField::AbilityGetManaLight()
 {
-   return AbilityGetMana(PlayerMana.Light, TriggersDispatcherEvent::EnumAbility::GetManaLight);
+   return AbilityGetMana(PlayerMana.Light, TriggersDispatcherEvent_EnumAbility::GetManaLight);
 }
 
 FString ABActorFightingField::AbilityGetManaDark()
 {
-    return AbilityGetMana(PlayerMana.Dark, TriggersDispatcherEvent::EnumAbility::GetManaDark);
+    return AbilityGetMana(PlayerMana.Dark, TriggersDispatcherEvent_EnumAbility::GetManaDark);
 }
 
 FString ABActorFightingField::AbilityGetManaFire()
 {
-    return AbilityGetMana(PlayerMana.Fire, TriggersDispatcherEvent::EnumAbility::GetManaFire);
+    return AbilityGetMana(PlayerMana.Fire, TriggersDispatcherEvent_EnumAbility::GetManaFire);
 }
 
 FString ABActorFightingField::AbilityGetManaIce()
 {
-    return AbilityGetMana(PlayerMana.Ice, TriggersDispatcherEvent::EnumAbility::GetManaIce);
+    return AbilityGetMana(PlayerMana.Ice, TriggersDispatcherEvent_EnumAbility::GetManaIce);
 }
 
 FString ABActorFightingField::PassTurn()
 {
-    TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeAbility(TriggersDispatcherEvent::EnumAbility::PassTurn));
+    TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeAbility(TriggersDispatcherEvent_EnumAbility::PassTurn));
     IsPlayerTurn = !IsPlayerTurn;
 
     GetCurrentPlayerMana()->GeneralMax += 2;
@@ -272,7 +272,7 @@ FString ABActorFightingField::PassTurn()
     if (GetCurrentPlayerMana()->General > GetCurrentPlayerMana()->GeneralMax) GetCurrentPlayerMana()->General = GetCurrentPlayerMana()->GeneralMax;
 
     auto* NewCard = GetCurrentPlayerDeck()->DrawCard();
-    TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(TriggersDispatcherEvent::EnumEvent::DrawCardOnTurnStart, std::vector<std::any>{ NewCard }));
+    TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(TriggersDispatcherEvent_EnumEvent::DrawCardOnTurnStart, std::vector<std::any>{ NewCard }));
 
     for (ABActorFightingUnitBase* Unit : ArrayUnits) {
         Unit->OnTurnEnd(this, IsPlayerTurn != Unit->IsControlledByPlayer);
@@ -298,7 +298,7 @@ bool ABActorFightingField::ClickedOnUnit(ABActorFightingUnitBase* target) {
     return UIManager.ClickedOnUnit(target);
 }
 
-bool ABActorFightingField::ClickedOnAbility(FString target) {
+bool ABActorFightingField::ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target) {
     // cell, unit, card, buttons for abilities, button for passing turn
     // returns bool (ok/not ok) and message/error
     return UIManager.ClickedOnAbility(target);

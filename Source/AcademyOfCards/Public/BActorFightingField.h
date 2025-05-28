@@ -152,7 +152,7 @@ public:
 	void Init();
 
 	FString AbilityDrawCard();
-	FString AbilityGetMana(int& Mana, TriggersDispatcherEvent::EnumAbility ManaType);
+	FString AbilityGetMana(int& Mana, TriggersDispatcherEvent_EnumAbility ManaType);
 	FString AbilityGetManaLight();
 	FString AbilityGetManaDark();
 	FString AbilityGetManaFire();
@@ -170,7 +170,7 @@ public:
 	bool ClickedOnUnit(ABActorFightingUnitBase* target);
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
-	bool ClickedOnAbility(FString target);
+	bool ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target);
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
 	bool ClickedOnCard(ABActorFightingCard* target);

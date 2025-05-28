@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Fighting/FightingTriggersDispatcher.h"
 #include <functional>
 #include <map>
 
@@ -19,7 +20,7 @@ enum FightingUIManagerClickType {
 	OnPassTurn,
 };
 
-using CallbackType = std::function<bool(FightingUIManagerClickType, ABActorFightingCellBase*, ABActorFightingUnitBase*, FString, ABActorFightingCard*)>;
+using CallbackType = std::function<bool(FightingUIManagerClickType, ABActorFightingCellBase*, ABActorFightingUnitBase*, TriggersDispatcherEvent_EnumAbility, ABActorFightingCard*)>;
 
 /**
  * 
@@ -42,7 +43,7 @@ public:
 
 	bool ClickedOnCell(ABActorFightingCellBase* target);
 	bool ClickedOnUnit(ABActorFightingUnitBase* target);
-	bool ClickedOnAbility(FString target);
+	bool ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target);
 	bool ClickedOnCard(ABActorFightingCard* target);
 	bool ClickedOnPassTurn();
 

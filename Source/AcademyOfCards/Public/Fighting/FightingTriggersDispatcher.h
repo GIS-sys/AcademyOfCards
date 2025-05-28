@@ -7,6 +7,7 @@
 #include <list>
 #include <vector>
 #include <any>
+#include "MyEnumsCollection.h"
 
 class ABActorFightingField;
 class ABActorFightingUnitBase;
@@ -14,36 +15,18 @@ class FightingAbility;
 
 static const int MAX_TRIGGERS_PER_EVENT = 100;
 
-
 struct TriggersDispatcherTrigger;
 struct TriggersDispatcherEvent {
-	enum EnumAbility {
-		DrawCard = 0,
-		PassTurn,
-		GetManaLight,
-		GetManaDark,
-		GetManaFire,
-		GetManaIce,
-	};
-
-	enum EnumEvent {
-		MOVE = 0,
-		ATTACK,
-		PLAYCARD,
-		DRAWCARD,
-		DrawCardOnTurnStart,
-	};
-
 	int type = -1; // 0 = trigger, 1 = ability, 2 = event
 	TriggersDispatcherTrigger* trigger;
-	EnumAbility ability;
+	TriggersDispatcherEvent_EnumAbility ability;
 	std::vector<std::any> ability_args;
-	EnumEvent event;
+	TriggersDispatcherEvent_EnumEvent event;
 	std::vector<std::any> event_args;
 
 	static TriggersDispatcherEvent MakeTriggerTriggered(TriggersDispatcherTrigger*);
-	static TriggersDispatcherEvent MakeAbility(EnumAbility, std::vector<std::any> args = {});
-	static TriggersDispatcherEvent MakeEvent(EnumEvent, std::vector<std::any> args = {});
+	static TriggersDispatcherEvent MakeAbility(TriggersDispatcherEvent_EnumAbility x, std::vector<std::any> args = {});
+	static TriggersDispatcherEvent MakeEvent(TriggersDispatcherEvent_EnumEvent x, std::vector<std::any> args = {});
 };
 struct TriggersDispatcherTrigger {
 	ABActorFightingUnitBase* unit;

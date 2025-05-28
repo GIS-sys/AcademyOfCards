@@ -60,7 +60,6 @@ public:
 	void OnAttackUnit(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Victim);
 	void OnGetAttacked(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Attacker);
 
-
 	bool CheckEvent(ABActorFightingField* Field, TriggersDispatcherEvent Event, ABActorFightingUnitBase* unit) { return false; } // TODO IMPORTANT
 	void ExecEvent(ABActorFightingField* Field, TriggersDispatcherEvent Event, ABActorFightingUnitBase* unit) { return; } // TODO IMPORTANT
 	void FlushEvent(ABActorFightingField* Field, TriggersDispatcherEvent Event, ABActorFightingUnitBase* unit) { return; } // TODO IMPORTANT

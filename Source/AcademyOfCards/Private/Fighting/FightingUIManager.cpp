@@ -33,23 +33,23 @@ void FightingUIManager::Clear() {
 }
 
 bool FightingUIManager::ClickedOnCell(ABActorFightingCellBase* target) {
-    return Callbacks[FightingUIManagerClickType::OnCell](FightingUIManagerClickType::OnCell, target, nullptr, "", nullptr);
+    return Callbacks[FightingUIManagerClickType::OnCell](FightingUIManagerClickType::OnCell, target, nullptr, TriggersDispatcherEvent_EnumAbility::None, nullptr);
 }
 
 bool FightingUIManager::ClickedOnUnit(ABActorFightingUnitBase* target) {
-    return Callbacks[FightingUIManagerClickType::OnUnit](FightingUIManagerClickType::OnUnit, nullptr, target, "", nullptr);
+    return Callbacks[FightingUIManagerClickType::OnUnit](FightingUIManagerClickType::OnUnit, nullptr, target, TriggersDispatcherEvent_EnumAbility::None, nullptr);
 }
 
-bool FightingUIManager::ClickedOnAbility(FString target) {
+bool FightingUIManager::ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target) {
     return Callbacks[FightingUIManagerClickType::OnAbility](FightingUIManagerClickType::OnAbility, nullptr, nullptr, target, nullptr);
 }
 
 bool FightingUIManager::ClickedOnCard(ABActorFightingCard* target) {
-    return Callbacks[FightingUIManagerClickType::OnCard](FightingUIManagerClickType::OnCard, nullptr, nullptr, "", target);
+    return Callbacks[FightingUIManagerClickType::OnCard](FightingUIManagerClickType::OnCard, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::None, target);
 }
 
 bool FightingUIManager::ClickedOnPassTurn() {
-    return Callbacks[FightingUIManagerClickType::OnPassTurn](FightingUIManagerClickType::OnPassTurn, nullptr, nullptr, "", nullptr);
+    return Callbacks[FightingUIManagerClickType::OnPassTurn](FightingUIManagerClickType::OnPassTurn, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::None, nullptr);
 }
 
 void FightingUIManager::RegisterCallback(CallbackType callback_foo, std::vector<FightingUIManagerClickType> callback_types) {
@@ -62,7 +62,7 @@ void FightingUIManager::LetActionsRegular() {
     // TODO IMPORTANT
     UE_LOG(LogTemp, Error, TEXT("Let actions regular"));
     RegisterCallback(
-        [](FightingUIManagerClickType cbt, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, FString ability, ABActorFightingCard* card) {
+        [](FightingUIManagerClickType cbt, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
             UE_LOG(LogTemp, Error, TEXT("Callback!"));
             return true;
         },
