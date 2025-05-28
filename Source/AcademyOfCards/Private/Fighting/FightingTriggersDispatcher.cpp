@@ -42,6 +42,7 @@ void FightingTriggersDispatcher::Tick(float DeltaTime)
 TriggersDispatcherTrigger* FightingTriggersDispatcher::CheckTriggers()
 {
     int i = 0;
+    UE_LOG(LogTemp, Error, TEXT("Checking triggers (total %d)"), all_triggers.size());
     for (auto& trigger : all_triggers) {
         if (trigger.Check(Field, all_events[0])) return &trigger;
         ++i;

@@ -89,7 +89,6 @@ FString Regular_WhereToMoveUnit(FightingUIManagerClickType cbt, FightingUIManage
 
 
 FString Regular_PlayCardOrMoveUnitOrPass(FightingUIManagerClickType cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
-    UE_LOG(LogTemp, Error, TEXT("Regular_PlayCardOrMoveUnitOrPass")); 
     if (cbt == FightingUIManagerClickType::OnCard) {
         card->PermanentlyHighlight();
         uim->state["card"] = card;
@@ -111,10 +110,11 @@ FString Regular_PlayCardOrMoveUnitOrPass(FightingUIManagerClickType cbt, Fightin
 }
 
 FString Regular_WhereToPlayCard(FightingUIManagerClickType cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
-    UE_LOG(LogTemp, Error, TEXT("Regular_WhereToPlayCard"));
     if (cbt == FightingUIManagerClickType::OnCell) {
         ABActorFightingCard* ChosenCard = std::any_cast<ABActorFightingCard*>(uim->state["card"]);
         if (!ChosenCard->CanTargetCell()) return "Please target Cell with this card";
+        bool res = uim->Field->PlayCard(ChosenCard, cell);
+        if (!res) return "Couldn't play Card on this Cell";
         ChosenCard->ResetPermanentHighlight();
         uim->LetActionsRegular();
         return "";
@@ -122,6 +122,8 @@ FString Regular_WhereToPlayCard(FightingUIManagerClickType cbt, FightingUIManage
     if (cbt == FightingUIManagerClickType::OnUnit) {
         ABActorFightingCard* ChosenCard = std::any_cast<ABActorFightingCard*>(uim->state["card"]);
         if (!ChosenCard->CanTargetUnit()) return "Please target Unit with this card";
+        bool res = uim->Field->PlayCard(ChosenCard, unit->CurrentCell);
+        if (!res) return "Couldn't play Card on this Unit";
         ChosenCard->ResetPermanentHighlight();
         uim->LetActionsRegular();
         return "";
@@ -132,19 +134,25 @@ FString Regular_WhereToPlayCard(FightingUIManagerClickType cbt, FightingUIManage
         uim->LetActionsRegular();
         return "";
     }
+    if (cbt == FightingUIManagerClickType::OnPassTurn) {
+        return "Please explicitly deselect current Card first";
+    }
     return "";
 }
 
 FString Regular_WhereToMoveUnit(FightingUIManagerClickType cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
-    UE_LOG(LogTemp, Error, TEXT("Regular_WhereToMoveUnit"));
     if (cbt == FightingUIManagerClickType::OnCell) {
         ABActorFightingUnitBase* ChosenUnit = std::any_cast<ABActorFightingUnitBase*>(uim->state["unit"]);
+        bool res = uim->Field->MoveUnit(ChosenUnit, cell);
+        if (!res) return "Couldn't move Unit on this Cell";
         ChosenUnit->ResetPermanentHighlight();
         uim->LetActionsRegular();
         return "";
     }
     if (cbt == FightingUIManagerClickType::OnUnit) {
         ABActorFightingUnitBase* ChosenUnit = std::any_cast<ABActorFightingUnitBase*>(uim->state["unit"]);
+        bool res = uim->Field->AttackUnit(ChosenUnit, unit);
+        if (!res) return "Couldn't attack Unit with selected Unit";
         ChosenUnit->ResetPermanentHighlight();
         uim->LetActionsRegular();
         return "";
@@ -154,6 +162,9 @@ FString Regular_WhereToMoveUnit(FightingUIManagerClickType cbt, FightingUIManage
         ChosenUnit->ResetPermanentHighlight();
         uim->LetActionsRegular();
         return "";
+    }
+    if (cbt == FightingUIManagerClickType::OnPassTurn) {
+        return "Please explicitly deselect current Unit first";
     }
     return "";
 }

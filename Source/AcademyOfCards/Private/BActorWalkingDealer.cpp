@@ -63,7 +63,6 @@ void ABActorWalkingDealer::Tick(float DeltaTime)
 
 			LevelSaveInstance* FightOutcomeSave = MyGameInstance->FightingSave.Saves.Find(UUMyGameInstance::SAVE_FIGHTING_FIGHT_OUTCOME);
 			bool FightOutcome = FightOutcomeSave->GetAsCopy<bool>(LevelSaveInstance::DEFAULT_NAME);
-			UE_LOG(LogTemp, Error, TEXT("Fight Result: %d"), FightOutcome);
 
 			LevelSaveInstance* PlayerStatsSave = MyGameInstance->FightingSave.Saves.Find(UUMyGameInstance::SAVE_FIGHTING_PLAYER_STATS);
 			FPlayerStats PlayerStats = UStatStructs::LoadPlayerStats(PlayerStatsSave);
