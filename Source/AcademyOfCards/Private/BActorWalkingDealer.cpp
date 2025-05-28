@@ -119,6 +119,18 @@ void ABActorWalkingDealer::SetPlayerModel(int ix, int iy)
 	PlayerModel->Move(GetCenterCellPosition(ix, iy), ix, iy, this);
 }
 
+UMaterialInterface* ABActorWalkingDealer::GetMaterialByID(FString ID)
+{
+	int MaterialIndex = 0;
+	for (int i = 0; i < MaterialIDsArray.Num(); ++i) {
+		if (MaterialIDsArray[i] == ID) {
+			MaterialIndex = i;
+			break;
+		}
+	}
+	return MaterialArray[MaterialIndex];
+}
+
 ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked(int ix, int iy)
 {
 	AActor* actor = GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), GetActorRotation());
@@ -138,14 +150,7 @@ ABActorWalkingCard* ABActorWalkingDealer::CreateRandomCardFullyBlocked(int ix, i
 	} else {
 		actor_wc->CardConfig = Configs->GetCardByID(DEBUG_CARD_ID);
 	}
-	int MaterialIndex = 0;
-	for (int i = 0; i < MaterialIDsArray.Num(); ++i) {
-		if (MaterialIDsArray[i] == actor_wc->CardConfig->ID) {
-			MaterialIndex = i;
-			break;
-		}
-	}
-	actor_wc->MainCardMaterial = MaterialArray[MaterialIndex];
+	actor_wc->MainCardMaterial = GetMaterialByID(actor_wc->CardConfig->ID);
 
 	actor_wc->Walls.bottom = true;
 	actor_wc->Walls.top = true;
@@ -295,7 +300,6 @@ bool ABActorWalkingDealer::CheckAbleToGo(int CurrentBoardPositionX, int CurrentB
 void ABActorWalkingDealer::SetTimersForCardDeal()
 {
 	float time_delay = TIME_BETWEEN_CARD_DEAL;
-	if (true) time_delay = 0.0001; // TODO
 	float TimeBetweenFactor = 1100.0 / 16.0; // Idk why but I need this factor to make TIME_BETWEEN_CARD_DEAL be in seconds
 	for (int ix = 0; ix < FieldWidth; ++ix) {
 		for (int iy = 0; iy < FieldHeight; ++iy) {

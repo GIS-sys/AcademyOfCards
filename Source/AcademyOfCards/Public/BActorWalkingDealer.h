@@ -83,6 +83,8 @@ public:
 	void DealCards();
 	bool CheckAbleToGo(int CurrentBoardPositionX, int CurrentBoardPositionY, int BoardPositionX, int BoardPositionY);
 
+	UMaterialInterface* GetMaterialByID(FString ID);
+
 	bool IsSaveLoaded = false;
 	TMap<TPair<int, int>, FString> SavedIDs;
 	LevelSaveInstance Save();

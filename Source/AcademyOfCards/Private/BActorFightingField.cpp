@@ -73,15 +73,21 @@ void ABActorFightingField::InitDecks()
     DeckOpponent->DealCards();
 }
 
+
 bool ABActorFightingField::MoveUnit(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell)
 {
-    if (IsOccupied(Cell)) return false;
-    return Unit->Move(this, Cell);
+    IsFinished = true;
+    IsPlayerWinner = true;
+    return true;
+    //throw std::exception("TODO");
+    /*if (IsOccupied(Cell)) return false;
+    return Unit->Move(this, Cell);*/
 }
 
 bool ABActorFightingField::AttackUnit(ABActorFightingUnitBase* Attacker, ABActorFightingUnitBase* Victim)
 {
-    if (Attacker == Victim) return false;
+    throw std::exception("AAA");
+    /*if (Attacker == Victim) return false;
     if (Attacker->UnitParameters->CurrentAttacks <= 0) return false;
     int Distance = ABActorFightingCellBase::Distance(Attacker->CurrentCell, Victim->CurrentCell);
     if (Distance > Attacker->UnitParameters->Range) return false;
@@ -107,12 +113,13 @@ bool ABActorFightingField::AttackUnit(ABActorFightingUnitBase* Attacker, ABActor
             IsPlayerWinner = (Victim != PlayerUnitMy);
         }
     }
-    return true;
+    return true;*/
 }
 
 bool ABActorFightingField::PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell)
 {
-    if (ABActorFightingCellBase::Distance(GetCurrentPlayerUnit()->CurrentCell, Cell) > 1) return false;
+    throw std::exception("TODO");
+    /*if (ABActorFightingCellBase::Distance(GetCurrentPlayerUnit()->CurrentCell, Cell) > 1) return false;
     if (IsOccupied(Cell)) return false;
     FMana ManaRest = *GetCurrentPlayerMana() - Card->ManaCost;
     if (!ManaRest) return false;
@@ -121,8 +128,9 @@ bool ABActorFightingField::PlayCard(ABActorFightingCard* Card, ABActorFightingCe
     ArrayUnits.Add(NewUnit);
     *GetCurrentPlayerMana() -= Card->ManaCost;
     *GetCurrentPlayerMana() += Card->ManaGain;
-    return true;
+    return true;*/
 }
+
 
 void ABActorFightingField::Tick(float DeltaTime)
 {
@@ -194,52 +202,60 @@ void ABActorFightingField::Init()
     InitDecks();
     InitUnits();
     PassTurn();
-}
 
+    OpponentStats.Health = 0;
+}
 
 
 FString ABActorFightingField::AbilityDrawCard()
 {
-    if (PlayerMana.General >= 4) {
+    throw std::exception("TODO");
+    /*if (PlayerMana.General >= 4) {
         PlayerMana.General -= 4;
         DeckMy->DrawCard();
         return "";
     }
-    return "Not enough mana";
+    return "Not enough mana";*/
 }
 
 FString ABActorFightingField::AbilityGetMana(int& Mana)
 {
-    if (PlayerMana.General >= 2) {
+    throw std::exception("TODO");
+    /*if (PlayerMana.General >= 2) {
         PlayerMana.General -= 2;
         Mana += 1;
         return "";
     }
-    return "Not enough mana";
+    return "Not enough mana";*/
 }
 
 FString ABActorFightingField::AbilityGetManaLight()
 {
-    return AbilityGetMana(PlayerMana.Light);
+    throw std::exception("TODO");
+    /*return AbilityGetMana(PlayerMana.Light);*/
 }
 
 FString ABActorFightingField::AbilityGetManaDark()
 {
-    return AbilityGetMana(PlayerMana.Dark);
+    throw std::exception("TODO");
+    /*return AbilityGetMana(PlayerMana.Dark);*/
 }
 
 FString ABActorFightingField::AbilityGetManaFire()
 {
-    return AbilityGetMana(PlayerMana.Fire);
+    throw std::exception("TODO");
+    /*return AbilityGetMana(PlayerMana.Fire);*/
 }
 
 FString ABActorFightingField::AbilityGetManaIce()
 {
-    return AbilityGetMana(PlayerMana.Ice);
+    throw std::exception("TODO");
+    /*return AbilityGetMana(PlayerMana.Ice);*/
 }
 
 FString ABActorFightingField::PassTurn()
 {
+    //throw std::exception("TODO");
     IsPlayerTurn = !IsPlayerTurn;
     
     GetCurrentPlayerMana()->GeneralMax += 2;
@@ -257,7 +273,6 @@ FString ABActorFightingField::PassTurn()
     }
     return "";
 }
-
 
 
 
@@ -378,7 +393,8 @@ void AI::Think(ABActorFightingField* FightingField)
 
 void AI::Act(ABActorFightingField* FightingField)
 {
-    if (CardToPlay) {
+    // TODO
+    /*if (CardToPlay) {
         int x = PlayCardCoordinates.Get<0>(); int y = PlayCardCoordinates.Get<1>(); int z = PlayCardCoordinates.Get<2>();
         UE_LOG(LogTemp, Error, TEXT("AI acting by playing card to %d %d %d"), x, y, z);
         FightingField->PlayCard(CardToPlay, FightingField->ArrayCells[x][y][z]);
@@ -405,7 +421,7 @@ void AI::Act(ABActorFightingField* FightingField)
     if (AttackUnitAttacker) {
         UE_LOG(LogTemp, Error, TEXT("AI acting by attacking"));
         FightingField->AttackUnit(AttackUnitAttacker, AttackUnitVictim);
-    }
+    }*/
 }
 
 bool AI::HasFinishedTurn(ABActorFightingField* FightingField)

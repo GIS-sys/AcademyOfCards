@@ -65,5 +65,9 @@ void ABActorWalkingCard::Load(LevelSaveInstance* SaveInstance) {
 	Walls = SaveInstance->GetAsCopy<WallsStruct>("Walls");
 	IsCloseUpLook = SaveInstance->GetAsCopy<bool>("IsCloseUpLook");
 	IsDiscovered = SaveInstance->GetAsCopy<bool>("IsDiscovered");
-	CardConfig->ID = SaveInstance->GetAsCopy<FString>("ID");
+
+	FString ID = SaveInstance->GetAsCopy<FString>("ID");
+	TSharedPtr<WalkingConfigs> Configs = Cast<UUMyGameInstance>(GetGameInstance())->LoadedWalkingConfigs;
+	CardConfig = Configs->GetCardByID(ID);
+	MainCardMaterial = DealerPtr->GetMaterialByID(ID);
 };
