@@ -33,8 +33,10 @@ void FightingTriggersDispatcher::Tick(float DeltaTime)
         return;
     }
 
+    UE_LOG(LogTemp, Error, TEXT("Event finished triggering: %s"), *TriggersDispatcherEvent_EnumEvent_ToString(all_events[0].event));
     FlushTriggers();
     triggered = 0;
+    all_events[0].Callback();
     all_events.pop_front();
     Field->UIManager.LetActionsRegular();
 }
@@ -71,6 +73,9 @@ void FightingTriggersDispatcher::AddEvent(TriggersDispatcherEvent Event) {
     all_events.push_back(Event);
 }
 
+void DeleteEventAbility(TSharedPtr<FightingAbility> Ability) {
+    // TODO IMPORTANT
+}
 
 
 
@@ -83,7 +88,7 @@ TriggersDispatcherEvent TriggersDispatcherEvent::MakeTriggerTriggered(TriggersDi
     return tde;
 }
 
-TriggersDispatcherEvent TriggersDispatcherEvent::MakeAbility(TriggersDispatcherEvent_EnumAbility enum_ability, std::vector<std::any> args) {
+TriggersDispatcherEvent TriggersDispatcherEvent::MakeAbility(TriggersDispatcherEvent_EnumAbility enum_ability, std::map<FString, std::any> args) {
     TriggersDispatcherEvent tde;
     tde.type = 1;
     tde.ability = enum_ability;
@@ -91,11 +96,13 @@ TriggersDispatcherEvent TriggersDispatcherEvent::MakeAbility(TriggersDispatcherE
     return tde;
 }
 
-TriggersDispatcherEvent TriggersDispatcherEvent::MakeEvent(TriggersDispatcherEvent_EnumEvent enum_event, std::vector<std::any> args) {
+TriggersDispatcherEvent TriggersDispatcherEvent::MakeEvent(TriggersDispatcherEvent_EnumEvent enum_event, std::map<FString, std::any> args, std::function<FString(std::map<FString, std::any>)> results) {
+    // TODO IMPORTANT
     TriggersDispatcherEvent tde;
     tde.type = 2;
     tde.event = enum_event;
     tde.event_args = args;
+    tde.old_event_args = args;
     return tde;
 }
 

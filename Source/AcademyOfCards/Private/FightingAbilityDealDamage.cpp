@@ -16,7 +16,7 @@ void FightingAbilityDealDamage::_OnSpawn(ABActorFightingField* Field, ABActorFig
 void FightingAbilityDealDamage::DealDamage(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) {
 	for (auto& Unit : Field->ArrayUnits) {
 		if (Unit->IsControlledByPlayer == OwnerUnit->IsControlledByPlayer) break;
-		Field->AttackUnit(OwnerUnit, Unit);
+		Field->AttackUnitWithEvent(OwnerUnit, Unit);
 		break;
 	}
 }

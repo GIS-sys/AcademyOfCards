@@ -99,8 +99,8 @@ FString Regular_Pass(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* c
 FString Regular_Abilities(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card);
 FString Regular_Outside(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card);
 
-FString Regular_PlayCardOrMoveUnitOrPass(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card);
-std::vector<FCT> Regular_PlayCardOrMoveUnitOrPass_CallBackTypes {
+FString Regular_PlayCardOrMoveUnit(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card);
+std::vector<FCT> Regular_PlayCardOrMoveUnit_CallBackTypes {
     FCT::OnCard,
     FCT::OnUnit,
 };
@@ -120,8 +120,7 @@ std::vector<FCT> Regular_WhereToMoveUnit_CallBackTypes {
 
 FString Regular_Pass(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
     Regular_Outside(cbt, uim, cell, unit, ability, card);
-    uim->Field->PassTurn();
-    return "";
+    return uim->Field->PassTurnWithEvent();
 }
 
 FString Regular_Outside(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
@@ -136,24 +135,24 @@ FString Regular_Outside(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase
 
 FString Regular_Abilities(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
     if (ability == TriggersDispatcherEvent_EnumAbility::DrawCard) {
-        return uim->Field->AbilityDrawCard();
+        return uim->Field->AbilityDrawCardWithEvent();
     }
     if (ability == TriggersDispatcherEvent_EnumAbility::GetManaDark) {
-        return uim->Field->AbilityGetManaDark();
+        return uim->Field->AbilityGetManaDarkWithEvent();
     }
     if (ability == TriggersDispatcherEvent_EnumAbility::GetManaLight) {
-        return uim->Field->AbilityGetManaLight();
+        return uim->Field->AbilityGetManaLightWithEvent();
     }
     if (ability == TriggersDispatcherEvent_EnumAbility::GetManaIce) {
-        return uim->Field->AbilityGetManaIce();
+        return uim->Field->AbilityGetManaIceWithEvent();
     }
     if (ability == TriggersDispatcherEvent_EnumAbility::GetManaFire) {
-        return uim->Field->AbilityGetManaFire();
+        return uim->Field->AbilityGetManaFireWithEvent();
     }
     return "Unknown ability";
 }
 
-FString Regular_PlayCardOrMoveUnitOrPass(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
+FString Regular_PlayCardOrMoveUnit(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
     if (cbt == FCT::OnCard) {
         card->PermanentlyHighlight();
         uim->state["card"] = card;
@@ -183,16 +182,14 @@ FString Regular_WhereToPlayCard(FCT cbt, FightingUIManager* uim, ABActorFighting
     ABActorFightingCard* ChosenCard = std::any_cast<ABActorFightingCard*>(uim->state["card"]);
     if (cbt == FCT::OnCell) {
         if (!ChosenCard->CanTargetCell()) return "Please target Cell with this card";
-        bool res = uim->Field->PlayCard(ChosenCard, cell);
-        if (!res) return "Couldn't play Card on this Cell";
+        uim->Field->PlayCardWithEvent(ChosenCard, cell);
         ChosenCard->ResetPermanentHighlight();
         uim->LetActionsRegular();
         return "";
     }
     if (cbt == FCT::OnUnit) {
         if (!ChosenCard->CanTargetUnit()) return "Please target Unit with this card";
-        bool res = uim->Field->PlayCard(ChosenCard, unit->CurrentCell);
-        if (!res) return "Couldn't play Card on this Unit";
+        uim->Field->PlayCardWithEvent(ChosenCard, unit->CurrentCell);
         ChosenCard->ResetPermanentHighlight();
         uim->LetActionsRegular();
         return "";
@@ -217,8 +214,7 @@ FString Regular_WhereToPlayCard(FCT cbt, FightingUIManager* uim, ABActorFighting
 FString Regular_WhereToMoveUnit(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
     ABActorFightingUnitBase* ChosenUnit = std::any_cast<ABActorFightingUnitBase*>(uim->state["unit"]);
     if (cbt == FCT::OnCell) {
-        bool res = uim->Field->MoveUnit(ChosenUnit, cell);
-        if (!res) return "Couldn't move Unit on this Cell";
+        uim->Field->MoveUnitWithEvent(ChosenUnit, cell);
         ChosenUnit->ResetPermanentHighlight();
         uim->LetActionsRegular();
         return "";
@@ -229,8 +225,7 @@ FString Regular_WhereToMoveUnit(FCT cbt, FightingUIManager* uim, ABActorFighting
             uim->LetActionsRegular();
             return "";
         }
-        bool res = uim->Field->AttackUnit(ChosenUnit, unit);
-        if (!res) return "Couldn't attack Unit with selected Unit";
+        uim->Field->AttackUnitWithEvent(ChosenUnit, unit);
         ChosenUnit->ResetPermanentHighlight();
         uim->LetActionsRegular();
         return "";
@@ -245,7 +240,7 @@ FString Regular_WhereToMoveUnit(FCT cbt, FightingUIManager* uim, ABActorFighting
 
 void FightingUIManager::LetActionsRegular() {
     Clear()
-        ->RegisterCallback(Regular_PlayCardOrMoveUnitOrPass, Regular_PlayCardOrMoveUnitOrPass_CallBackTypes)
+        ->RegisterCallback(Regular_PlayCardOrMoveUnit, Regular_PlayCardOrMoveUnit_CallBackTypes)
         ->RegisterCallback(Regular_Pass, { FCT::OnPassTurn })
         ->RegisterCallback(Regular_Outside, { FCT::OnOutside })
         ->RegisterCallback(Regular_Abilities, { FCT::OnAbility })

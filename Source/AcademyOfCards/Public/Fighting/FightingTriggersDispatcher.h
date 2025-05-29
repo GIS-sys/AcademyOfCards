@@ -7,6 +7,8 @@
 #include <list>
 #include <vector>
 #include <any>
+#include <functional>
+#include <map>
 #include "MyEnumsCollection.h"
 
 class ABActorFightingField;
@@ -20,13 +22,16 @@ struct TriggersDispatcherEvent {
 	int type = -1; // 0 = trigger, 1 = ability, 2 = event
 	TriggersDispatcherTrigger* trigger;
 	TriggersDispatcherEvent_EnumAbility ability;
-	std::vector<std::any> ability_args;
+	std::map<FString, std::any> ability_args;
 	TriggersDispatcherEvent_EnumEvent event;
-	std::vector<std::any> event_args;
+	std::map<FString, std::any> event_args;
+	std::map<FString, std::any> old_event_args;
+
+	void Callback(); // TODO IMPORTANT
 
 	static TriggersDispatcherEvent MakeTriggerTriggered(TriggersDispatcherTrigger*);
-	static TriggersDispatcherEvent MakeAbility(TriggersDispatcherEvent_EnumAbility x, std::vector<std::any> args = {});
-	static TriggersDispatcherEvent MakeEvent(TriggersDispatcherEvent_EnumEvent x, std::vector<std::any> args = {});
+	static TriggersDispatcherEvent MakeAbility(TriggersDispatcherEvent_EnumAbility enum_ability, std::map<FString, std::any> args = {});
+	static TriggersDispatcherEvent MakeEvent(TriggersDispatcherEvent_EnumEvent enum_event, std::map<FString, std::any> args = {}, std::function<FString(std::map<FString, std::any>)> results = [](std::map<FString, std::any>) { return "";  });
 };
 struct TriggersDispatcherTrigger {
 	ABActorFightingUnitBase* unit;
@@ -63,4 +68,5 @@ public:
 	void AddTriggerAbility(ABActorFightingUnitBase* Unit, TSharedPtr<FightingAbility> Ability);
 
 	void AddEvent(TriggersDispatcherEvent Event);
+	void DeleteEventAbility(TSharedPtr<FightingAbility> Ability);
 };

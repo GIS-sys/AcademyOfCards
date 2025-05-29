@@ -11,7 +11,9 @@
 #include "StatStructs.h"
 #include "Fighting/FightingUIManager.h"
 #include "Fighting/FightingTriggersDispatcher.h"
+#include <map>
 #include "BActorFightingField.generated.h"
+
 
 class ABActorFightingField;
 
@@ -151,17 +153,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Base")
 	void Init();
 
-	FString AbilityDrawCard();
-	FString AbilityGetMana(int& Mana, TriggersDispatcherEvent_EnumAbility ManaType);
-	FString AbilityGetManaLight();
-	FString AbilityGetManaDark();
-	FString AbilityGetManaFire();
-	FString AbilityGetManaIce();
-	FString PassTurn();
+	FString AbilityDrawCardWithEvent();
+	FString AbilityGetManaWithEvent(int& Mana, TriggersDispatcherEvent_EnumAbility ManaType);
+	FString AbilityGetManaLightWithEvent();
+	FString AbilityGetManaDarkWithEvent();
+	FString AbilityGetManaFireWithEvent();
+	FString AbilityGetManaIceWithEvent();
+	FString PassTurnWithEvent(bool DoEvent = true);
 
-	bool MoveUnit(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell);
-	bool AttackUnit(ABActorFightingUnitBase* Attacker, ABActorFightingUnitBase* Victim);
-	bool PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell);
+	FString MoveUnitWithEvent(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell);
+	FString AttackUnitWithEvent(ABActorFightingUnitBase* Attacker, ABActorFightingUnitBase* Victim);
+	FString PlayCardWithEvent(ABActorFightingCard* Card, ABActorFightingCellBase* Cell);
+
+	FString DeleteUnit(ABActorFightingUnitBase* Unit);
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
 	FString ClickedOnCell(ABActorFightingCellBase* target);
@@ -183,7 +187,6 @@ public:
 
 	FightingTriggersDispatcher TriggersDispatcher;
 	FightingUIManager UIManager;
-
 
 	AI AIOpponent;
 };

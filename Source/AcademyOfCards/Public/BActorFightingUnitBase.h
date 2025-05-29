@@ -32,7 +32,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 	UMaterialInterface* MainMaterial;
 
-	bool Move(ABActorFightingField* Field, ABActorFightingCellBase* Cell);
+	void Move(ABActorFightingField* Field, ABActorFightingCellBase* Cell);
 
 	void OnSpawn(ABActorFightingField* Field);
 	void OnTurnEnd(ABActorFightingField* Field, bool TurnEndedIsThisOwner);
@@ -40,4 +40,8 @@ public:
 
 	void InitPlayerMy(ABActorFightingField* Field, ABActorFightingCellBase* Cell, const FPlayerStats* Stats);
 	void InitPlayerOpponent(ABActorFightingField* Field, FString OpponentName, ABActorFightingCellBase* Cell, FPlayerStats* Stats);
+
+	FString CanMove(ABActorFightingCellBase* Cell);
+	FString CanAttack(ABActorFightingUnitBase* Victim);
+	FString IsDead();
 };

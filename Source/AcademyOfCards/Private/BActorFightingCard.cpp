@@ -38,3 +38,6 @@ void ABActorFightingCard::FromConfig(TSharedPtr<FightingCard> CardConfig)
     UnitParameters->FromFUnitParameters(CardConfig->UnitParameters);
     UnitParameters->Name = Name;
 }
+
+bool ABActorFightingCard::CanTargetCell() { return true; } // TODO IMPORTANT
+bool ABActorFightingCard::CanTargetUnit() { return true; } // TODO IMPORTANT
