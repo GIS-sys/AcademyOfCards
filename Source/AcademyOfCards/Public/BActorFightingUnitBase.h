@@ -36,8 +36,7 @@ public:
 
 	void OnSpawn(ABActorFightingField* Field);
 	void OnTurnEnd(ABActorFightingField* Field, bool TurnEndedIsThisOwner);
-	void OnAttackUnit(ABActorFightingField* Field, ABActorFightingUnitBase* Victim);
-	void OnGetAttacked(ABActorFightingField* Field, ABActorFightingUnitBase* Attacker);
+	void TakeDamage(int Damage);
 
 	void InitPlayerMy(ABActorFightingField* Field, ABActorFightingCellBase* Cell, const FPlayerStats* Stats);
 	void InitPlayerOpponent(ABActorFightingField* Field, FString OpponentName, ABActorFightingCellBase* Cell, FPlayerStats* Stats);

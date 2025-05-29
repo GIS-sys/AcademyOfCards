@@ -3,51 +3,6 @@
 
 #include "BActorFightingUnitBase.h"
 
-bool ABActorFightingUnitBase::Move(ABActorFightingField* Field, ABActorFightingCellBase* Cell)
-{
-	if (UnitParameters->CurrentMovement < ABActorFightingCellBase::Distance(Cell, CurrentCell)) return false;
-	UnitParameters->CurrentMovement -= ABActorFightingCellBase::Distance(Cell, CurrentCell);
-	MoveOverTimeTo(LocationOriginal, Cell->GetUnitLocation(), MOVING_TIME);
-	ABActorFightingCellBase* CellFrom = CurrentCell;
-	CurrentCell = Cell;
-	for (const auto& Ability : UnitParameters->Abilities) {
-		Ability->OnMove(Field, this, CellFrom, Cell);
-	}
-	return true;
-}
-
-void ABActorFightingUnitBase::OnSpawn(ABActorFightingField* Field)
-{
-	UnitParameters->ResetCurrent(true);
-	for (const auto& Ability : UnitParameters->Abilities) {
-		Ability->OnSpawn(Field, this);
-	}
-}
-
-void ABActorFightingUnitBase::OnTurnEnd(ABActorFightingField* Field, bool TurnEndedIsThisOwner)
-{
-	if (!TurnEndedIsThisOwner) {
-		UnitParameters->ResetCurrent();
-	}
-	for (const auto& Ability : UnitParameters->Abilities) {
-		Ability->OnTurnEnd(Field, this, TurnEndedIsThisOwner);
-	}
-}
-
-void ABActorFightingUnitBase::OnAttackUnit(ABActorFightingField* Field, ABActorFightingUnitBase* Victim)
-{
-	for (const auto& Ability : UnitParameters->Abilities) {
-		Ability->OnAttackUnit(Field, this, Victim);
-	}
-}
-
-void ABActorFightingUnitBase::OnGetAttacked(ABActorFightingField* Field, ABActorFightingUnitBase* Attacker)
-{
-	for (const auto& Ability : UnitParameters->Abilities) {
-		Ability->OnGetAttacked(Field, this, Attacker);
-	}
-}
-
 void ABActorFightingUnitBase::InitPlayerMy(ABActorFightingField* Field, ABActorFightingCellBase* Cell, const FPlayerStats* Stats)
 {
 	IsPlayer = true;
@@ -85,4 +40,30 @@ void ABActorFightingUnitBase::InitPlayerOpponent(ABActorFightingField* Field, FS
 	}
 	//UnitParameters = UnitParameters;
 	OnSpawn(Field);
+}
+
+void ABActorFightingUnitBase::OnSpawn(ABActorFightingField* Field)
+{
+	UnitParameters->ResetCurrent(true);
+}
+
+void ABActorFightingUnitBase::OnTurnEnd(ABActorFightingField* Field, bool TurnEndedIsThisOwner)
+{
+	if (!TurnEndedIsThisOwner) {
+		UnitParameters->ResetCurrent();
+	}
+}
+
+
+bool ABActorFightingUnitBase::Move(ABActorFightingField* Field, ABActorFightingCellBase* Cell)
+{
+	UnitParameters->CurrentMovement -= ABActorFightingCellBase::Distance(Cell, CurrentCell);
+	MoveOverTimeTo(LocationOriginal, Cell->GetUnitLocation(), MOVING_TIME);
+	CurrentCell = Cell;
+	return true;
+}
+
+void ABActorFightingUnitBase::TakeDamage(int Damage)
+{
+	UnitParameters->CurrentHealth -= Damage;
 }

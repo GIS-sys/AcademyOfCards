@@ -4,6 +4,21 @@
 #include "Fighting/FightingUIManager.h"
 #include "BActorFightingField.h"
 
+using FCT = FightingUIManagerClickType;
+
+std::vector<FCT> FightingUIManagerClickType_All() {
+    return { OnCell, OnUnit, OnAbility, OnCard, OnPassTurn, OnOutside };
+}
+
+std::vector<FCT> FightingUIManagerClickType_AllExcept(const std::set<FCT>& exceptions) {
+    std::vector<FCT> result;
+    for (FCT ct : FightingUIManagerClickType_All())
+        if (exceptions.find(ct) == exceptions.end())
+            result.push_back(ct);
+    return result;
+}
+
+
 FightingUIManager::FightingUIManager()
 {
 }
@@ -34,84 +49,139 @@ FightingUIManager* FightingUIManager::Clear() {
 }
 
 FString FightingUIManager::ClickedOnCell(ABActorFightingCellBase* target) {
-    if (Callbacks.find(FightingUIManagerClickType::OnCell) == Callbacks.end()) return "Press on something else";
-    return Callbacks[FightingUIManagerClickType::OnCell](FightingUIManagerClickType::OnCell, this, target, nullptr, TriggersDispatcherEvent_EnumAbility::None, nullptr);
+    if (Callbacks.find(FCT::OnCell) == Callbacks.end()) return "Press on something else";
+    return Callbacks[FCT::OnCell](FCT::OnCell, this, target, nullptr, TriggersDispatcherEvent_EnumAbility::None, nullptr);
 }
 
 FString FightingUIManager::ClickedOnUnit(ABActorFightingUnitBase* target) {
-    if (Callbacks.find(FightingUIManagerClickType::OnUnit) == Callbacks.end()) return "Press on something else";
-    return Callbacks[FightingUIManagerClickType::OnUnit](FightingUIManagerClickType::OnUnit, this, nullptr, target, TriggersDispatcherEvent_EnumAbility::None, nullptr);
+    if (Callbacks.find(FCT::OnUnit) == Callbacks.end()) return "Press on something else";
+    return Callbacks[FCT::OnUnit](FCT::OnUnit, this, nullptr, target, TriggersDispatcherEvent_EnumAbility::None, nullptr);
 }
 
 FString FightingUIManager::ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target) {
-    if (Callbacks.find(FightingUIManagerClickType::OnAbility) == Callbacks.end()) return "Press on something else";
-    return Callbacks[FightingUIManagerClickType::OnAbility](FightingUIManagerClickType::OnAbility, this, nullptr, nullptr, target, nullptr);
+    if (Callbacks.find(FCT::OnAbility) == Callbacks.end()) return "Press on something else";
+    return Callbacks[FCT::OnAbility](FCT::OnAbility, this, nullptr, nullptr, target, nullptr);
 }
 
 FString FightingUIManager::ClickedOnCard(ABActorFightingCard* target) {
-    if (Callbacks.find(FightingUIManagerClickType::OnCard) == Callbacks.end()) return "Press on something else";
-    return Callbacks[FightingUIManagerClickType::OnCard](FightingUIManagerClickType::OnCard, this, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::None, target);
+    if (Callbacks.find(FCT::OnCard) == Callbacks.end()) return "Press on something else";
+    return Callbacks[FCT::OnCard](FCT::OnCard, this, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::None, target);
 }
 
 FString FightingUIManager::ClickedOnPassTurn() {
-    if (Callbacks.find(FightingUIManagerClickType::OnPassTurn) == Callbacks.end()) return "Press on something else";
-    return Callbacks[FightingUIManagerClickType::OnPassTurn](FightingUIManagerClickType::OnPassTurn, this, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::None, nullptr);
+    if (Callbacks.find(FCT::OnPassTurn) == Callbacks.end()) return "Press on something else";
+    return Callbacks[FCT::OnPassTurn](FCT::OnPassTurn, this, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::None, nullptr);
 }
 
 FString FightingUIManager::ClickedOnOutside() {
-    if (Callbacks.find(FightingUIManagerClickType::OnOutside) == Callbacks.end()) return "Press on something else";
-    return Callbacks[FightingUIManagerClickType::OnOutside](FightingUIManagerClickType::OnOutside, this, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::None, nullptr);
+    if (Callbacks.find(FCT::OnOutside) == Callbacks.end()) return "Press on something else";
+    return Callbacks[FCT::OnOutside](FCT::OnOutside, this, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::None, nullptr);
 }
 
-FightingUIManager* FightingUIManager::RegisterCallback(CallbackType callback_foo, std::vector<FightingUIManagerClickType> click_types) {
+FightingUIManager* FightingUIManager::RegisterCallback(CallbackType callback_foo, std::vector<FCT> click_types) {
     for (auto cbt : click_types) {
         Callbacks[cbt] = callback_foo;
     }
     return this;
 }
 
+FightingUIManager* FightingUIManager::FillUnusedCallbacks(CallbackType callback_foo) {
+    for (FCT cbt : FightingUIManagerClickType_All()) {
+        if (Callbacks.find(cbt) == Callbacks.end())
+            Callbacks[cbt] = callback_foo;
+    }
+    return this;
+}
 
 
 
+FString Regular_Pass(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card);
+FString Regular_Abilities(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card);
+FString Regular_Outside(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card);
 
-std::vector<FightingUIManagerClickType> all_click_types{
-    FightingUIManagerClickType::OnCell,
-    FightingUIManagerClickType::OnUnit,
-    FightingUIManagerClickType::OnAbility,
-    FightingUIManagerClickType::OnCard,
-    FightingUIManagerClickType::OnPassTurn,
-    FightingUIManagerClickType::OnOutside,
+FString Regular_PlayCardOrMoveUnitOrPass(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card);
+std::vector<FCT> Regular_PlayCardOrMoveUnitOrPass_CallBackTypes {
+    FCT::OnCard,
+    FCT::OnUnit,
 };
 
-FString Regular_PlayCardOrMoveUnitOrPass(FightingUIManagerClickType cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card);
-FString Regular_WhereToPlayCard(FightingUIManagerClickType cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card);
-FString Regular_WhereToMoveUnit(FightingUIManagerClickType cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card);
+FString Regular_WhereToPlayCard(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card);
+std::vector<FCT> Regular_WhereToPlayCard_CallBackTypes {
+    FCT::OnCell,
+    FCT::OnUnit,
+    FCT::OnCard,
+};
+FString Regular_WhereToMoveUnit(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card);
+std::vector<FCT> Regular_WhereToMoveUnit_CallBackTypes {
+    FCT::OnCard,
+    FCT::OnUnit
+};
 
 
-FString Regular_PlayCardOrMoveUnitOrPass(FightingUIManagerClickType cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
-    if (cbt == FightingUIManagerClickType::OnCard) {
-        card->PermanentlyHighlight();
-        uim->state["card"] = card;
-        uim->Clear()->RegisterCallback(Regular_WhereToPlayCard, all_click_types)->WaitForInput();
-        return "";
-    }
-    if (cbt == FightingUIManagerClickType::OnUnit) {
-        unit->PermanentlyHighlight();
-        uim->state["unit"] = unit;
-        uim->Clear()->RegisterCallback(Regular_WhereToMoveUnit, all_click_types)->WaitForInput();
-        return "";
-    }
-    if (cbt == FightingUIManagerClickType::OnPassTurn) {
-        uim->Clear();
-        uim->Field->PassTurn();
-        return "";
-    }
+FString Regular_Pass(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
+    Regular_Outside(cbt, uim, cell, unit, ability, card);
+    uim->Field->PassTurn();
     return "";
 }
 
-FString Regular_WhereToPlayCard(FightingUIManagerClickType cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
+FString Regular_Outside(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
+    if (uim->state.find("unit") != uim->state.end())
+        std::any_cast<ABActorFightingUnitBase*>(uim->state["unit"])->ResetPermanentHighlight();
+    if (uim->state.find("card") != uim->state.end())
+        std::any_cast<ABActorFightingCard*>(uim->state["card"])->ResetPermanentHighlight();
+
+    uim->LetActionsRegular();
+    return "";
+}
+
+FString Regular_Abilities(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
+    if (ability == TriggersDispatcherEvent_EnumAbility::DrawCard) {
+        return uim->Field->AbilityDrawCard();
+    }
+    if (ability == TriggersDispatcherEvent_EnumAbility::GetManaDark) {
+        return uim->Field->AbilityGetManaDark();
+    }
+    if (ability == TriggersDispatcherEvent_EnumAbility::GetManaLight) {
+        return uim->Field->AbilityGetManaLight();
+    }
+    if (ability == TriggersDispatcherEvent_EnumAbility::GetManaIce) {
+        return uim->Field->AbilityGetManaIce();
+    }
+    if (ability == TriggersDispatcherEvent_EnumAbility::GetManaFire) {
+        return uim->Field->AbilityGetManaFire();
+    }
+    return "Unknown ability";
+}
+
+FString Regular_PlayCardOrMoveUnitOrPass(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
+    if (cbt == FCT::OnCard) {
+        card->PermanentlyHighlight();
+        uim->state["card"] = card;
+        uim->Clear()
+            ->RegisterCallback(Regular_WhereToPlayCard, Regular_WhereToPlayCard_CallBackTypes)
+            ->RegisterCallback(Regular_Pass, { FCT::OnPassTurn })
+            ->RegisterCallback(Regular_Outside, { FCT::OnOutside })
+            ->RegisterCallback(Regular_Abilities, { FCT::OnAbility })
+            ->WaitForInput();
+        return "";
+    }
+    if (cbt == FCT::OnUnit) {
+        unit->PermanentlyHighlight();
+        uim->state["unit"] = unit;
+        uim->Clear()
+            ->RegisterCallback(Regular_WhereToMoveUnit, Regular_WhereToMoveUnit_CallBackTypes)
+            ->RegisterCallback(Regular_Pass, { FCT::OnPassTurn })
+            ->RegisterCallback(Regular_Outside, { FCT::OnOutside })
+            ->RegisterCallback(Regular_Abilities, { FCT::OnAbility })
+            ->WaitForInput();
+        return "";
+    }
+    return "Choose Card, Unit, Ability or Pass the turn";
+}
+
+FString Regular_WhereToPlayCard(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
     ABActorFightingCard* ChosenCard = std::any_cast<ABActorFightingCard*>(uim->state["card"]);
-    if (cbt == FightingUIManagerClickType::OnCell) {
+    if (cbt == FCT::OnCell) {
         if (!ChosenCard->CanTargetCell()) return "Please target Cell with this card";
         bool res = uim->Field->PlayCard(ChosenCard, cell);
         if (!res) return "Couldn't play Card on this Cell";
@@ -119,7 +189,7 @@ FString Regular_WhereToPlayCard(FightingUIManagerClickType cbt, FightingUIManage
         uim->LetActionsRegular();
         return "";
     }
-    if (cbt == FightingUIManagerClickType::OnUnit) {
+    if (cbt == FCT::OnUnit) {
         if (!ChosenCard->CanTargetUnit()) return "Please target Unit with this card";
         bool res = uim->Field->PlayCard(ChosenCard, unit->CurrentCell);
         if (!res) return "Couldn't play Card on this Unit";
@@ -127,12 +197,7 @@ FString Regular_WhereToPlayCard(FightingUIManagerClickType cbt, FightingUIManage
         uim->LetActionsRegular();
         return "";
     }
-    if (cbt == FightingUIManagerClickType::OnOutside) {
-        ChosenCard->ResetPermanentHighlight();
-        uim->LetActionsRegular();
-        return "";
-    }
-    if (cbt == FightingUIManagerClickType::OnCard) {
+    if (cbt == FCT::OnCard) {
         // Dehighlight current
         ChosenCard->ResetPermanentHighlight();
         if (ChosenCard != card) {
@@ -143,22 +208,22 @@ FString Regular_WhereToPlayCard(FightingUIManagerClickType cbt, FightingUIManage
         }
         return "";
     }
-    if (cbt == FightingUIManagerClickType::OnPassTurn) {
+    if (cbt == FCT::OnPassTurn) {
         return "Please explicitly deselect current Card first";
     }
     return "";
 }
 
-FString Regular_WhereToMoveUnit(FightingUIManagerClickType cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
+FString Regular_WhereToMoveUnit(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
     ABActorFightingUnitBase* ChosenUnit = std::any_cast<ABActorFightingUnitBase*>(uim->state["unit"]);
-    if (cbt == FightingUIManagerClickType::OnCell) {
+    if (cbt == FCT::OnCell) {
         bool res = uim->Field->MoveUnit(ChosenUnit, cell);
         if (!res) return "Couldn't move Unit on this Cell";
         ChosenUnit->ResetPermanentHighlight();
         uim->LetActionsRegular();
         return "";
     }
-    if (cbt == FightingUIManagerClickType::OnUnit) {
+    if (cbt == FCT::OnUnit) {
         if (unit == ChosenUnit) {
             ChosenUnit->ResetPermanentHighlight();
             uim->LetActionsRegular();
@@ -170,14 +235,6 @@ FString Regular_WhereToMoveUnit(FightingUIManagerClickType cbt, FightingUIManage
         uim->LetActionsRegular();
         return "";
     }
-    if (cbt == FightingUIManagerClickType::OnOutside) {
-        ChosenUnit->ResetPermanentHighlight();
-        uim->LetActionsRegular();
-        return "";
-    }
-    if (cbt == FightingUIManagerClickType::OnPassTurn) {
-        return "Please explicitly deselect current Unit first";
-    }
     return "";
 }
 
@@ -185,6 +242,12 @@ FString Regular_WhereToMoveUnit(FightingUIManagerClickType cbt, FightingUIManage
 
 
 
+
 void FightingUIManager::LetActionsRegular() {
-    Clear()->RegisterCallback(Regular_PlayCardOrMoveUnitOrPass, all_click_types)->WaitForInput();
+    Clear()
+        ->RegisterCallback(Regular_PlayCardOrMoveUnitOrPass, Regular_PlayCardOrMoveUnitOrPass_CallBackTypes)
+        ->RegisterCallback(Regular_Pass, { FCT::OnPassTurn })
+        ->RegisterCallback(Regular_Outside, { FCT::OnOutside })
+        ->RegisterCallback(Regular_Abilities, { FCT::OnAbility })
+        ->WaitForInput();
 }

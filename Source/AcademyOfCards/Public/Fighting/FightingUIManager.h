@@ -6,6 +6,8 @@
 #include "Fighting/FightingTriggersDispatcher.h"
 #include <functional>
 #include <map>
+#include <set>
+#include <vector>
 
 class ABActorFightingField;
 class ABActorFightingCellBase;
@@ -21,6 +23,9 @@ enum FightingUIManagerClickType {
 	OnPassTurn,
 	OnOutside,
 };
+
+std::vector<FightingUIManagerClickType> FightingUIManagerClickType_All();
+std::vector<FightingUIManagerClickType> FightingUIManagerClickType_AllExcept(const std::set<FightingUIManagerClickType>& exceptions);
 
 using CallbackType = std::function<FString(FightingUIManagerClickType, FightingUIManager*, ABActorFightingCellBase*, ABActorFightingUnitBase*, TriggersDispatcherEvent_EnumAbility, ABActorFightingCard*)>;
 
@@ -56,4 +61,5 @@ public:
 	FightingUIManager* Clear();
 
 	FightingUIManager* RegisterCallback(CallbackType callback_foo, std::vector<FightingUIManagerClickType> click_types);
+	FightingUIManager* FillUnusedCallbacks(CallbackType callback_foo);
 };

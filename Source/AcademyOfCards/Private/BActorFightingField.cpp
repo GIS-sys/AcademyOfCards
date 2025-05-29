@@ -179,8 +179,8 @@ bool ABActorFightingField::AttackUnit(ABActorFightingUnitBase* Attacker, ABActor
     int Distance = ABActorFightingCellBase::Distance(Attacker->CurrentCell, Victim->CurrentCell);
     if (Distance > Attacker->UnitParameters->Range) return false;
 
-    Attacker->OnAttackUnit(this, Victim);
-    Victim->OnGetAttacked(this, Attacker);
+    //Attacker->OnAttackUnit(this, Victim);
+    //Victim->OnGetAttacked(this, Attacker);
 
     Victim->UnitParameters->CurrentHealth -= Attacker->UnitParameters->CurrentPower;
     Attacker->UnitParameters->CurrentAttacks -= 1;
@@ -286,39 +286,29 @@ FString ABActorFightingField::PassTurn()
 
 
 
+// cell, unit, card, buttons for abilities, button for passing turn, outside of everything previous
+// return bool (ok/not ok) and message/error
 FString ABActorFightingField::ClickedOnCell(ABActorFightingCellBase* target) {
-    // cell, unit, card, buttons for abilities, button for passing turn
-    // returns bool (ok/not ok) and message/error
     return UIManager.ClickedOnCell(target);
 }
 
 FString ABActorFightingField::ClickedOnUnit(ABActorFightingUnitBase* target) {
-    // cell, unit, card, buttons for abilities, button for passing turn
-    // returns bool (ok/not ok) and message/error
     return UIManager.ClickedOnUnit(target);
 }
 
 FString ABActorFightingField::ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target) {
-    // cell, unit, card, buttons for abilities, button for passing turn
-    // returns bool (ok/not ok) and message/error
     return UIManager.ClickedOnAbility(target);
 }
 
 FString ABActorFightingField::ClickedOnCard(ABActorFightingCard* target) {
-    // cell, unit, card, buttons for abilities, button for passing turn
-    // returns bool (ok/not ok) and message/error
     return UIManager.ClickedOnCard(target);
 }
 
 FString ABActorFightingField::ClickedOnPassTurn() {
-    // cell, unit, card, buttons for abilities, button for passing turn
-    // returns bool (ok/not ok) and message/error
     return UIManager.ClickedOnPassTurn();
 }
 
 FString ABActorFightingField::ClickedOnOutside() {
-    // cell, unit, card, buttons for abilities, button for passing turn
-    // returns bool (ok/not ok) and message/error
     return UIManager.ClickedOnOutside();
 }
 
