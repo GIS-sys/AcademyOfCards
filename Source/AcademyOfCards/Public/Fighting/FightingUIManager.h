@@ -35,7 +35,9 @@ using CallbackType = std::function<FString(FightingUIManagerClickType, FightingU
 class ACADEMYOFCARDS_API FightingUIManager
 {
 	std::map<FightingUIManagerClickType, CallbackType> Callbacks;
-	bool wait = false;
+	bool trigger_needs_input = false;
+
+	bool CheckCanClickNow() const;
 
 public:
 	std::map<FString, std::any> state;
@@ -48,7 +50,10 @@ public:
 
 	void LetActionsRegular();
 
-	bool IsWaitingPlayerResponse() const;
+	bool IsTriggerWaitingPlayerResponse() const;
+	void TriggerNeedsInput();
+	void TriggerDoesntNeedInput();
+
 
 	FString ClickedOnCell(ABActorFightingCellBase* target);
 	FString ClickedOnUnit(ABActorFightingUnitBase* target);
@@ -57,7 +62,6 @@ public:
 	FString ClickedOnPassTurn();
 	FString ClickedOnOutside();
 
-	void WaitForInput();
 	FightingUIManager* Clear();
 
 	FightingUIManager* RegisterCallback(CallbackType callback_foo, std::vector<FightingUIManagerClickType> click_types);

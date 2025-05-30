@@ -41,3 +41,4 @@ void ABActorFightingCard::FromConfig(TSharedPtr<FightingCard> CardConfig)
 
 bool ABActorFightingCard::CanTargetCell() { return true; } // TODO IMPORTANT
 bool ABActorFightingCard::CanTargetUnit() { return true; } // TODO IMPORTANT
+FString ABActorFightingCard::CanBePlayed(ABActorFightingCellBase* Cell) { return ""; } // TODO IMPORTANT

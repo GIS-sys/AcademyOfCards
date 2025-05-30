@@ -50,6 +50,7 @@ public:
 
 	bool CanTargetCell();
 	bool CanTargetUnit();
+	FString CanBePlayed(ABActorFightingCellBase* Cell);
 
 	ABActorFightingUnitBase* SpawnUnit(ABActorFightingField* Field, ABActorFightingCellBase* Cell, TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit);
 

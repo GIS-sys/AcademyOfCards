@@ -67,19 +67,20 @@ void ABActorFightingUnitBase::TakeDamage(int Damage)
 	UnitParameters->CurrentHealth -= Damage;
 }
 
-/*if (IsOccupied(Cell)) return "Cell is occupied"; and distance and acan move still*/ // TODO IMPORTANT
-FString ABActorFightingUnitBase::CanMove(ABActorFightingCellBase* Cell) {
-
+/*if (IsOccupied(Cell)) return "Cell is occupied"; and distance and acan move still*/
+FString ABActorFightingUnitBase::CanMove(ABActorFightingCellBase* Cell) { // TODO IMPORTANT
+	return "";
 }
 
 /*if (Attacker == Victim) return "Units cannot attack themselves";
 if (Attacker->UnitParameters->CurrentAttacks <= 0) return "Unit is already out of attacks for this turn";
 int Distance = ABActorFightingCellBase::Distance(Attacker->CurrentCell, Victim->CurrentCell);
-if (Distance > Attacker->UnitParameters->Range) return;*/ // TODO IMPORTANT
-FString ABActorFightingUnitBase::CanAttack(ABActorFightingUnitBase* Victim) {
-
+if (Distance > Attacker->UnitParameters->Range) return;*/
+FString ABActorFightingUnitBase::CanAttack(ABActorFightingUnitBase* Victim) { // TODO IMPORTANT
+	return "";
 }
 
-FString ABActorFightingUnitBase::IsDead() {
-	// TODO IMPORTANT
+// if (Unit->UnitParameters->CurrentHealth <= 0) {
+FString ABActorFightingUnitBase::IsDead() { // TODO IMPORTANT
+	return "";
 }

@@ -7,22 +7,31 @@
 
 UENUM(BlueprintType)
 enum class TriggersDispatcherEvent_EnumAbility : uint8 {
-	None = 0,
-	DrawCard,
-	PassTurn,
-	GetManaLight,
-	GetManaDark,
-	GetManaFire,
-	GetManaIce
+	UNK = 0,
+	NONE,
+	DRAW_CARD,
+	DREW_CARD,
+	PASS_TURN,
+	PASSED_TURN,
+	GET_MANA_LIGHT,
+	GOT_MANA_LIGHT,
+	GET_MANA_DARK,
+	GOT_MANA_DARK,
+	GET_MANA_FIRE,
+	GOT_MANA_FIRE,
+	GET_MANA_ICE,
+	GOT_MANA_ICE,
 };
 
 UENUM(BlueprintType)
 enum class TriggersDispatcherEvent_EnumEvent : uint8 {
-	MOVE = 0,
+	UNK = 0,
+	MOVE,
+	MOVED,
 	ATTACK,
 	ATTACKED,
 	PLAY_CARD,
-	//DRAW_CARD,
+	PLAYED_CARD,
 	DRAW_CARD_ON_TURN_START,
 	DREW_CARD_ON_TURN_START,
 	TAKE_DAMAGE,
@@ -31,21 +40,8 @@ enum class TriggersDispatcherEvent_EnumEvent : uint8 {
 	UNIT_DIED,
 };
 
-FString TriggersDispatcherEvent_EnumEvent_ToString(TriggersDispatcherEvent_EnumEvent ev) {
-	// TODO IMPORTANT
-	if (ev == TriggersDispatcherEvent_EnumEvent::MOVE) return "MOVE";
-	if (ev == TriggersDispatcherEvent_EnumEvent::ATTACK) return "ATTACK";
-	if (ev == TriggersDispatcherEvent_EnumEvent::ATTACKED) return "ATTACKED";
-	if (ev == TriggersDispatcherEvent_EnumEvent::PLAY_CARD) return "PLAY_CARD";
-	//if (ev == TriggersDispatcherEvent_EnumEvent::DRAW_CARD) return "DRAW_CARD";
-	if (ev == TriggersDispatcherEvent_EnumEvent::DRAW_CARD_ON_TURN_START) return "DRAW_CARD_ON_TURN_START";
-	if (ev == TriggersDispatcherEvent_EnumEvent::DREW_CARD_ON_TURN_START) return "DREW_CARD_ON_TURN_START";
-	if (ev == TriggersDispatcherEvent_EnumEvent::TAKE_DAMAGE) return "TAKE_DAMAGE";
-	if (ev == TriggersDispatcherEvent_EnumEvent::TOOK_DAMAGE) return "TOOK_DAMAGE";
-	if (ev == TriggersDispatcherEvent_EnumEvent::UNIT_DYING) return "UNIT_DYING";
-	if (ev == TriggersDispatcherEvent_EnumEvent::UNIT_DIED) return "UNIT_DIED";
-	return "UNK";
-}
+FString TriggersDispatcherEvent_EnumAbility_ToString(TriggersDispatcherEvent_EnumAbility ev);
+FString TriggersDispatcherEvent_EnumEvent_ToString(TriggersDispatcherEvent_EnumEvent ev);
 
 /**
  * 

@@ -34,48 +34,61 @@ void FightingUIManager::Init(ABActorFightingField* NewField)
     LetActionsRegular();
 }
 
-bool FightingUIManager::IsWaitingPlayerResponse() const {
-    return wait;
+bool FightingUIManager::IsTriggerWaitingPlayerResponse() const {
+    return trigger_needs_input;
 }
 
-void FightingUIManager::WaitForInput() {
-    wait = true;
+void FightingUIManager::TriggerNeedsInput() {
+    trigger_needs_input = true;
+}
+
+void FightingUIManager::TriggerDoesntNeedInput() {
+    trigger_needs_input = false;
 }
 
 FightingUIManager* FightingUIManager::Clear() {
-    wait = false;
     Callbacks.clear();
     return this;
 }
 
+bool FightingUIManager::CheckCanClickNow() const {
+    return Field->IsPlayerTurn && (IsTriggerWaitingPlayerResponse() || Field->TriggersDispatcher.all_events.empty());
+}
+
 FString FightingUIManager::ClickedOnCell(ABActorFightingCellBase* target) {
+    if (!CheckCanClickNow()) return "Can't click now, please wait";
     if (Callbacks.find(FCT::OnCell) == Callbacks.end()) return "Press on something else";
-    return Callbacks[FCT::OnCell](FCT::OnCell, this, target, nullptr, TriggersDispatcherEvent_EnumAbility::None, nullptr);
+    return Callbacks[FCT::OnCell](FCT::OnCell, this, target, nullptr, TriggersDispatcherEvent_EnumAbility::NONE, nullptr);
 }
 
 FString FightingUIManager::ClickedOnUnit(ABActorFightingUnitBase* target) {
+    if (!CheckCanClickNow()) return "Can't click now, please wait";
     if (Callbacks.find(FCT::OnUnit) == Callbacks.end()) return "Press on something else";
-    return Callbacks[FCT::OnUnit](FCT::OnUnit, this, nullptr, target, TriggersDispatcherEvent_EnumAbility::None, nullptr);
+    return Callbacks[FCT::OnUnit](FCT::OnUnit, this, nullptr, target, TriggersDispatcherEvent_EnumAbility::NONE, nullptr);
 }
 
 FString FightingUIManager::ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target) {
+    if (!CheckCanClickNow()) return "Can't click now, please wait";
     if (Callbacks.find(FCT::OnAbility) == Callbacks.end()) return "Press on something else";
     return Callbacks[FCT::OnAbility](FCT::OnAbility, this, nullptr, nullptr, target, nullptr);
 }
 
 FString FightingUIManager::ClickedOnCard(ABActorFightingCard* target) {
+    if (!CheckCanClickNow()) return "Can't click now, please wait";
     if (Callbacks.find(FCT::OnCard) == Callbacks.end()) return "Press on something else";
-    return Callbacks[FCT::OnCard](FCT::OnCard, this, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::None, target);
+    return Callbacks[FCT::OnCard](FCT::OnCard, this, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::NONE, target);
 }
 
 FString FightingUIManager::ClickedOnPassTurn() {
+    if (!CheckCanClickNow()) return "Can't click now, please wait";
     if (Callbacks.find(FCT::OnPassTurn) == Callbacks.end()) return "Press on something else";
-    return Callbacks[FCT::OnPassTurn](FCT::OnPassTurn, this, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::None, nullptr);
+    return Callbacks[FCT::OnPassTurn](FCT::OnPassTurn, this, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::NONE, nullptr);
 }
 
 FString FightingUIManager::ClickedOnOutside() {
+    if (!CheckCanClickNow()) return "Can't click now, please wait";
     if (Callbacks.find(FCT::OnOutside) == Callbacks.end()) return "Press on something else";
-    return Callbacks[FCT::OnOutside](FCT::OnOutside, this, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::None, nullptr);
+    return Callbacks[FCT::OnOutside](FCT::OnOutside, this, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::NONE, nullptr);
 }
 
 FightingUIManager* FightingUIManager::RegisterCallback(CallbackType callback_foo, std::vector<FCT> click_types) {
@@ -134,19 +147,19 @@ FString Regular_Outside(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase
 }
 
 FString Regular_Abilities(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
-    if (ability == TriggersDispatcherEvent_EnumAbility::DrawCard) {
+    if (ability == TriggersDispatcherEvent_EnumAbility::DRAW_CARD) {
         return uim->Field->AbilityDrawCardWithEvent();
     }
-    if (ability == TriggersDispatcherEvent_EnumAbility::GetManaDark) {
+    if (ability == TriggersDispatcherEvent_EnumAbility::GET_MANA_DARK) {
         return uim->Field->AbilityGetManaDarkWithEvent();
     }
-    if (ability == TriggersDispatcherEvent_EnumAbility::GetManaLight) {
+    if (ability == TriggersDispatcherEvent_EnumAbility::GET_MANA_LIGHT) {
         return uim->Field->AbilityGetManaLightWithEvent();
     }
-    if (ability == TriggersDispatcherEvent_EnumAbility::GetManaIce) {
+    if (ability == TriggersDispatcherEvent_EnumAbility::GET_MANA_ICE) {
         return uim->Field->AbilityGetManaIceWithEvent();
     }
-    if (ability == TriggersDispatcherEvent_EnumAbility::GetManaFire) {
+    if (ability == TriggersDispatcherEvent_EnumAbility::GET_MANA_FIRE) {
         return uim->Field->AbilityGetManaFireWithEvent();
     }
     return "Unknown ability";
@@ -160,8 +173,7 @@ FString Regular_PlayCardOrMoveUnit(FCT cbt, FightingUIManager* uim, ABActorFight
             ->RegisterCallback(Regular_WhereToPlayCard, Regular_WhereToPlayCard_CallBackTypes)
             ->RegisterCallback(Regular_Pass, { FCT::OnPassTurn })
             ->RegisterCallback(Regular_Outside, { FCT::OnOutside })
-            ->RegisterCallback(Regular_Abilities, { FCT::OnAbility })
-            ->WaitForInput();
+            ->RegisterCallback(Regular_Abilities, { FCT::OnAbility });
         return "";
     }
     if (cbt == FCT::OnUnit) {
@@ -171,8 +183,7 @@ FString Regular_PlayCardOrMoveUnit(FCT cbt, FightingUIManager* uim, ABActorFight
             ->RegisterCallback(Regular_WhereToMoveUnit, Regular_WhereToMoveUnit_CallBackTypes)
             ->RegisterCallback(Regular_Pass, { FCT::OnPassTurn })
             ->RegisterCallback(Regular_Outside, { FCT::OnOutside })
-            ->RegisterCallback(Regular_Abilities, { FCT::OnAbility })
-            ->WaitForInput();
+            ->RegisterCallback(Regular_Abilities, { FCT::OnAbility });
         return "";
     }
     return "Choose Card, Unit, Ability or Pass the turn";
@@ -243,6 +254,5 @@ void FightingUIManager::LetActionsRegular() {
         ->RegisterCallback(Regular_PlayCardOrMoveUnit, Regular_PlayCardOrMoveUnit_CallBackTypes)
         ->RegisterCallback(Regular_Pass, { FCT::OnPassTurn })
         ->RegisterCallback(Regular_Outside, { FCT::OnOutside })
-        ->RegisterCallback(Regular_Abilities, { FCT::OnAbility })
-        ->WaitForInput();
+        ->RegisterCallback(Regular_Abilities, { FCT::OnAbility });
 }

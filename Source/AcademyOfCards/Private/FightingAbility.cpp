@@ -61,8 +61,7 @@ TSharedPtr<FightingAbility> FightingAbility::Build(TSharedPtr<FJsonObject> Build
 	return AbilityBuilt;
 }
 
-bool FightingAbility::CheckCondition(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) const {
-	// TODOIMPORTANT
+bool FightingAbility::CheckCondition(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) const { // TODO IMPORTANT
 	return true;
 }
 

@@ -8,7 +8,7 @@
 /**
  * 
  */
-class ACADEMYOFCARDS_API FightingAbilityGiveAbility : public FightingAbility
+class ACADEMYOFCARDS_API FightingAbilityGiveAbility : public FightingAbility // TODO IMPORTANT
 {
-	// TODOIMPORTANT
+	
 };

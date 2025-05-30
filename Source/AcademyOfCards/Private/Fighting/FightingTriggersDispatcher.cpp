@@ -23,7 +23,7 @@ void FightingTriggersDispatcher::Tick(float DeltaTime)
 {
     if (!Field) return;
 
-    if (Field->UIManager.IsWaitingPlayerResponse() || !Field->IsPlayerTurn || all_events.empty()) return;
+    if (Field->UIManager.IsTriggerWaitingPlayerResponse() || all_events.empty()) return;
 
     TriggersDispatcherTrigger* trigger = CheckTriggers();
     if (trigger && triggered < MAX_TRIGGERS_PER_EVENT) {
@@ -33,7 +33,7 @@ void FightingTriggersDispatcher::Tick(float DeltaTime)
         return;
     }
 
-    UE_LOG(LogTemp, Error, TEXT("Event finished triggering: %s"), *TriggersDispatcherEvent_EnumEvent_ToString(all_events[0].event));
+    UE_LOG(LogTemp, Error, TEXT("Event finished triggering: %s"), *all_events[0].ToDebugString());
     FlushTriggers();
     triggered = 0;
     all_events[0].Callback();
@@ -73,39 +73,75 @@ void FightingTriggersDispatcher::AddEvent(TriggersDispatcherEvent Event) {
     all_events.push_back(Event);
 }
 
-void DeleteEventAbility(TSharedPtr<FightingAbility> Ability) {
-    // TODO IMPORTANT
+void FightingTriggersDispatcher::DeleteTriggerAbility(TSharedPtr<FightingAbility> Ability) { // TODO IMPORTANT
+    
 }
 
 
 
 
 
-TriggersDispatcherEvent TriggersDispatcherEvent::MakeTriggerTriggered(TriggersDispatcherTrigger* trigger) {
+
+TriggersDispatcherEvent TriggersDispatcherEvent::MakeTriggerTriggered(TriggersDispatcherTrigger* new_trigger) {
     TriggersDispatcherEvent tde;
-    tde.type = 0;
-    tde.trigger = trigger;
+    tde.type = 0; // 0 = trigger, 1 = ability, 2 = event
+    tde.trigger = new_trigger;
+    // tde.ability;
+    // tde.ability_args;
+    // tde.old_ability_args;
+    // tde.event;
+    // tde.event_args;
+    // tde.old_event_args;
+    // tde.CallbackFoo;
     return tde;
 }
 
-TriggersDispatcherEvent TriggersDispatcherEvent::MakeAbility(TriggersDispatcherEvent_EnumAbility enum_ability, std::map<FString, std::any> args) {
+TriggersDispatcherEvent TriggersDispatcherEvent::MakeAbility(TriggersDispatcherEvent_EnumAbility enum_ability, std::map<FString, std::any> args, std::function<FString(std::map<FString, std::any>&)> callback) {
     TriggersDispatcherEvent tde;
-    tde.type = 1;
+    tde.type = 1; // 0 = trigger, 1 = ability, 2 = event
+    // tde.trigger;
     tde.ability = enum_ability;
     tde.ability_args = args;
+    tde.old_ability_args = args;
+    // tde.event;
+    // tde.event_args;
+    // tde.old_event_args;
+    tde.CallbackFoo = callback;
     return tde;
 }
 
-TriggersDispatcherEvent TriggersDispatcherEvent::MakeEvent(TriggersDispatcherEvent_EnumEvent enum_event, std::map<FString, std::any> args, std::function<FString(std::map<FString, std::any>)> results) {
-    // TODO IMPORTANT
+TriggersDispatcherEvent TriggersDispatcherEvent::MakeEvent(TriggersDispatcherEvent_EnumEvent enum_event, std::map<FString, std::any> args, std::function<FString(std::map<FString, std::any>&)> callback) {
     TriggersDispatcherEvent tde;
-    tde.type = 2;
+    tde.type = 2; // 0 = trigger, 1 = ability, 2 = event
+    // tde.trigger;
+    // tde.ability;
+    // tde.ability_args;
+    // tde.old_ability_args;
     tde.event = enum_event;
     tde.event_args = args;
     tde.old_event_args = args;
+    tde.CallbackFoo = callback;
     return tde;
 }
 
+void TriggersDispatcherEvent::Callback() {
+    if (type == 0)
+        return;
+    if (type == 1)
+        CallbackFoo(ability_args);
+    if (type == 2)
+        CallbackFoo(event_args);
+}
+
+FString TriggersDispatcherEvent::ToDebugString() const {
+    if (type == 0)
+        return "Trigger";
+    if (type == 1)
+        return "Ability:" + TriggersDispatcherEvent_EnumAbility_ToString(ability);
+    if (type == 2)
+        return "Event:" + TriggersDispatcherEvent_EnumEvent_ToString(event);
+    return "UNK";
+}
 
 
 

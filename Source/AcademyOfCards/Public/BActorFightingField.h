@@ -154,7 +154,7 @@ public:
 	void Init();
 
 	FString AbilityDrawCardWithEvent();
-	FString AbilityGetManaWithEvent(int& Mana, TriggersDispatcherEvent_EnumAbility ManaType);
+	FString AbilityGetManaWithEvent(TriggersDispatcherEvent_EnumAbility ManaType);
 	FString AbilityGetManaLightWithEvent();
 	FString AbilityGetManaDarkWithEvent();
 	FString AbilityGetManaFireWithEvent();
