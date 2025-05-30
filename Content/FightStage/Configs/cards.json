@@ -389,7 +389,7 @@
                 "when": "Invocation",
                 "amount": 2,
                 "condition": {
-                  "Previous succed": 1
+                  "Previous succed": {}
                 }
               }
             }
@@ -770,7 +770,7 @@
                   "range": 7
                 },
                 "condition": {
-                  "attack_opponent_destroyed": 1
+                  "attack_opponent_destroyed": {}
                 }
               }
             }

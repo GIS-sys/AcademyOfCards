@@ -208,48 +208,69 @@ FString ABActorFightingField::AttackUnitWithEvent(ABActorFightingUnitBase* Attac
             int PrAttacksSpent = std::any_cast<int>(results["attacks"]);
             int PrDamage = std::any_cast<int>(results["damage"]);
             PrAttacker->UnitParameters->CurrentAttacks -= PrAttacksSpent;
-            TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(
-                TriggersDispatcherEvent_EnumEvent::ATTACKED,
-                std::map<FString, std::any>{ {"attacker", PrAttacker}, { "victim", PrVictim }, { "attacks", PrAttacksSpent }, { "damage", PrDamage } }
-            ));
+
 
             TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(
-                TriggersDispatcherEvent_EnumEvent::TAKE_DAMAGE,
-                std::map<FString, std::any>{ {"unit", PrVictim}, {"source_unit", PrAttacker}, {"damage", PrDamage}, {"proceed", true}, {"result", FString("")} },
+                TriggersDispatcherEvent_EnumEvent::ATTACKED,
+                std::map<FString, std::any>{ {"attacker", PrAttacker}, { "victim", PrVictim }, { "attacks", PrAttacksSpent }, { "damage", PrDamage } },
                 [this](std::map<FString, std::any> results) {
-                    // If we were told to stop - stop
-                    FString Result = std::any_cast<FString>(results["result"]);
-                    if (results.find("proceed") == results.end() || !std::any_cast<bool>(results["proceed"])) return Result;
                     // Act
-                    ABActorFightingUnitBase* PrVictim = std::any_cast<ABActorFightingUnitBase*>(results["unit"]);
-                    ABActorFightingUnitBase* PrSourceUnit = std::any_cast<ABActorFightingUnitBase*>(results["source_unit"]);
+                    ABActorFightingUnitBase* PrAttacker = std::any_cast<ABActorFightingUnitBase*>(results["attacker"]);
+                    ABActorFightingUnitBase* PrVictim = std::any_cast<ABActorFightingUnitBase*>(results["victim"]);
+                    int PrAttacksSpent = std::any_cast<int>(results["attacks"]);
                     int PrDamage = std::any_cast<int>(results["damage"]);
-                    PrVictim->TakeDamage(PrDamage);
-                    if (PrVictim->IsPlayer) {
-                        PrVictim->UnitParameters->Health = PrVictim->UnitParameters->CurrentHealth;
-                        GetPlayerStats(PrVictim->IsControlledByPlayer)->Health = PrVictim->UnitParameters->Health;
-                    }
+
                     TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(
-                        TriggersDispatcherEvent_EnumEvent::TOOK_DAMAGE,
-                        std::map<FString, std::any>{ {"unit", PrVictim}, { "source_unit", PrSourceUnit }, { "damage", PrDamage } }
-                    ));
-                    // Check if need to die
-                    bool Result2 = PrVictim->IsDead(this);
-                    if (!Result2) return FString("Doesn't die");
-                    TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(
-                        TriggersDispatcherEvent_EnumEvent::UNIT_DYING,
-                        std::map<FString, std::any>{ {"unit", PrVictim}, {"proceed", true}, {"result", FString("")} },
+                        TriggersDispatcherEvent_EnumEvent::TAKE_DAMAGE,
+                        std::map<FString, std::any>{ {"unit", PrVictim}, { "source_unit", PrAttacker }, { "damage", PrDamage }, { "proceed", true }, { "result", FString("") } },
                         [this](std::map<FString, std::any> results) {
                             // If we were told to stop - stop
                             FString Result = std::any_cast<FString>(results["result"]);
                             if (results.find("proceed") == results.end() || !std::any_cast<bool>(results["proceed"])) return Result;
                             // Act
-                            ABActorFightingUnitBase* Unit = std::any_cast<ABActorFightingUnitBase*>(results["unit"]);
-                            FString Result2 = DeleteUnit(Unit);
-                            if (!Result2.IsEmpty()) return Result2;
+                            ABActorFightingUnitBase* PrVictim = std::any_cast<ABActorFightingUnitBase*>(results["unit"]);
+                            ABActorFightingUnitBase* PrSourceUnit = std::any_cast<ABActorFightingUnitBase*>(results["source_unit"]);
+                            int PrDamage = std::any_cast<int>(results["damage"]);
+                            PrVictim->TakeDamage(PrDamage);
+                            if (PrVictim->IsPlayer) {
+                                PrVictim->UnitParameters->Health = PrVictim->UnitParameters->CurrentHealth;
+                                GetPlayerStats(PrVictim->IsControlledByPlayer)->Health = PrVictim->UnitParameters->Health;
+                            }
+
                             TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(
-                                TriggersDispatcherEvent_EnumEvent::UNIT_DIED,
-                                std::map<FString, std::any>{ {"unit", Unit} }
+                                TriggersDispatcherEvent_EnumEvent::TOOK_DAMAGE,
+                                std::map<FString, std::any>{ {"unit", PrVictim}, { "source_unit", PrSourceUnit }, { "damage", PrDamage } },
+                                [this](std::map<FString, std::any> results) {
+                                    // Act
+                                    ABActorFightingUnitBase* PrVictim = std::any_cast<ABActorFightingUnitBase*>(results["unit"]);
+                                    ABActorFightingUnitBase* PrSourceUnit = std::any_cast<ABActorFightingUnitBase*>(results["source_unit"]);
+                                    int PrDamage = std::any_cast<int>(results["damage"]);
+                                    // Check if need to die
+                                    bool Result2 = PrVictim->IsDead(this);
+                                    if (!Result2) return FString("Doesn't die");
+
+                                    TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(
+                                        TriggersDispatcherEvent_EnumEvent::UNIT_DYING,
+                                        std::map<FString, std::any>{ {"unit", PrVictim}, { "source_unit", PrSourceUnit }, { "proceed", true }, { "result", FString("") } },
+                                        [this](std::map<FString, std::any> results) {
+                                            // If we were told to stop - stop
+                                            FString Result = std::any_cast<FString>(results["result"]);
+                                            if (results.find("proceed") == results.end() || !std::any_cast<bool>(results["proceed"])) return Result;
+                                            // Act
+                                            ABActorFightingUnitBase* PrVictim = std::any_cast<ABActorFightingUnitBase*>(results["unit"]);
+                                            ABActorFightingUnitBase* PrSourceUnit = std::any_cast<ABActorFightingUnitBase*>(results["source_unit"]);
+                                            FString Result2 = DeleteUnit(PrVictim);
+                                            if (!Result2.IsEmpty()) return Result2;
+
+                                            TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(
+                                                TriggersDispatcherEvent_EnumEvent::UNIT_DIED,
+                                                std::map<FString, std::any>{ {"unit", PrVictim}, { "source_unit", PrSourceUnit } }
+                                            ));
+                                            return FString();
+                                        }
+                                    ));
+                                    return FString();
+                                }
                             ));
                             return FString();
                         }
@@ -399,17 +420,6 @@ FString ABActorFightingField::PassTurnWithEvent(bool DoEvent)
                                         if (!IsPlayerTurn) {
                                             AIOpponent.YourTurn(this);
                                         }
-
-                                        /*TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(
-                                            TriggersDispatcherEvent_EnumEvent::DREW_CARD_ON_TURN_START,
-                                            std::map<FString, std::any>{ {"mana_gain", PrManaGain}, { "is_player_turn", PrIsPlayerTurn }, { "card", PrCard } },
-                                            [this](std::map<FString, std::any> results) {
-                                                if (!IsPlayerTurn) {
-                                                    AIOpponent.YourTurn(this);
-                                                }
-                                                return FString();
-                                            }
-                                        ));*/
                                         return FString();
                                     }
                                 ));
@@ -454,17 +464,23 @@ FString ABActorFightingField::AbilityGetManaWithEvent(TriggersDispatcherEvent_En
             if (PlayerMana.General < PrCost) return FString("Not enough mana");
             
             PlayerMana.General -= PrCost;
-            if (PrManaType == TriggersDispatcherEvent_EnumAbility::GET_MANA_DARK)
+            TriggersDispatcherEvent_EnumAbility PrManaTypePastevent = TriggersDispatcherEvent_EnumAbility::NONE;
+            if (PrManaType == TriggersDispatcherEvent_EnumAbility::GET_MANA_DARK) {
                 GetCurrentPlayerMana()->Dark += PrAmount;
-            else if (PrManaType == TriggersDispatcherEvent_EnumAbility::GET_MANA_FIRE)
+                PrManaTypePastevent = TriggersDispatcherEvent_EnumAbility::GOT_MANA_DARK;
+            } else if (PrManaType == TriggersDispatcherEvent_EnumAbility::GET_MANA_FIRE) {
                 GetCurrentPlayerMana()->Fire += PrAmount;
-            else if (PrManaType == TriggersDispatcherEvent_EnumAbility::GET_MANA_ICE)
+                PrManaTypePastevent = TriggersDispatcherEvent_EnumAbility::GOT_MANA_FIRE;
+            } else if (PrManaType == TriggersDispatcherEvent_EnumAbility::GET_MANA_ICE) {
                 GetCurrentPlayerMana()->Ice += PrAmount;
-            else if (PrManaType == TriggersDispatcherEvent_EnumAbility::GET_MANA_LIGHT)
+                PrManaTypePastevent = TriggersDispatcherEvent_EnumAbility::GOT_MANA_ICE;
+            } else if (PrManaType == TriggersDispatcherEvent_EnumAbility::GET_MANA_LIGHT) {
                 GetCurrentPlayerMana()->Light += PrAmount;
+                PrManaTypePastevent = TriggersDispatcherEvent_EnumAbility::GOT_MANA_LIGHT;
+            }
 
             TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeAbility(
-                PrManaType,
+                PrManaTypePastevent,
                 std::map<FString, std::any>{ { "mana_type", PrManaType }, { "cost", PrCost }, { "amount", PrAmount } }
             ));
             return FString();

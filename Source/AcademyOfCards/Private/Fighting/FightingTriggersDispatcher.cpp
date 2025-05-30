@@ -37,6 +37,7 @@ void FightingTriggersDispatcher::Tick(float DeltaTime)
     FlushTriggers();
     triggered = 0;
     all_events[0].Callback();
+    history_events.push_back(all_events[0]);
     all_events.pop_front();
     Field->UIManager.LetActionsRegular();
 }

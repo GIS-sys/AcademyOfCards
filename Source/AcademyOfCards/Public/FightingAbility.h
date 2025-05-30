@@ -26,10 +26,15 @@ enum WHEN : int {
 	//ALWAYS,
 };
 
-// TODO IMPORTANT conditions in fighting abilities
-// "Allied_familiar_died_this_turn": { "greater": 0 }
-// "Previous succed": 1
-// "attack_opponent_destroyed": 1
+struct FightingAbilityCondition {
+	FString Type;
+	TSharedPtr<FJsonValue> Data;
+
+	FightingAbilityCondition() {}
+	FightingAbilityCondition(FString Type, TSharedPtr<FJsonValue> Data) : Type(Type), Data(Data) {}
+
+	bool Check(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) const;
+};
 
 class ACADEMYOFCARDS_API FightingAbility
 {
@@ -38,6 +43,7 @@ protected:
 	virtual void _Build() {}
 
 	std::set<WHEN> When;
+	std::map<FString, FightingAbilityCondition> Conditions;
 
 public:
 	FightingAbility(TSharedPtr<FJsonObject> data, UUMyGameInstance* MyGameInstance);
@@ -87,10 +93,10 @@ public:
 
 	bool CheckConditions(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) { // TODO IMPORTANT
 		bool applicable = true;
-		/*for (const auto& condition : Conditions) {
-			applicable = condition.Check(Field, Event, OwnerUnit);
+		for (const auto& condition : Conditions) {
+			applicable = condition.second.Check(Field, Event, OwnerUnit);
 			if (!applicable) break;
-		}*/
+		}
 		return applicable;
 	}
 };
