@@ -2,6 +2,7 @@
 
 
 #include "BActorFightingUnitBase.h"
+#include "BActorFightingField.h"
 
 void ABActorFightingUnitBase::InitPlayerMy(ABActorFightingField* Field, ABActorFightingCellBase* Cell, const FPlayerStats* Stats)
 {
@@ -66,20 +67,48 @@ void ABActorFightingUnitBase::TakeDamage(int Damage)
 	UnitParameters->CurrentHealth -= Damage;
 }
 
-/*if (IsOccupied(Cell)) return "Cell is occupied"; and distance and acan move still*/
-FString ABActorFightingUnitBase::CanMove(ABActorFightingCellBase* Cell) { // TODO IMPORTANT
-	return "";
+bool ABActorFightingUnitBase::CanMove(ABActorFightingField* Field, ABActorFightingCellBase* Cell) {
+	bool can_move = true;
+	// Check yourself
+	int Distance = ABActorFightingCellBase::Distance(CurrentCell, Cell);
+	if (Field->IsOccupied(Cell))
+		can_move = false;
+	else if (UnitParameters->CurrentMovement <= 0)
+		can_move = false;
+	else if (Distance > UnitParameters->CurrentMovement)
+		can_move = false;
+	// Ask abilities
+	for (auto& ability : UnitParameters->Abilities)
+		can_move = ability->CanMove(this, Cell, can_move, Field);
+	// Return
+	return can_move;
 }
 
-/*if (Attacker == Victim) return "Units cannot attack themselves";
-if (Attacker->UnitParameters->CurrentAttacks <= 0) return "Unit is already out of attacks for this turn";
-int Distance = ABActorFightingCellBase::Distance(Attacker->CurrentCell, Victim->CurrentCell);
-if (Distance > Attacker->UnitParameters->Range) return;*/
-FString ABActorFightingUnitBase::CanAttack(ABActorFightingUnitBase* Victim) { // TODO IMPORTANT
-	return "";
+bool ABActorFightingUnitBase::CanAttack(ABActorFightingField* Field, ABActorFightingUnitBase* Victim) {
+	bool can_attack = true;
+	// Check yourself
+	int Distance = ABActorFightingCellBase::Distance(CurrentCell, Victim->CurrentCell);
+	if (this == Victim)
+		can_attack = false;
+	else if (UnitParameters->CurrentAttacks <= 0)
+		can_attack = false;
+	else if (Distance > UnitParameters->Range)
+		can_attack = false;
+	// Ask abilities
+	for (auto& ability : UnitParameters->Abilities)
+		can_attack = ability->CanAttack(this, Victim, can_attack, Field);
+	// Return
+	return can_attack;
 }
 
-// if (Unit->UnitParameters->CurrentHealth <= 0) {
-FString ABActorFightingUnitBase::IsDead() { // TODO IMPORTANT
-	return "";
+bool ABActorFightingUnitBase::IsDead(ABActorFightingField* Field) {
+	bool is_dead = false;
+	// Check yourself
+	if (UnitParameters->CurrentHealth <= 0)
+		is_dead = true;
+	// Ask abilities
+	for (auto& ability : UnitParameters->Abilities)
+		is_dead = ability->IsDead(this, is_dead, Field);
+	// Return
+	return is_dead;
 }

@@ -63,4 +63,8 @@ public:
 	bool CheckEvent(ABActorFightingField* Field, TriggersDispatcherEvent Event, ABActorFightingUnitBase* unit) { return false; } // TODO IMPORTANT
 	void ExecEvent(ABActorFightingField* Field, TriggersDispatcherEvent Event, ABActorFightingUnitBase* unit) { return; } // TODO IMPORTANT
 	void FlushEvent(ABActorFightingField* Field, TriggersDispatcherEvent Event, ABActorFightingUnitBase* unit) { return; } // TODO IMPORTANT
+
+	bool CanMove(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell, bool can_move, ABActorFightingField* Field) { return can_move; } // TODO IMPORTANT
+	bool CanAttack(ABActorFightingUnitBase* Unit, ABActorFightingUnitBase* Victim, bool can_attack, ABActorFightingField* Field) { return can_attack; } // TODO IMPORTANT
+	bool IsDead(ABActorFightingUnitBase* Unit, bool is_dead, ABActorFightingField* Field) { return is_dead; } // TODO IMPORTANT
 };

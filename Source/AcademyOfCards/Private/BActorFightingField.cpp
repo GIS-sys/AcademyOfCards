@@ -164,8 +164,8 @@ void ABActorFightingField::Tick(float DeltaTime)
 
 FString ABActorFightingField::MoveUnitWithEvent(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell)
 {
-    FString res = Unit->CanMove(Cell);
-    if (!res.IsEmpty()) return res;
+    bool res = Unit->CanMove(this, Cell);
+    if (!res) return "Can't move";
 
     TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(
         TriggersDispatcherEvent_EnumEvent::MOVE,
@@ -191,8 +191,8 @@ FString ABActorFightingField::MoveUnitWithEvent(ABActorFightingUnitBase* Unit, A
 
 FString ABActorFightingField::AttackUnitWithEvent(ABActorFightingUnitBase* Attacker, ABActorFightingUnitBase* Victim)
 {
-    FString res = Attacker->CanAttack(Victim);
-    if (!res.IsEmpty()) return res;
+    bool res = Attacker->CanAttack(this, Victim);
+    if (!res) return "Can't attack";
 
     TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(
         TriggersDispatcherEvent_EnumEvent::ATTACK,
@@ -233,8 +233,8 @@ FString ABActorFightingField::AttackUnitWithEvent(ABActorFightingUnitBase* Attac
                         std::map<FString, std::any>{ {"unit", PrVictim}, { "source_unit", PrSourceUnit }, { "damage", PrDamage } }
                     ));
                     // Check if need to die
-                    FString Result2 = PrVictim->IsDead();
-                    if (!Result2.IsEmpty()) return Result2;
+                    bool Result2 = PrVictim->IsDead(this);
+                    if (!Result2) return FString("Doesn't die");
                     TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(
                         TriggersDispatcherEvent_EnumEvent::UNIT_DYING,
                         std::map<FString, std::any>{ {"unit", PrVictim}, {"proceed", true}, {"result", FString("")} },

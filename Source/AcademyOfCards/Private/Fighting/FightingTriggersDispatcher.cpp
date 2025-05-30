@@ -73,8 +73,8 @@ void FightingTriggersDispatcher::AddEvent(TriggersDispatcherEvent Event) {
     all_events.push_back(Event);
 }
 
-void FightingTriggersDispatcher::DeleteTriggerAbility(TSharedPtr<FightingAbility> Ability) { // TODO IMPORTANT
-    
+void FightingTriggersDispatcher::DeleteTriggerAbility(TSharedPtr<FightingAbility> Ability) {
+    all_triggers.remove_if([&Ability](const TriggersDispatcherTrigger& trigger) { return trigger.ability == Ability; });
 }
 
 
