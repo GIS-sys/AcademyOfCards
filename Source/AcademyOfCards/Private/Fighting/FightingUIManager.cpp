@@ -46,6 +46,12 @@ void FightingUIManager::TriggerDoesntNeedInput() {
     trigger_needs_input = false;
 }
 
+bool FightingUIManager::CheckIfCallbackExists(FightingUIManagerClickType click_type) const {
+    return Callbacks.find(click_type) != Callbacks.end();
+}
+
+
+
 FightingUIManager* FightingUIManager::Clear() {
     Callbacks.clear();
     return this;

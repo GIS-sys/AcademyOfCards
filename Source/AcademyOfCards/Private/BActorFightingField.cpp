@@ -526,6 +526,21 @@ FString ABActorFightingField::ClickedOnOutside() {
 
 
 
+bool ABActorFightingField::CanClickOnCell() { return UIManager.CheckIfCallbackExists(FightingUIManagerClickType::OnCell);  }
+
+bool ABActorFightingField::CanClickOnUnit() { return UIManager.CheckIfCallbackExists(FightingUIManagerClickType::OnUnit); }
+
+bool ABActorFightingField::CanClickOnAbility() { return UIManager.CheckIfCallbackExists(FightingUIManagerClickType::OnAbility); }
+
+bool ABActorFightingField::CanClickOnCard() { return UIManager.CheckIfCallbackExists(FightingUIManagerClickType::OnCard); }
+
+bool ABActorFightingField::CanClickOnPassTurn() { return UIManager.CheckIfCallbackExists(FightingUIManagerClickType::OnPassTurn); }
+
+bool ABActorFightingField::CanClickOnOutside() { return UIManager.CheckIfCallbackExists(FightingUIManagerClickType::OnOutside); }
+
+
+
+
 
 void AI::StartThinkingLoop(ABActorFightingField* FightingField) {
     AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, FightingField]() {

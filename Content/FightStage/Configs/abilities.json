@@ -1,10 +1,12 @@
 [
+
   {
     "ID": "ab000",
     "Type": "Give ability",
     "Description": "",
     "Arguments": {
       "ability_id": "",
+      "Arguments": {},
       "when": "",
       "target": {
         "type": "",
@@ -13,7 +15,10 @@
       },
       "condition": {
 
-      }
+      },
+      "result": [
+
+      ]
     }
   },
 
@@ -31,7 +36,10 @@
       "damage": 0,
       "condition": {
 
-      }
+      },
+      "result": [
+
+      ]
     }
   },
   {
@@ -41,7 +49,10 @@
     "Arguments": {
       "condition": {
 
-      }
+      },
+      "result": [
+
+      ]
     }
   },
   {
@@ -54,7 +65,10 @@
       "when": "",
       "condition": {
 
-      }
+      },
+      "result": [
+
+      ]
     }
   },
   {
@@ -72,8 +86,253 @@
       },
       "condition": {
 
-      }
+      },
+      "result": [
+
+      ]
     }
   },
-  
+
+  {
+    "ID": "ab005",
+    "Type": "Guardian",
+    "Description": "Enemy units, adjacent to this units can not move or attack units without guardian ability(but still can use their abilities)",
+    "Arguments": {
+      "condition": {
+
+      },
+      "result": [
+
+      ]
+    }
+  },
+
+  {
+    "ID": "ab006",
+    "Type": "Destroy unit",
+    "Description": "",
+    "Arguments": {
+      "when": "",
+      "target": {
+        "type": "",
+        "zone": "",
+        "range": 0
+      },
+      "condition": {
+
+      },
+      "result": [
+
+      ]
+    }
+  },
+
+  {
+    "ID": "ab007",
+    "Type": "Draw card",
+    "Description": "",
+    "Arguments": {
+      "when": "",
+      "amount": 0,
+      "condition": {
+
+      },
+      "result": [
+
+      ]
+    }
+  },
+
+  {
+    "ID": "ab008",
+    "Type": "Heal",
+    "Description": "",
+    "Arguments": {
+      "when": "",
+      "target": {
+        "type": "",
+        "zone": "",
+        "range": 0
+      },
+      "heal": 0,
+      "condition": {
+
+      },
+      "result": [
+
+      ]
+    }
+  },
+
+  {
+    "ID": "ab009",
+    "Type": "Determination",
+    "Description": "Can act immediatly after calling on the battlefield",
+    "Arguments": {
+      "condition": {
+
+      },
+      "result": [
+
+      ]
+    }
+  },
+
+  {
+    "ID": "ab010",
+    "Type": "Deal aoe-ring damage",
+    "Description": "deal damage to units in ring-shaped form with center on a target(radius can be either int[1-7], or array of those integers)",
+    "Arguments": {
+      "when": "",
+      "target": {
+        "type": "",
+        "zone": "",
+        "range": 0
+      },
+      "radius": 0,
+      "damage": 0,
+      "ally_immune": 0,
+      "condition": {
+
+      },
+      "result": [
+
+      ]
+    }
+  },
+
+  {
+    "ID": "ab011",
+    "Type": "Refresh",
+    "Description": "when it triggers, unit can move and attack again, even if it already attacked this turn",
+    "Arguments": {
+      "when": "",
+      "target": {
+        "type": "",
+        "zone": "",
+        "range": 0
+      },
+      "condition": {
+
+      },
+      "result": [
+
+      ]
+    }
+  },
+
+  {
+    "ID": "ab012",
+    "Type": "Call",
+    "Description": "call a unit by the same rules as playing it, but it is called from the target as origin, not always from player",
+    "Arguments": {
+      "unit_id": "",
+      "when": "",
+      "target": {
+        "type": "",
+        "zone": "",
+        "range": 0
+      },
+      "condition": {
+
+      },
+      "result": [
+
+      ]
+    }
+  },
+
+  {
+    "ID": "ab013",
+    "Type": "Freeze",
+    "Description": "stun",
+    "Arguments": {
+      "when": "",
+      "target": {
+        "type": "",
+        "zone": "",
+        "range": 0
+      },
+      "duration": 0,
+      "condition": {
+
+      },
+      "result": [
+
+      ]
+    }
+  },
+
+  {
+    "ID": "ab014",
+    "Type": "Freeze aoe-ring",
+    "Description": "stun units in ring-shaped form with center on a target(radius can be either int[1-7], or array of those integers)",
+    "Arguments": {
+      "when": "",
+      "target": {
+        "type": "",
+        "zone": "",
+        "range": 0
+      },
+      "radius": 0,
+      "duration": 0,
+      "ally_immune": 0,
+      "condition": {
+
+      },
+      "result": [
+
+      ]
+    }
+  },
+  {
+    "ID": "ab015",
+    "Type": "Give stats on variable",
+    "Description": "",
+    "Arguments": {
+      "x": "",
+      "y": "",
+      "Health": 0,
+      "Power": 0,
+      "when": "",
+      "target": {
+        "type": "",
+        "zone": "",
+        "range": 0
+      },
+      "condition": {
+
+      },
+      "result": [
+
+      ]
+    }
+  },
+  {
+    "ID": "ab016",
+    "Type": "Saturation",
+    "Description": "Spend different types of mana",
+    "Arguments": {
+      "when": "",
+      "target": {
+        "type": "as_previous",
+        "zone": "any",
+        "range": 7
+      },
+      "mana": {
+        "General": 0,
+        "Light": 0,
+        "Dark": 0,
+        "Fire": 0,
+        "Ice": 0
+      },
+      "condition": {
+
+      },
+      "result": [
+
+      ]
+    }
+  }
+
 ]

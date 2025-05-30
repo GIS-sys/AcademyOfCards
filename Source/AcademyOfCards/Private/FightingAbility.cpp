@@ -33,7 +33,8 @@ TSharedPtr<FightingAbility> FightingAbility::Build(TSharedPtr<FJsonObject> Build
 	} else if (Type == "Give stats") {
 		AbilityBuilt = MakeShareable(new FightingAbilityGiveStats());
 	} else {
-		throw "FightingAbility::Build got unexpected Type: " + Type + " (ID: " + ID + ")";
+		// throw "FightingAbility::Build got unexpected Type: " + Type + " (ID: " + ID + ")"; // TODO IMPORTANT
+		AbilityBuilt = MakeShareable(new FightingAbility());
 	}
 
 	AbilityBuilt->ID = ID;

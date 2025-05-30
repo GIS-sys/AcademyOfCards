@@ -54,6 +54,8 @@ public:
 	void TriggerNeedsInput();
 	void TriggerDoesntNeedInput();
 
+	bool CheckIfCallbackExists(FightingUIManagerClickType click_type) const;
+
 
 	FString ClickedOnCell(ABActorFightingCellBase* target);
 	FString ClickedOnUnit(ABActorFightingUnitBase* target);

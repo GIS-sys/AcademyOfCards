@@ -18,6 +18,8 @@ UCLASS()
 class ACADEMYOFCARDS_API ABActorFightingCard : public ABActorEnhanced
 {
 	GENERATED_BODY()
+
+	const FString MAGIC_TYPE = "Magic";
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")

@@ -185,6 +185,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
 	FString ClickedOnOutside();
 
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool CanClickOnCell();
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool CanClickOnUnit();
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool CanClickOnAbility();
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool CanClickOnCard();
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool CanClickOnPassTurn();
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool CanClickOnOutside();
+
 	FightingTriggersDispatcher TriggersDispatcher;
 	FightingUIManager UIManager;
 

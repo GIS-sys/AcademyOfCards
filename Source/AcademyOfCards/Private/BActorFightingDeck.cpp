@@ -40,7 +40,9 @@ ABActorFightingCard* ABActorFightingDeck::DrawCard()
     NewActor->WhenHighlightedLocationDelta = WhenHighlightedLocationDelta;
     NewActor->SetActorLocation(GetActorLocation());
 
-    NewActor->FromConfig(MyGameInstance->LoadedFightingConfigs->GetCardByID(GetRandomCardId()));
+    FString RandomCardId = GetRandomCardId();
+    UE_LOG(LogTemp, Error, TEXT("Get random card id %s"), *RandomCardId);
+    NewActor->FromConfig(MyGameInstance->LoadedFightingConfigs->GetCardByID(RandomCardId));
 
     // set material
     int i = 0;
