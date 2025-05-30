@@ -11,8 +11,8 @@
 class ACADEMYOFCARDS_API FightingAbilityGetStats : public FightingAbility
 {
 protected:
-	int DeltaHealth;
-	int DeltaPower;
+	int DeltaHealth = 0;
+	int DeltaPower = 0;
 
 	virtual void _Build() override;
 

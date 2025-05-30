@@ -162,6 +162,7 @@ public:
 	FString PassTurnWithEvent(bool DoEvent = true);
 
 	FString MoveUnitWithEvent(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell);
+	FString DealDamageWithEvent(ABActorFightingUnitBase* Attacker, ABActorFightingUnitBase* Victim, int Damage);
 	FString AttackUnitWithEvent(ABActorFightingUnitBase* Attacker, ABActorFightingUnitBase* Victim);
 	FString PlayCardWithEvent(ABActorFightingCard* Card, ABActorFightingCellBase* Cell);
 

@@ -36,14 +36,22 @@ struct FightingAbilityCondition {
 	bool Check(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) const;
 };
 
+struct FightingAbilityTarget {
+	TSharedPtr<FJsonObject> Data;
+
+	void With(
+		ABActorFightingField* Field,
+		TriggersDispatcherEvent& Event,
+		ABActorFightingUnitBase* OwnerUnit,
+		std::function<void(const std::map<FString, std::any>&, ABActorFightingField*, TriggersDispatcherEvent&, ABActorFightingUnitBase*)> Callback
+	) const;
+};
+
 class ACADEMYOFCARDS_API FightingAbility
 {
 protected:
 	FightingAbility() {}
 	virtual void _Build() {}
-
-	std::set<WHEN> When;
-	std::map<FString, FightingAbilityCondition> Conditions;
 
 public:
 	FightingAbility(TSharedPtr<FJsonObject> data, UUMyGameInstance* MyGameInstance);
@@ -54,6 +62,10 @@ public:
     FString Description;
     TSharedPtr<FJsonObject> Arguments;
 	TSharedPtr<FJsonObject> AdditionalArguments;
+
+	std::set<WHEN> When;
+	std::map<FString, FightingAbilityCondition> Conditions;
+	FightingAbilityTarget Target;
 
 	TSharedPtr<FightingAbility> Build(TSharedPtr<FJsonObject> Arguments) const;
 

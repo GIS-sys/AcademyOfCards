@@ -8,4 +8,6 @@ To add new Fighting card:
 
 - add when parsing in FightingAbility::Build if new When type (FightingAbility.cpp)
 
+- add target type FightingAbilityTarget::With if new target (FightingAbility.cpp)
+
 - implement new Ability class

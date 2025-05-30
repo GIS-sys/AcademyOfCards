@@ -10,6 +10,19 @@
 #include "BActorFightingField.h"
 #include "UMyGameInstance.h"
 
+
+void FightingAbilityTarget::With( // TODO IMPORTANT
+	ABActorFightingField* Field,
+	TriggersDispatcherEvent& Event,
+	ABActorFightingUnitBase* OwnerUnit,
+	std::function<void(const std::map<FString, std::any>&, ABActorFightingField*, TriggersDispatcherEvent&, ABActorFightingUnitBase*)> Callback
+) const {
+	std::map<FString, std::any> args;
+	args["unit"] = OwnerUnit;
+	Callback(args, Field, Event, OwnerUnit);
+}
+
+
 bool FightingAbilityCondition::Check(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) const { // TODO IMPORTANT
 	if (Type == "Allied_familiar_died_this_turn") {
 		for (auto it = Field->TriggersDispatcher.history_events.rbegin(); it != Field->TriggersDispatcher.history_events.rend(); ++it) {
@@ -56,9 +69,9 @@ TSharedPtr<FightingAbility> FightingAbility::Build(TSharedPtr<FJsonObject> Build
 		AbilityBuilt = MakeShareable(new FightingAbilityJump());
 	} else if (Type == "Get stats") {
 		AbilityBuilt = MakeShareable(new FightingAbilityGetStats());
-	/*} else if (Type == "Deal_damage") {
+	} else if (Type == "Deal_damage") {
 		AbilityBuilt = MakeShareable(new FightingAbilityDealDamage());
-	} else if (Type == "Give ability") {
+	/*} else if (Type == "Give ability") {
 		AbilityBuilt = MakeShareable(new FightingAbilityGiveAbility());
 	} else if (Type == "Give stats") {
 		AbilityBuilt = MakeShareable(new FightingAbilityGiveStats());*/
@@ -97,6 +110,13 @@ TSharedPtr<FightingAbility> FightingAbility::Build(TSharedPtr<FJsonObject> Build
 		for (auto& [x, y] : ConditionsObject->Values) {
 			AbilityBuilt->Conditions[x] = FightingAbilityCondition(x, y);
 		}
+	}
+
+	if (AbilityBuilt->AdditionalArguments->HasField("target") || AbilityBuilt->Arguments->HasField("target")) {
+		if (AbilityBuilt->AdditionalArguments->HasField("target"))
+			AbilityBuilt->Target.Data = AbilityBuilt->AdditionalArguments->TryGetField("target")->AsObject();
+		else
+			AbilityBuilt->Target.Data = AbilityBuilt->Arguments->TryGetField("target")->AsObject();
 	}
 
 	AbilityBuilt->_Build();

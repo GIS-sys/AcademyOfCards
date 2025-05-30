@@ -11,8 +11,9 @@
 class ACADEMYOFCARDS_API FightingAbilityDealDamage : public FightingAbility
 {
 protected:
-	void DealDamage(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit);
+	int Damage = 0;
 
-	virtual void _OnSpawn(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit);
-	virtual void _OnAttachAbility(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit);
+	virtual void _Build() override;
+
+	virtual void ExecEvent(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) override;
 };

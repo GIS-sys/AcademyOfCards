@@ -5,18 +5,17 @@
 #include "BActorFightingUnitBase.h"
 #include "BActorFightingField.h"
 
-void FightingAbilityDealDamage::_OnAttachAbility(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) {
-	DealDamage(Field, OwnerUnit);
+void FightingAbilityDealDamage::_Build() {
+	if (!AdditionalArguments->TryGetNumberField("damage", Damage))
+		if (!Arguments->TryGetNumberField("damage", Damage))
+			Damage = 0;
 }
 
-void FightingAbilityDealDamage::_OnSpawn(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) {
-	DealDamage(Field, OwnerUnit);
-}
+void FightingAbilityDealDamage::ExecEvent(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) {
+	Target.With(Field, Event, OwnerUnit, [&](const std::map<FString, std::any>& args, ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) {
+		if (args.find("unit") == args.end()) throw std::exception("FightingAbilityDealDamage needs a unit as a target");
+		ABActorFightingUnitBase* ChosenUnit = std::any_cast<ABActorFightingUnitBase*>(args.find("unit")->second);
 
-void FightingAbilityDealDamage::DealDamage(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) {
-	for (auto& Unit : Field->ArrayUnits) {
-		if (Unit->IsControlledByPlayer == OwnerUnit->IsControlledByPlayer) break;
-		Field->AttackUnitWithEvent(OwnerUnit, Unit);
-		break;
-	}
+		Field->DealDamageWithEvent(OwnerUnit, ChosenUnit, Damage);
+	});
 }
