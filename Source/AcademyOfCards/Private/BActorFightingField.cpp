@@ -268,7 +268,7 @@ FString ABActorFightingField::DeleteUnit(ABActorFightingUnitBase* Unit) {
         if (ArrayUnits[i] == Unit) ArrayUnits.RemoveAt(i);
     }
     for (auto& ability : Unit->UnitParameters->Abilities) {
-        this->TriggersDispatcher.DeleteTriggerAbility(ability);
+        this->TriggersDispatcher.DeleteTriggerAbility(Unit, ability);
     }
     if (!Unit->IsPlayer) {
         Unit->Destroy();
@@ -305,7 +305,7 @@ FString ABActorFightingField::PlayCardWithEvent(ABActorFightingCard* Card, ABAct
             TriggersDispatcher.AddTriggerAbilitiesFromUnit(NewUnit);
             TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(
                 TriggersDispatcherEvent_EnumEvent::PLAYED_CARD,
-                std::map<FString, std::any>{ {"card", PrCard}, { "cell", PrCell }, { "mana_cost", PrManaCost }, { "mana_gain", PrManaGain } }
+                std::map<FString, std::any>{ {"card", PrCard}, { "cell", PrCell }, { "mana_cost", PrManaCost }, { "mana_gain", PrManaGain }, { "created_unit", NewUnit } }
             ));
             return FString("");
         }
@@ -655,7 +655,7 @@ void AI::Act(ABActorFightingField* FightingField)
     // TODO
     /*if (CardToPlay) {
         int x = PlayCardCoordinates.Get<0>(); int y = PlayCardCoordinates.Get<1>(); int z = PlayCardCoordinates.Get<2>();
-        UE_LOG(LogTemp, Error, TEXT("AI acting by playing card to %d %d %d"), x, y, z);
+        UE_LOG(LogTemp, Warning, TEXT("AI acting by playing card to %d %d %d"), x, y, z);
         FightingField->PlayCard(CardToPlay, FightingField->ArrayCells[x][y][z]);
 
         NeedLoop = true;
@@ -663,7 +663,7 @@ void AI::Act(ABActorFightingField* FightingField)
     
     if (MovingPlayerCoordinates != TTuple<int, int, int>({ -1, -1, -1 })) {
         int x = MovingPlayerCoordinates.Get<0>(); int y = MovingPlayerCoordinates.Get<1>(); int z = MovingPlayerCoordinates.Get<2>();
-        UE_LOG(LogTemp, Error, TEXT("AI acting by walking to %d %d %d"), x, y, z);
+        UE_LOG(LogTemp, Warning, TEXT("AI acting by walking to %d %d %d"), x, y, z);
         FightingField->MoveUnit(FightingField->PlayerUnitOpponent, FightingField->ArrayCells[x][y][z]);
 
         NeedLoop |= (FightingField->PlayerUnitOpponent->UnitParameters->CurrentMovement != 0);
@@ -671,14 +671,14 @@ void AI::Act(ABActorFightingField* FightingField)
 
     if (MoveUnit) {
         int x = MoveUnitCoordinates.Get<0>(); int y = MoveUnitCoordinates.Get<1>(); int z = MoveUnitCoordinates.Get<2>();
-        UE_LOG(LogTemp, Error, TEXT("AI acting by moving unit to %d %d %d"), x, y, z);
+        UE_LOG(LogTemp, Warning, TEXT("AI acting by moving unit to %d %d %d"), x, y, z);
         bool res = FightingField->MoveUnit(MoveUnit, FightingField->ArrayCells[x][y][z]);
 
         NeedLoop |= res;
     }
 
     if (AttackUnitAttacker) {
-        UE_LOG(LogTemp, Error, TEXT("AI acting by attacking"));
+        UE_LOG(LogTemp, Warning, TEXT("AI acting by attacking"));
         FightingField->AttackUnit(AttackUnitAttacker, AttackUnitVictim);
     }*/
 }

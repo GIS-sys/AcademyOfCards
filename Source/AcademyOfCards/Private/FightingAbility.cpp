@@ -24,16 +24,17 @@ TSharedPtr<FightingAbility> FightingAbility::Build(TSharedPtr<FJsonObject> Build
 	TSharedPtr<FightingAbility> AbilityBuilt = nullptr;
 	if (Type == "Jump") {
 		AbilityBuilt = MakeShareable(new FightingAbilityJump());
+	} else if (Type == "Get stats") {
+		AbilityBuilt = MakeShareable(new FightingAbilityGetStats());
 	/*} else if (Type == "Deal_damage") {
 		AbilityBuilt = MakeShareable(new FightingAbilityDealDamage());
 	} else if (Type == "Give ability") {
 		AbilityBuilt = MakeShareable(new FightingAbilityGiveAbility());
-	} else if (Type == "Get stats") {
-		AbilityBuilt = MakeShareable(new FightingAbilityGetStats());
 	} else if (Type == "Give stats") {
 		AbilityBuilt = MakeShareable(new FightingAbilityGiveStats());*/
 	} else {
 		// throw "FightingAbility::Build got unexpected Type: " + Type + " (ID: " + ID + ")"; // TODO IMPORTANT
+		UE_LOG(LogTemp, Error, TEXT("ERROR UNKNOWN ABILITY TYPE %s (FightingAbility::Build)"), *Type);
 		AbilityBuilt = MakeShareable(new FightingAbility());
 	}
 
@@ -47,15 +48,14 @@ TSharedPtr<FightingAbility> FightingAbility::Build(TSharedPtr<FJsonObject> Build
 	if (!AbilityBuilt->AdditionalArguments->TryGetStringField("when", WhenStr)) {
 		if (!AbilityBuilt->Arguments->TryGetStringField("when", WhenStr)) WhenStr = "";
 	}
-	AbilityBuilt->When = ALWAYS;
 	if (WhenStr == "Invocation") {
-		AbilityBuilt->When = INVOCATION;
-	}
-	else if (WhenStr == "on_attack") {
-		AbilityBuilt->When = ON_ATTACK;
-	}
-	else if (WhenStr == "spell_cast") {
-		AbilityBuilt->When = SPELL_CAST;
+		AbilityBuilt->When.insert(INVOCATION);
+	//} else if (WhenStr == "on_attack") {
+	//	AbilityBuilt->When = ON_ATTACK;
+	//} else if (WhenStr == "spell_cast") {
+	//	AbilityBuilt->When = SPELL_CAST;
+	} else {
+		//AbilityBuilt->When = ALWAYS;
 	}
 
 	AbilityBuilt->_Build();

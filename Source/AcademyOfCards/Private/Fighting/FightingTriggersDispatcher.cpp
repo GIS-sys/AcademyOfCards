@@ -33,7 +33,7 @@ void FightingTriggersDispatcher::Tick(float DeltaTime)
         return;
     }
 
-    UE_LOG(LogTemp, Error, TEXT("Event finished triggering: %s"), *all_events[0].ToDebugString());
+    UE_LOG(LogTemp, Warning, TEXT("Event finished triggering: %s"), *all_events[0].ToDebugString());
     FlushTriggers();
     triggered = 0;
     all_events[0].Callback();
@@ -44,8 +44,9 @@ void FightingTriggersDispatcher::Tick(float DeltaTime)
 TriggersDispatcherTrigger* FightingTriggersDispatcher::CheckTriggers()
 {
     int i = 0;
-    UE_LOG(LogTemp, Error, TEXT("Checking triggers (total %d)"), all_triggers.size());
+    UE_LOG(LogTemp, Warning, TEXT("Checking triggers (total %d)"), all_triggers.size());
     for (auto& trigger : all_triggers) {
+        if (i < triggered) continue;
         if (trigger.Check(Field, all_events[0])) return &trigger;
         ++i;
     }
@@ -73,8 +74,8 @@ void FightingTriggersDispatcher::AddEvent(TriggersDispatcherEvent Event) {
     all_events.push_back(Event);
 }
 
-void FightingTriggersDispatcher::DeleteTriggerAbility(TSharedPtr<FightingAbility> Ability) {
-    all_triggers.remove_if([&Ability](const TriggersDispatcherTrigger& trigger) { return trigger.ability == Ability; });
+void FightingTriggersDispatcher::DeleteTriggerAbility(ABActorFightingUnitBase* Unit, TSharedPtr<FightingAbility> Ability) {
+    all_triggers.remove_if([&Ability, &Unit](const TriggersDispatcherTrigger& trigger) { return trigger.unit == Unit && trigger.ability == Ability; });
 }
 
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Fighting/FightingTriggersDispatcher.h"
+#include <set>
 
 class UUMyGameInstance;
 class ABActorFightingUnitBase;
@@ -13,15 +14,22 @@ class ABActorFightingField;
 /**
  * 
  */
-enum WHEN {
-	ALWAYS = 0,
-	INVOCATION = 1,
-	ON_ATTACK = 2,
-	SPELL_CAST = 3,
-	ON_MOVE = 4,
-	ON_TURN_END = 5,
-	ON_GET_ATTACKED = 6,
+
+enum WHEN : int {
+	NONE = 0,
+	INVOCATION,
+	//ON_ATTACK, // TODO IMPORTANT
+	//SPELL_CAST,
+	//ON_MOVE,
+	//ON_TURN_END,
+	//ON_GET_ATTACKED,
+	//ALWAYS,
 };
+
+// TODO IMPORTANT conditions in fighting abilities
+// "Allied_familiar_died_this_turn": { "greater": 0 }
+// "Previous succed": 1
+// "attack_opponent_destroyed": 1
 
 class ACADEMYOFCARDS_API FightingAbility
 {
@@ -29,7 +37,7 @@ protected:
 	FightingAbility() {}
 	virtual void _Build() {}
 
-	WHEN When = ALWAYS;
+	std::set<WHEN> When;
 
 public:
 	FightingAbility(TSharedPtr<FJsonObject> data, UUMyGameInstance* MyGameInstance);

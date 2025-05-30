@@ -83,5 +83,5 @@ public:
 	void AddTriggerAbility(ABActorFightingUnitBase* Unit, TSharedPtr<FightingAbility> Ability);
 
 	void AddEvent(TriggersDispatcherEvent Event);
-	void DeleteTriggerAbility(TSharedPtr<FightingAbility> Ability);
+	void DeleteTriggerAbility(ABActorFightingUnitBase* Unit, TSharedPtr<FightingAbility> Ability);
 };
