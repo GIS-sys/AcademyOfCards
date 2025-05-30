@@ -13,5 +13,5 @@ class ACADEMYOFCARDS_API FightingAbilityJump : public FightingAbility
 {
 protected:
 	virtual void ExecEvent(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) override;
-	virtual bool CanMove(ABActorFightingUnitBase* OwnerUnit, ABActorFightingCellBase* Cell, bool can_move, ABActorFightingField* Field) override;
+	virtual void CanMove(ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell, std::map<FString, std::any>& args, ABActorFightingField* Field) override;
 };

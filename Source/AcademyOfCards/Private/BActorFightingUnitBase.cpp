@@ -55,9 +55,9 @@ void ABActorFightingUnitBase::ResetOnTurnEnd(bool TurnEndedIsThisOwner)
 }
 
 
-void ABActorFightingUnitBase::Move(ABActorFightingField* Field, ABActorFightingCellBase* Cell)
+void ABActorFightingUnitBase::Move(ABActorFightingField* Field, ABActorFightingCellBase* Cell, int MoveCost)
 {
-	UnitParameters->CurrentMovement -= ABActorFightingCellBase::Distance(Cell, CurrentCell);
+	UnitParameters->CurrentMovement -= MoveCost;
 	MoveOverTimeTo(LocationOriginal, Cell->GetUnitLocation(), MOVING_TIME);
 	CurrentCell = Cell;
 }
@@ -67,48 +67,54 @@ void ABActorFightingUnitBase::TakeDamage(int Damage)
 	UnitParameters->CurrentHealth -= Damage;
 }
 
-bool ABActorFightingUnitBase::CanMove(ABActorFightingField* Field, ABActorFightingCellBase* Cell) { // TODO IMPORTANT
-	bool can_move = true;
-	// Check yourself
-	int Distance = ABActorFightingCellBase::Distance(CurrentCell, Cell);
-	if (Field->IsOccupied(Cell))
-		can_move = false;
-	else if (UnitParameters->CurrentMovement <= 0)
-		can_move = false;
-	else if (Distance > UnitParameters->CurrentMovement)
-		can_move = false;
+bool ABActorFightingUnitBase::CanMove(ABActorFightingField* Field, ABActorFightingCellBase* Cell) {
+	// Prepare
+	std::map<FString, std::any> args;
+	args["unit"] = this;
+	args["is_occupied"] = Field->IsOccupied(Cell);
+	args["move_cost"] = 1;
+	args["dist_can"] = 1;
+	args["dist_req"] = ABActorFightingCellBase::Distance(CurrentCell, Cell);
 	// Ask abilities
-	for (auto& ability : UnitParameters->Abilities)
-		can_move = ability->CanMove(this, Cell, can_move, Field);
-	// Return
-	return can_move;
+	for (auto& trigger : Field->TriggersDispatcher.all_triggers)
+		trigger.CanMove(this, Cell, args, Field);
+	UE_LOG(LogTemp, Error, TEXT("DIST TODO %d %d"), std::any_cast<int>(args["dist_can"]), std::any_cast<int>(args["dist_req"]));
+	// Check yourself
+	if (std::any_cast<bool>(args["is_occupied"])) return false;
+	if (std::any_cast<ABActorFightingUnitBase*>(args["unit"])->UnitParameters->CurrentMovement < std::any_cast<int>(args["move_cost"])) return false;
+	if (std::any_cast<int>(args["dist_can"]) < std::any_cast<int>(args["dist_req"])) return false;
+	return true;
 }
 
-bool ABActorFightingUnitBase::CanAttack(ABActorFightingField* Field, ABActorFightingUnitBase* Victim) { // TODO IMPORTANT
-	bool can_attack = true;
-	// Check yourself
-	int Distance = ABActorFightingCellBase::Distance(CurrentCell, Victim->CurrentCell);
-	if (this == Victim)
-		can_attack = false;
-	else if (UnitParameters->CurrentAttacks <= 0)
-		can_attack = false;
-	else if (Distance > UnitParameters->Range)
-		can_attack = false;
+bool ABActorFightingUnitBase::CanAttack(ABActorFightingField* Field, ABActorFightingUnitBase* Victim) {
+	// Prepare
+	std::map<FString, std::any> args;
+	args["attacker"] = this;
+	args["victim"] = Victim;
+	args["attack_cost"] = 1;
+	args["range"] = UnitParameters->Range;
+	args["distance"] = ABActorFightingCellBase::Distance(CurrentCell, Victim->CurrentCell);
 	// Ask abilities
-	for (auto& ability : UnitParameters->Abilities)
-		can_attack = ability->CanAttack(this, Victim, can_attack, Field);
-	// Return
-	return can_attack;
+	for (auto& trigger : Field->TriggersDispatcher.all_triggers)
+		trigger.CanAttack(this, Victim, args, Field);
+	// Check yourself
+	ABActorFightingUnitBase* PrAttacker = std::any_cast<ABActorFightingUnitBase*>(args["attacker"]);
+	if (PrAttacker == std::any_cast<ABActorFightingUnitBase*>(args["victim"])) return false;
+	if (PrAttacker->UnitParameters->CurrentAttacks < std::any_cast<int>(args["attack_cost"])) return false;
+	if (std::any_cast<int>(args["distance"]) > std::any_cast<int>(args["range"])) return false;
+	return true;
 }
 
-bool ABActorFightingUnitBase::IsDead(ABActorFightingField* Field) { // TODO IMPORTANT
-	bool is_dead = false;
-	// Check yourself
-	if (UnitParameters->CurrentHealth <= 0)
-		is_dead = true;
+bool ABActorFightingUnitBase::IsDead(ABActorFightingField* Field) {
+	// Prepare
+	std::map<FString, std::any> args;
+	args["unit"] = this;
+	args["health_threshold"] = 0;
 	// Ask abilities
-	for (auto& ability : UnitParameters->Abilities)
-		is_dead = ability->IsDead(this, is_dead, Field);
-	// Return
-	return is_dead;
+	for (auto& trigger : Field->TriggersDispatcher.all_triggers)
+		trigger.IsDead(this, args, Field);
+	// Check yourself
+	ABActorFightingUnitBase* PrUnit = std::any_cast<ABActorFightingUnitBase*>(args["unit"]);
+	if (PrUnit->UnitParameters->CurrentHealth <= std::any_cast<int>(args["health_threshold"])) return true;
+	return false;
 }

@@ -32,7 +32,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 	UMaterialInterface* MainMaterial;
 
-	void Move(ABActorFightingField* Field, ABActorFightingCellBase* Cell);
+	void Move(ABActorFightingField* Field, ABActorFightingCellBase* Cell, int MoveCost = -1);
 
 	void InitUnit();
 	void ResetOnTurnEnd(bool TurnEndedIsThisOwner);

@@ -13,6 +13,7 @@
 
 class ABActorFightingField;
 class ABActorFightingUnitBase;
+class ABActorFightingCellBase;
 class FightingAbility;
 
 static const int MAX_TRIGGERS_PER_EVENT = 1000;
@@ -50,6 +51,10 @@ struct TriggersDispatcherTrigger {
 	bool Check(ABActorFightingField* Field, TriggersDispatcherEvent Event);
 	void Exec(ABActorFightingField* Field, TriggersDispatcherEvent Event);
 	void Flush(ABActorFightingField* Field, TriggersDispatcherEvent Event);
+
+	void CanMove(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell, std::map<FString, std::any>& args, ABActorFightingField* Field);
+	void CanAttack(ABActorFightingUnitBase* Unit, ABActorFightingUnitBase* Victim, std::map<FString, std::any>& args, ABActorFightingField* Field);
+	void IsDead(ABActorFightingUnitBase* Unit, std::map<FString, std::any>& args, ABActorFightingField* Field);
 
 	static TriggersDispatcherTrigger MakeAbility(ABActorFightingUnitBase* Unit, TSharedPtr<FightingAbility> Ability);
 };

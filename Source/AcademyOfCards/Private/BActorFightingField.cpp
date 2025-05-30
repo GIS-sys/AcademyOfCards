@@ -169,7 +169,7 @@ FString ABActorFightingField::MoveUnitWithEvent(ABActorFightingUnitBase* Unit, A
 
     TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(
         TriggersDispatcherEvent_EnumEvent::MOVE,
-        std::map<FString, std::any>{ {"unit", Unit}, { "from_cell", Unit->CurrentCell }, {"cell", Cell}, {"proceed", true}, {"result", FString("")} },
+        std::map<FString, std::any>{ {"unit", Unit}, { "from_cell", Unit->CurrentCell }, { "cell", Cell }, { "move_cost", ABActorFightingCellBase::Distance(Cell, Unit->CurrentCell) }, {"proceed", true}, {"result", FString("")} },
         [this](std::map<FString, std::any> results) {
             // If we were told to stop - stop
             FString Result = std::any_cast<FString>(results["result"]);
@@ -178,7 +178,8 @@ FString ABActorFightingField::MoveUnitWithEvent(ABActorFightingUnitBase* Unit, A
             ABActorFightingUnitBase* PrUnit = std::any_cast<ABActorFightingUnitBase*>(results["unit"]);
             ABActorFightingCellBase* PrCell = std::any_cast<ABActorFightingCellBase*>(results["cell"]);
             ABActorFightingCellBase* PrFromCell = std::any_cast<ABActorFightingCellBase*>(results["from_cell"]);
-            PrUnit->Move(this, PrCell);
+            int PrMoveCost = std::any_cast<int>(results["move_cost"]);
+            PrUnit->Move(this, PrCell, PrMoveCost);
             TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(
                 TriggersDispatcherEvent_EnumEvent::MOVED,
                 std::map<FString, std::any>{ {"unit", PrUnit}, { "from_cell", PrFromCell }, { "cell", PrCell } }

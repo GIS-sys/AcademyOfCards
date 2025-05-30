@@ -159,6 +159,18 @@ void TriggersDispatcherTrigger::Flush(ABActorFightingField* Field, TriggersDispa
     return ability->FlushEvent(Field, Event, unit);
 }
 
+void TriggersDispatcherTrigger::CanMove(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell, std::map<FString, std::any>& args, ABActorFightingField* Field) {
+    ability->CanMove(unit, Unit, Cell, args, Field);
+}
+
+void TriggersDispatcherTrigger::CanAttack(ABActorFightingUnitBase* Unit, ABActorFightingUnitBase* Victim, std::map<FString, std::any>& args, ABActorFightingField* Field) {
+    ability->CanAttack(unit, Unit, Victim, args, Field);
+}
+
+void TriggersDispatcherTrigger::IsDead(ABActorFightingUnitBase* Unit, std::map<FString, std::any>& args, ABActorFightingField* Field) {
+    ability->IsDead(unit, Unit, args, Field);
+}
+
 TriggersDispatcherTrigger TriggersDispatcherTrigger::MakeAbility(ABActorFightingUnitBase* Unit, TSharedPtr<FightingAbility> Ability) {
     TriggersDispatcherTrigger tdt;
     tdt.ability = Ability;

@@ -47,7 +47,7 @@ public:
 	virtual void ExecEvent(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) { return; } // TODO IMPORTANT
 	virtual void FlushEvent(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) { return; } // TODO IMPORTANT
 
-	virtual bool CanMove(ABActorFightingUnitBase* OwnerUnit, ABActorFightingCellBase* Cell, bool can_move, ABActorFightingField* Field) { return can_move; } // TODO IMPORTANT
-	virtual bool CanAttack(ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Victim, bool can_attack, ABActorFightingField* Field) { return can_attack; } // TODO IMPORTANT
-	virtual bool IsDead(ABActorFightingUnitBase* OwnerUnit, bool is_dead, ABActorFightingField* Field) { return is_dead; } // TODO IMPORTANT
+	virtual void CanMove(ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell, std::map<FString, std::any>& args, ABActorFightingField* Field) { return; }
+	virtual void CanAttack(ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Unit, ABActorFightingUnitBase* Victim, std::map<FString, std::any>& args, ABActorFightingField* Field) { return; }
+	virtual void IsDead(ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Unit, std::map<FString, std::any>& args, ABActorFightingField* Field) { return; }
 };
