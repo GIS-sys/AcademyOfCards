@@ -22,6 +22,8 @@ ABActorFightingUnitBase* ABActorFightingCard::SpawnUnit(ABActorFightingField* Fi
     NewActor->IsControlledByPlayer = IsControlledByPlayer;
     NewActor->MainMaterial = UnitMaterial;
     NewActor->SetActorRotation({ 0, 0, 0, 0 });
+
+    NewActor->InitUnit();
     return NewActor;
 }
 

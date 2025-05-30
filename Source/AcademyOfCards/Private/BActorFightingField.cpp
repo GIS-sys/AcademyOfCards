@@ -372,6 +372,9 @@ FString ABActorFightingField::PassTurnWithEvent(bool DoEvent)
                         int PrManaGain = std::any_cast<int>(results["mana_gain"]);
                         bool PrIsPlayerTurn = std::any_cast<bool>(results["is_player_turn"]);
 
+                        for (auto& Unit : ArrayUnits)
+                            Unit->ResetOnTurnEnd(IsPlayerTurn != Unit->IsControlledByPlayer);
+
                         TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(
                             TriggersDispatcherEvent_EnumEvent::DRAW_CARD_ON_TURN_START,
                             std::map<FString, std::any>{ {"mana_gain", PrManaGain}, { "is_player_turn", PrIsPlayerTurn }, { "proceed", true }, { "result", FString("") } },

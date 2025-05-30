@@ -21,7 +21,7 @@ FString TriggersDispatcherEvent_EnumAbility_ToString(TriggersDispatcherEvent_Enu
 
 FString TriggersDispatcherEvent_EnumEvent_ToString(TriggersDispatcherEvent_EnumEvent ev) {
 	if (ev == TriggersDispatcherEvent_EnumEvent::MOVE) return "MOVE";
-	if (ev == TriggersDispatcherEvent_EnumEvent::MOVE) return "MOVED";
+	if (ev == TriggersDispatcherEvent_EnumEvent::MOVED) return "MOVED";
 	if (ev == TriggersDispatcherEvent_EnumEvent::ATTACK) return "ATTACK";
 	if (ev == TriggersDispatcherEvent_EnumEvent::ATTACKED) return "ATTACKED";
 	if (ev == TriggersDispatcherEvent_EnumEvent::PLAY_CARD) return "PLAY_CARD";

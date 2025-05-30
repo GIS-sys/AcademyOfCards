@@ -15,7 +15,7 @@ void ABActorFightingUnitBase::InitPlayerMy(ABActorFightingField* Field, ABActorF
 	UnitParameters->Attacks = 1;
 	UnitParameters->Power = 1;
 	UnitParameters->Range = 1;
-	OnSpawn(Field);
+	InitUnit();
 }
 
 void ABActorFightingUnitBase::InitPlayerOpponent(ABActorFightingField* Field, FString OpponentName, ABActorFightingCellBase* Cell, FPlayerStats* Stats)
@@ -38,16 +38,15 @@ void ABActorFightingUnitBase::InitPlayerOpponent(ABActorFightingField* Field, FS
 		UnitParameters->Power = 5;
 		UnitParameters->Range = 3;
 	}
-	//UnitParameters = UnitParameters;
-	OnSpawn(Field);
+	InitUnit();
 }
 
-void ABActorFightingUnitBase::OnSpawn(ABActorFightingField* Field)
+void ABActorFightingUnitBase::InitUnit()
 {
 	UnitParameters->ResetCurrent(true);
 }
 
-void ABActorFightingUnitBase::OnTurnEnd(ABActorFightingField* Field, bool TurnEndedIsThisOwner)
+void ABActorFightingUnitBase::ResetOnTurnEnd(bool TurnEndedIsThisOwner)
 {
 	if (!TurnEndedIsThisOwner) {
 		UnitParameters->ResetCurrent();

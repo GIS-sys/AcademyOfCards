@@ -126,7 +126,7 @@ std::vector<FCT> Regular_WhereToPlayCard_CallBackTypes {
 };
 FString Regular_WhereToMoveUnit(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card);
 std::vector<FCT> Regular_WhereToMoveUnit_CallBackTypes {
-    FCT::OnCard,
+    FCT::OnCell,
     FCT::OnUnit
 };
 

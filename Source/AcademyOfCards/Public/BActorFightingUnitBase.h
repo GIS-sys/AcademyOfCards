@@ -34,8 +34,8 @@ public:
 
 	void Move(ABActorFightingField* Field, ABActorFightingCellBase* Cell);
 
-	void OnSpawn(ABActorFightingField* Field);
-	void OnTurnEnd(ABActorFightingField* Field, bool TurnEndedIsThisOwner);
+	void InitUnit();
+	void ResetOnTurnEnd(bool TurnEndedIsThisOwner);
 	void TakeDamage(int Damage);
 
 	void InitPlayerMy(ABActorFightingField* Field, ABActorFightingCellBase* Cell, const FPlayerStats* Stats);
