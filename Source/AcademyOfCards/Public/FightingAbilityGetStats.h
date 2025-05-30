@@ -15,5 +15,5 @@ protected:
 	int DeltaPower;
 
 	virtual void _Build() override;
-	virtual void _OnAnything(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) override;
+	virtual void _OnAnything(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) ;
 };

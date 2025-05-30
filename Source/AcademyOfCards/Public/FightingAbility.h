@@ -31,14 +31,6 @@ protected:
 
 	WHEN When = ALWAYS;
 
-	virtual void _OnAnything(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) {}
-	virtual void _OnAttachAbility(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) {}
-	virtual void _OnMove(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, ABActorFightingCellBase* CellFrom, ABActorFightingCellBase* CellTo) {}
-	virtual void _OnSpawn(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) {}
-	virtual void _OnTurnEnd(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, bool TurnEndedIsThisOwner) {}
-	virtual void _OnAttackUnit(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Victim) {}
-	virtual void _OnGetAttacked(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Attacker) {}
-
 public:
 	FightingAbility(TSharedPtr<FJsonObject> data, UUMyGameInstance* MyGameInstance);
 	virtual ~FightingAbility() = default;
@@ -51,20 +43,11 @@ public:
 
 	TSharedPtr<FightingAbility> Build(TSharedPtr<FJsonObject> Arguments) const;
 
-	bool CheckCondition(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) const;
+	virtual bool CheckEvent(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) { return false; } // TODO IMPORTANT
+	virtual void ExecEvent(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) { return; } // TODO IMPORTANT
+	virtual void FlushEvent(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) { return; } // TODO IMPORTANT
 
-	void OnAttachAbility(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit);
-	void OnMove(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, ABActorFightingCellBase* CellFrom, ABActorFightingCellBase* CellTo);
-	void OnSpawn(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit);
-	void OnTurnEnd(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, bool TurnEndedIsThisOwner);
-	void OnAttackUnit(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Victim);
-	void OnGetAttacked(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Attacker);
-
-	bool CheckEvent(ABActorFightingField* Field, TriggersDispatcherEvent Event, ABActorFightingUnitBase* unit) { return false; } // TODO IMPORTANT
-	void ExecEvent(ABActorFightingField* Field, TriggersDispatcherEvent Event, ABActorFightingUnitBase* unit) { return; } // TODO IMPORTANT
-	void FlushEvent(ABActorFightingField* Field, TriggersDispatcherEvent Event, ABActorFightingUnitBase* unit) { return; } // TODO IMPORTANT
-
-	bool CanMove(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell, bool can_move, ABActorFightingField* Field) { return can_move; } // TODO IMPORTANT
-	bool CanAttack(ABActorFightingUnitBase* Unit, ABActorFightingUnitBase* Victim, bool can_attack, ABActorFightingField* Field) { return can_attack; } // TODO IMPORTANT
-	bool IsDead(ABActorFightingUnitBase* Unit, bool is_dead, ABActorFightingField* Field) { return is_dead; } // TODO IMPORTANT
+	virtual bool CanMove(ABActorFightingUnitBase* OwnerUnit, ABActorFightingCellBase* Cell, bool can_move, ABActorFightingField* Field) { return can_move; } // TODO IMPORTANT
+	virtual bool CanAttack(ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Victim, bool can_attack, ABActorFightingField* Field) { return can_attack; } // TODO IMPORTANT
+	virtual bool IsDead(ABActorFightingUnitBase* OwnerUnit, bool is_dead, ABActorFightingField* Field) { return is_dead; } // TODO IMPORTANT
 };

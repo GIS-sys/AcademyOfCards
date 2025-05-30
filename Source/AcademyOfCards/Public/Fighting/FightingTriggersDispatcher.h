@@ -19,8 +19,13 @@ static const int MAX_TRIGGERS_PER_EVENT = 1000;
 
 struct TriggersDispatcherTrigger;
 struct TriggersDispatcherEvent {
-private:
-	int type = -1; // 0 = trigger, 1 = ability, 2 = event
+	enum Type : int {
+		NONE = -1,
+		TRIGGER,
+		ABILITY,
+		EVENT,
+	};
+	Type type = Type::NONE;
 	TriggersDispatcherTrigger* trigger;
 	TriggersDispatcherEvent_EnumAbility ability;
 	std::map<FString, std::any> ability_args;
@@ -31,7 +36,6 @@ private:
 
 	std::function<FString(std::map<FString, std::any>&)> CallbackFoo;
 
-public:
 	FString ToDebugString() const;
 	void Callback();
 

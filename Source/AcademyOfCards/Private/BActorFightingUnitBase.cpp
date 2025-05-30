@@ -67,7 +67,7 @@ void ABActorFightingUnitBase::TakeDamage(int Damage)
 	UnitParameters->CurrentHealth -= Damage;
 }
 
-bool ABActorFightingUnitBase::CanMove(ABActorFightingField* Field, ABActorFightingCellBase* Cell) {
+bool ABActorFightingUnitBase::CanMove(ABActorFightingField* Field, ABActorFightingCellBase* Cell) { // TODO IMPORTANT
 	bool can_move = true;
 	// Check yourself
 	int Distance = ABActorFightingCellBase::Distance(CurrentCell, Cell);
@@ -84,7 +84,7 @@ bool ABActorFightingUnitBase::CanMove(ABActorFightingField* Field, ABActorFighti
 	return can_move;
 }
 
-bool ABActorFightingUnitBase::CanAttack(ABActorFightingField* Field, ABActorFightingUnitBase* Victim) {
+bool ABActorFightingUnitBase::CanAttack(ABActorFightingField* Field, ABActorFightingUnitBase* Victim) { // TODO IMPORTANT
 	bool can_attack = true;
 	// Check yourself
 	int Distance = ABActorFightingCellBase::Distance(CurrentCell, Victim->CurrentCell);
@@ -101,7 +101,7 @@ bool ABActorFightingUnitBase::CanAttack(ABActorFightingField* Field, ABActorFigh
 	return can_attack;
 }
 
-bool ABActorFightingUnitBase::IsDead(ABActorFightingField* Field) {
+bool ABActorFightingUnitBase::IsDead(ABActorFightingField* Field) { // TODO IMPORTANT
 	bool is_dead = false;
 	// Check yourself
 	if (UnitParameters->CurrentHealth <= 0)

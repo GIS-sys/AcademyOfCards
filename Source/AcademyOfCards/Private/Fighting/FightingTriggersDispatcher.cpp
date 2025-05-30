@@ -84,7 +84,7 @@ void FightingTriggersDispatcher::DeleteTriggerAbility(TSharedPtr<FightingAbility
 
 TriggersDispatcherEvent TriggersDispatcherEvent::MakeTriggerTriggered(TriggersDispatcherTrigger* new_trigger) {
     TriggersDispatcherEvent tde;
-    tde.type = 0; // 0 = trigger, 1 = ability, 2 = event
+    tde.type = Type::TRIGGER; // 0 = trigger, 1 = ability, 2 = event
     tde.trigger = new_trigger;
     // tde.ability;
     // tde.ability_args;
@@ -98,7 +98,7 @@ TriggersDispatcherEvent TriggersDispatcherEvent::MakeTriggerTriggered(TriggersDi
 
 TriggersDispatcherEvent TriggersDispatcherEvent::MakeAbility(TriggersDispatcherEvent_EnumAbility enum_ability, std::map<FString, std::any> args, std::function<FString(std::map<FString, std::any>&)> callback) {
     TriggersDispatcherEvent tde;
-    tde.type = 1; // 0 = trigger, 1 = ability, 2 = event
+    tde.type = Type::ABILITY; // 0 = trigger, 1 = ability, 2 = event
     // tde.trigger;
     tde.ability = enum_ability;
     tde.ability_args = args;
@@ -112,7 +112,7 @@ TriggersDispatcherEvent TriggersDispatcherEvent::MakeAbility(TriggersDispatcherE
 
 TriggersDispatcherEvent TriggersDispatcherEvent::MakeEvent(TriggersDispatcherEvent_EnumEvent enum_event, std::map<FString, std::any> args, std::function<FString(std::map<FString, std::any>&)> callback) {
     TriggersDispatcherEvent tde;
-    tde.type = 2; // 0 = trigger, 1 = ability, 2 = event
+    tde.type = Type::EVENT; // 0 = trigger, 1 = ability, 2 = event
     // tde.trigger;
     // tde.ability;
     // tde.ability_args;
@@ -125,20 +125,20 @@ TriggersDispatcherEvent TriggersDispatcherEvent::MakeEvent(TriggersDispatcherEve
 }
 
 void TriggersDispatcherEvent::Callback() {
-    if (type == 0)
+    if (type == Type::TRIGGER)
         return;
-    if (type == 1)
+    if (type == Type::ABILITY)
         CallbackFoo(ability_args);
-    if (type == 2)
+    if (type == Type::EVENT)
         CallbackFoo(event_args);
 }
 
 FString TriggersDispatcherEvent::ToDebugString() const {
-    if (type == 0)
+    if (type == Type::TRIGGER)
         return "Trigger";
-    if (type == 1)
+    if (type == Type::ABILITY)
         return "Ability:" + TriggersDispatcherEvent_EnumAbility_ToString(ability);
-    if (type == 2)
+    if (type == Type::EVENT)
         return "Event:" + TriggersDispatcherEvent_EnumEvent_ToString(event);
     return "UNK";
 }
