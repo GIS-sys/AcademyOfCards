@@ -78,7 +78,6 @@ bool ABActorFightingUnitBase::CanMove(ABActorFightingField* Field, ABActorFighti
 	// Ask abilities
 	for (auto& trigger : Field->TriggersDispatcher.all_triggers)
 		trigger.CanMove(this, Cell, args, Field);
-	UE_LOG(LogTemp, Error, TEXT("DIST TODO %d %d"), std::any_cast<int>(args["dist_can"]), std::any_cast<int>(args["dist_req"]));
 	// Check yourself
 	if (std::any_cast<bool>(args["is_occupied"])) return false;
 	if (std::any_cast<ABActorFightingUnitBase*>(args["unit"])->UnitParameters->CurrentMovement < std::any_cast<int>(args["move_cost"])) return false;
