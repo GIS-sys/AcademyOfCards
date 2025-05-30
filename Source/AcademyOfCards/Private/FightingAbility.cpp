@@ -51,9 +51,8 @@ FightingAbility::FightingAbility(TSharedPtr<FJsonObject> data, UUMyGameInstance*
 
 TSharedPtr<FightingAbility> FightingAbility::Build(TSharedPtr<FJsonObject> BuildArguments) const
 {
-	// TODOIMPORTANT
 	TSharedPtr<FightingAbility> AbilityBuilt = nullptr;
-	if (Type == "Jump") {
+	if (Type == "Jump") { // TODO IMPORTANT
 		AbilityBuilt = MakeShareable(new FightingAbilityJump());
 	} else if (Type == "Get stats") {
 		AbilityBuilt = MakeShareable(new FightingAbilityGetStats());
@@ -64,7 +63,7 @@ TSharedPtr<FightingAbility> FightingAbility::Build(TSharedPtr<FJsonObject> Build
 	} else if (Type == "Give stats") {
 		AbilityBuilt = MakeShareable(new FightingAbilityGiveStats());*/
 	} else {
-		// throw "FightingAbility::Build got unexpected Type: " + Type + " (ID: " + ID + ")"; // TODO IMPORTANT
+		// throw "FightingAbility::Build got unexpected Type: " + Type + " (ID: " + ID + ")";
 		UE_LOG(LogTemp, Error, TEXT("ERROR UNKNOWN ABILITY TYPE %s (FightingAbility::Build)"), *Type);
 		AbilityBuilt = MakeShareable(new FightingAbility());
 	}
