@@ -21,8 +21,7 @@ public:
 	int Y = 0;
 	int Z = 0;
 
-	static int Distance(TTuple<int, int, int> Cell1, TTuple<int, int, int> Cell2) {
-		int dx = (Cell1.Get<0>() - Cell2.Get<0>()), dy = (Cell1.Get<1>() - Cell2.Get<1>()), dz = (Cell1.Get<2>() - Cell2.Get<2>());
+	static std::tuple<int, int, int, int> Reduce(int dx, int dy, int dz) {
 		int adx = std::abs(dx), ady = std::abs(dy), adz = std::abs(dz);
 		int dcommon = 0;
 		if (dx * dy > 0 && adx <= ady) dcommon = dx;
@@ -31,7 +30,23 @@ public:
 		if (dy * dz > 0 && ady <= adz) dcommon = dy;
 		if (dz * dx > 0 && adz <= adx) dcommon = dz;
 		if (dz * dy > 0 && adz <= ady) dcommon = dz;
-		return std::abs(dx - dcommon) + std::abs(dy - dcommon) + std::abs(dz - dcommon);
+		return { dx - dcommon, dy - dcommon, dz - dcommon, dcommon };
+	}
+
+	static bool AreOnTheLine(TTuple<int, int, int> Cell1, TTuple<int, int, int> Cell2) {
+		int dx = (Cell1.Get<0>() - Cell2.Get<0>()), dy = (Cell1.Get<1>() - Cell2.Get<1>()), dz = (Cell1.Get<2>() - Cell2.Get<2>());
+		auto [ddx, ddy, ddz, ddcommon] = Reduce(dx, dy, dz);
+		return ddx == ddy || ddx == ddz || ddy == ddz;
+	}
+
+	static bool AreOnTheLine(ABActorFightingCellBase* Cell1, ABActorFightingCellBase* Cell2) {
+		return AreOnTheLine(Cell1->GetCoordinates(), Cell2->GetCoordinates());
+	}
+
+	static int Distance(TTuple<int, int, int> Cell1, TTuple<int, int, int> Cell2) {
+		int dx = (Cell1.Get<0>() - Cell2.Get<0>()), dy = (Cell1.Get<1>() - Cell2.Get<1>()), dz = (Cell1.Get<2>() - Cell2.Get<2>());
+		auto [ddx, ddy, ddz, ddcommon] = Reduce(dx, dy, dz);
+		return std::abs(ddx) + std::abs(ddy) + std::abs(ddz);
 	}
 
 	static int Distance(ABActorFightingCellBase* Cell1, ABActorFightingCellBase* Cell2) {

@@ -11,15 +11,66 @@
 #include "UMyGameInstance.h"
 
 
-void FightingAbilityTarget::With( // TODO IMPORTANT
+void FightingAbilityTarget::With(
 	ABActorFightingField* Field,
 	TriggersDispatcherEvent& Event,
 	ABActorFightingUnitBase* OwnerUnit,
 	std::function<void(const std::map<FString, std::any>&, ABActorFightingField*, TriggersDispatcherEvent&, ABActorFightingUnitBase*)> Callback
 ) const {
-	std::map<FString, std::any> args;
-	args["unit"] = OwnerUnit;
-	Callback(args, Field, Event, OwnerUnit);
+	FightingUIManagerClickType WhatToChoose;
+	WhatToChoose = FightingUIManagerClickType::OnUnit; // TODO IMPORTANT
+
+	Field->UIManager
+		.Clear()
+		->RegisterCallback(
+			[this, Field, &Event, OwnerUnit, Callback, WhatToChoose](FightingUIManagerClickType cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
+				// Dont choose anything - no callback
+				if (cbt == FightingUIManagerClickType::OnOutside) {
+					Field->UIManager.TriggerDoesntNeedInput();
+					Field->UIManager.LetActionsRegular();
+					return FString();
+				}
+				// Chose unit - check things and apply damage
+				std::map<FString, std::any> args;
+				if (WhatToChoose == FightingUIManagerClickType::OnUnit) { // TODO IMPORTANT
+					// Check type
+					if (Data->HasField("type")) {
+						FString Type = Data->GetStringField("type");
+						if (Type == "select_enemy") {
+							if (OwnerUnit->IsControlledByPlayer == unit->IsControlledByPlayer) {
+								return FString("Choose Enemy unit");
+							}
+						} else {
+							UE_LOG(LogTemp, Error, TEXT("FightingAbilityTarget::With got unknown type %s"), *Type);
+						}
+					}
+					// Check zone
+					if (Data->HasField("zone")) {
+						FString Zone = Data->GetStringField("zone");
+						if (Zone == "line") {
+							if (!ABActorFightingCellBase::AreOnTheLine(OwnerUnit->CurrentCell, unit->CurrentCell)) {
+								return FString("Choose unit on the line");
+							}
+						} else {
+							UE_LOG(LogTemp, Error, TEXT("FightingAbilityTarget::With got unknown zone %s"), *Zone);
+						}
+					}
+					// Check range
+					if (Data->HasField("range")) {
+						int Range = (int)(Data->GetNumberField("range") + 0.5);
+						if (ABActorFightingCellBase::Distance(OwnerUnit->CurrentCell, unit->CurrentCell) > Range) {
+							return FString("Choose proper distance");
+						}
+					}
+					args["unit"] = unit;
+				}
+				Callback(args, Field, Event, OwnerUnit);
+				Field->UIManager.TriggerDoesntNeedInput();
+				Field->UIManager.LetActionsRegular();
+				return FString();
+			}, { WhatToChoose, FightingUIManagerClickType::OnOutside }
+		)
+		->TriggerNeedsInput();
 }
 
 
