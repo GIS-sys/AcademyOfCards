@@ -51,11 +51,46 @@ public:
 
 	TSharedPtr<FightingAbility> Build(TSharedPtr<FJsonObject> Arguments) const;
 
-	virtual bool CheckEvent(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) { return false; }
+	virtual bool CheckEvent(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) { return ChecWhens(Event, OwnerUnit) && CheckConditions(Field, Event, OwnerUnit); }
 	virtual void ExecEvent(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) { return; }
 	virtual void FlushEvent(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) { return; }
 
 	virtual void CanMove(ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell, std::map<FString, std::any>& args, ABActorFightingField* Field) { return; }
 	virtual void CanAttack(ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Unit, ABActorFightingUnitBase* Victim, std::map<FString, std::any>& args, ABActorFightingField* Field) { return; }
 	virtual void IsDead(ABActorFightingUnitBase* OwnerUnit, ABActorFightingUnitBase* Unit, std::map<FString, std::any>& args, ABActorFightingField* Field) { return; }
+
+
+
+	bool CheckIsWhenApplicable(const WHEN& when, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) { // TODO IMPORTANT
+		if (when == WHEN::INVOCATION) {
+			// Only react to event PLAYED
+			if (Event.type != TriggersDispatcherEvent::Type::EVENT || Event.event != TriggersDispatcherEvent_EnumEvent::PLAYED_CARD) return false;
+			// Only react to moving yourself
+			ABActorFightingUnitBase* TargetUnit = std::any_cast<ABActorFightingUnitBase*>(Event.event_args["created_unit"]);
+			if (TargetUnit != OwnerUnit) return false;
+			return true;
+		}
+		else {
+			UE_LOG(LogTemp, Error, TEXT("ERROR UNKNOWN WHEN TYPE %d (CheckIsWhenApplicable)"), (int)when);
+			return false;
+		}
+	}
+
+	bool ChecWhens(TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) { // TODO IMPORTANT
+		bool applicable = false;
+		for (const auto& when : When) {
+			applicable = CheckIsWhenApplicable(when, Event, OwnerUnit);
+			if (applicable) break;
+		}
+		return applicable;
+	}
+
+	bool CheckConditions(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) { // TODO IMPORTANT
+		bool applicable = true;
+		/*for (const auto& condition : Conditions) {
+			applicable = condition.Check(Field, Event, OwnerUnit);
+			if (!applicable) break;
+		}*/
+		return applicable;
+	}
 };
