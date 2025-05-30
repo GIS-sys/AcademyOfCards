@@ -3,6 +3,7 @@
 
 #include "BActorFightingCard.h"
 #include <BActorFightingCellBase.h>
+#include "BActorFightingField.h"
 
 ABActorFightingUnitBase* ABActorFightingCard::SpawnUnit(ABActorFightingField* Field, ABActorFightingCellBase* Cell, TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit)
 {
@@ -42,5 +43,16 @@ void ABActorFightingCard::FromConfig(TSharedPtr<FightingCard> CardConfig)
 }
 
 bool ABActorFightingCard::CanTargetCell() { return true; } // TODO IMPORTANT
-bool ABActorFightingCard::CanTargetUnit() { return true; } // TODO IMPORTANT
-FString ABActorFightingCard::CanBePlayed(ABActorFightingCellBase* Cell) { return ""; } // TODO IMPORTANT
+bool ABActorFightingCard::CanTargetUnit() { return false; } // TODO IMPORTANT
+bool ABActorFightingCard::CanBePlayed(ABActorFightingField* Field, ABActorFightingCellBase* Cell) { // TODO IMPORTANT
+    bool can_play = true;
+    // Check yourself
+    if (ABActorFightingCellBase::Distance(Field->GetCurrentPlayerUnit()->CurrentCell, Cell) > 1)
+        can_play = false;
+    else if (Field->IsOccupied(Cell))
+        can_play = false;
+    else if (!(*(Field->GetCurrentPlayerMana()) - ManaCost))
+        can_play = false;
+    // Return
+    return can_play;
+}

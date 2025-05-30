@@ -280,12 +280,8 @@ FString ABActorFightingField::DeleteUnit(ABActorFightingUnitBase* Unit) {
 }
 FString ABActorFightingField::PlayCardWithEvent(ABActorFightingCard* Card, ABActorFightingCellBase* Cell)
 {
-    /*if (ABActorFightingCellBase::Distance(GetCurrentPlayerUnit()->CurrentCell, Cell) > 1) return;
-    if (IsOccupied(Cell)) return;
-    FMana ManaRest = *GetCurrentPlayerMana() - Card->ManaCost;
-    if (!ManaRest) return;*/
-    FString res = Card->CanBePlayed(Cell);
-    if (!res.IsEmpty()) return res;
+    bool res = Card->CanBePlayed(this, Cell);
+    if (!res) return "Can't play the card on this Cell";
 
     TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(
         TriggersDispatcherEvent_EnumEvent::PLAY_CARD,

@@ -41,7 +41,6 @@ ABActorFightingCard* ABActorFightingDeck::DrawCard()
     NewActor->SetActorLocation(GetActorLocation());
 
     FString RandomCardId = GetRandomCardId();
-    UE_LOG(LogTemp, Error, TEXT("Get random card id %s"), *RandomCardId);
     NewActor->FromConfig(MyGameInstance->LoadedFightingConfigs->GetCardByID(RandomCardId));
 
     // set material
