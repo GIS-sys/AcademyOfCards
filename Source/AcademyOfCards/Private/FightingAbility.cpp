@@ -32,7 +32,7 @@ void FightingAbilityTarget::With(
 			Callback(args, Field, Event, OwnerUnit);
 			return;
 		}
-	} else if (Type == "select_enemy" || Type == "select_ally") {
+	} else if (Type == "select_enemy" || Type == "select_ally" || Type == "select_unit") {
 		FightingUIManagerClickType WhatToChoose;
 		WhatToChoose = FightingUIManagerClickType::OnUnit;
 
@@ -58,6 +58,7 @@ void FightingAbilityTarget::With(
 							if (OwnerUnit->IsControlledByPlayer != unit->IsControlledByPlayer) {
 								return FString("Choose Ally unit");
 							}
+						} else if (Type == "select_unit") {
 						} else {
 							UE_LOG(LogTemp, Error, TEXT("FightingAbilityTarget::With got unknown type %s"), *Type);
 						}

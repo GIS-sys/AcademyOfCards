@@ -295,7 +295,7 @@
           "Power": 5,
           "when": "spell_cast",
           "target": {
-            "type": "select",
+            "type": "select_unit",
             "zone": "any",
             "range": 7
           },
