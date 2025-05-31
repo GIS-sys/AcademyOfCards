@@ -25,11 +25,11 @@ void FightingTriggersDispatcher::Tick(float DeltaTime)
 
     if (Field->UIManager.IsTriggerWaitingPlayerResponse() || all_events.empty()) return;
 
-    UE_LOG(LogTemp, Warning, TEXT("Event is triggering: %s / %d"), *all_events[0].ToDebugString(), all_events.size());
+    UE_LOG(LogTemp, Warning, TEXT("Event is triggering: %s (%d total events)"), *all_events[0].ToDebugString(), all_events.size());
     TriggersDispatcherTrigger* trigger = CheckTriggers();
     if (trigger && triggered < MAX_TRIGGERS_PER_EVENT) {
-        ++triggered;
         all_events.push_back(TriggersDispatcherEvent::MakeTriggerTriggered(trigger));
+        UE_LOG(LogTemp, Warning, TEXT("    Triggering! (%s)"), *(trigger->ability->Type));
         trigger->Exec(Field, all_events[0]);
         return;
     }
@@ -45,14 +45,24 @@ void FightingTriggersDispatcher::Tick(float DeltaTime)
 
 TriggersDispatcherTrigger* FightingTriggersDispatcher::CheckTriggers()
 {
+    // triggered = 0
+    //   i=0, no, triggered = 1, ?-
+    //   i=1, no, triggered = 2, ?+
+    //
+    // <trigger [1] activated>
+    //
+    // triggered = 2
+    // ...
+    //   i = 2, no, trigered = 3, ?...
     int i = 0;
-    UE_LOG(LogTemp, Warning, TEXT("Checking triggers (total %d triggered %d)"), all_triggers.size(), triggered);
+    UE_LOG(LogTemp, Warning, TEXT("  Checking triggers (total %d, triggered before %d)"), all_triggers.size(), triggered);
     for (auto& trigger : all_triggers) {
         if (i < triggered) {
             ++i;
             continue;
         }
-        UE_LOG(LogTemp, Warning, TEXT("Checking triggers (current %d %s)"), i, *all_events[0].ToDebugString());
+        ++triggered;
+        UE_LOG(LogTemp, Warning, TEXT("  Checking triggers (current %d, trigger %s, event %s)"), i, *(trigger.ability->Type), *all_events[0].ToDebugString());
         if (trigger.Check(Field, all_events[0])) return &trigger;
         ++i;
     }
@@ -72,8 +82,15 @@ void FightingTriggersDispatcher::AddTriggerAbilitiesFromUnit(ABActorFightingUnit
     }
 }
 
-void FightingTriggersDispatcher::AddTriggerAbility(ABActorFightingUnitBase* Unit, TSharedPtr<FightingAbility> Ability) {
-    all_triggers.push_back(TriggersDispatcherTrigger::MakeAbility(Unit, Ability));
+void FightingTriggersDispatcher::AddTriggerAbility(ABActorFightingUnitBase* Unit, TSharedPtr<FightingAbility> Ability, bool add_after_current) {
+    auto it = all_triggers.begin();
+    if (add_after_current) {
+        for (int i = 0; i < triggered; ++i) ++it;
+    } else {
+        it = all_triggers.end();
+    }
+    
+    all_triggers.insert(it, TriggersDispatcherTrigger::MakeAbility(Unit, Ability));
 }
 
 void FightingTriggersDispatcher::AddEvent(TriggersDispatcherEvent Event) {

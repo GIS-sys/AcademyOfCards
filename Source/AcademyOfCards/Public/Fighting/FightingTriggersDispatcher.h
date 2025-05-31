@@ -80,7 +80,7 @@ public:
 	void FlushTriggers();
 
 	void AddTriggerAbilitiesFromUnit(ABActorFightingUnitBase* Unit);
-	void AddTriggerAbility(ABActorFightingUnitBase* Unit, TSharedPtr<FightingAbility> Ability);
+	void AddTriggerAbility(ABActorFightingUnitBase* Unit, TSharedPtr<FightingAbility> Ability, bool add_after_current = false);
 
 	void AddEvent(TriggersDispatcherEvent Event);
 	void DeleteTriggerAbility(ABActorFightingUnitBase* Unit, TSharedPtr<FightingAbility> Ability);

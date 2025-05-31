@@ -15,16 +15,11 @@ class ABActorFightingField;
  * 
  */
 
-enum WHEN : int { // TODO IMPORTANT
+enum WHEN : int {
 	NONE = 0,
 	INVOCATION,
 	ON_ATTACK,
 	ON_DEATH,
-	//SPELL_CAST,
-	//ON_MOVE,
-	//ON_TURN_END,
-	//ON_GET_ATTACKED,
-	//ALWAYS,
 };
 
 struct FightingAbilityCondition {

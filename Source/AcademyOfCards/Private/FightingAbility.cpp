@@ -53,7 +53,8 @@ void FightingAbilityTarget::With(
 					}
 					// Chose unit - check things and apply damage
 					std::map<FString, std::any> args;
-					if (WhatToChoose == FightingUIManagerClickType::OnUnit) { // TODO IMPORTANT
+					if (WhatToChoose == FightingUIManagerClickType::OnUnit) {
+						if (unit->IsASpell) return FString("Don't choose Spell");
 						// Check type
 						if (Type == "select_enemy") {
 							if (OwnerUnit->IsControlledByPlayer == unit->IsControlledByPlayer) {
@@ -103,7 +104,7 @@ void FightingAbilityTarget::With(
 }
 
 
-bool FightingAbilityCondition::Check(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) const { // TODO IMPORTANT
+bool FightingAbilityCondition::Check(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) const {
 	if (Type == "Allied_familiar_died_this_turn") {
 		for (auto it = Field->TriggersDispatcher.history_events.rbegin(); it != Field->TriggersDispatcher.history_events.rend(); ++it) {
 			auto& event = *it;
@@ -118,12 +119,6 @@ bool FightingAbilityCondition::Check(ABActorFightingField* Field, TriggersDispat
 			}
 		}
 		return false;
-		/*} else if (Type == "Previous succed") {
-			UE_LOG(LogTemp, Error, TEXT("UNKNOWN CONDITION TYPE (FightingAbilityCondition::Check) %s"), *Type);
-			return true;
-		} else if (Type == "attack_opponent_destroyed") {
-			UE_LOG(LogTemp, Error, TEXT("UNKNOWN CONDITION TYPE (FightingAbilityCondition::Check) %s"), *Type);
-			return true;*/
 	}
 	else {
 		UE_LOG(LogTemp, Error, TEXT("UNKNOWN CONDITION TYPE (FightingAbilityCondition::Check) %s"), *Type);
@@ -155,7 +150,7 @@ TSharedPtr<FightingAbility> FightingAbility::FactoryBuildSpellDeath() {
 TSharedPtr<FightingAbility> FightingAbility::Build(TSharedPtr<FJsonObject> BuildArguments) const
 {
 	TSharedPtr<FightingAbility> AbilityBuilt = nullptr;
-	if (Type == "Jump") { // TODO IMPORTANT
+	if (Type == "Jump") {
 		AbilityBuilt = MakeShareable(new FightingAbilityJump());
 	} else if (Type == "Get stats") {
 		AbilityBuilt = MakeShareable(new FightingAbilityGetStats());
@@ -163,9 +158,8 @@ TSharedPtr<FightingAbility> FightingAbility::Build(TSharedPtr<FJsonObject> Build
 		AbilityBuilt = MakeShareable(new FightingAbilityDealDamage());
 	} else if (Type == "Give stats") {
 		AbilityBuilt = MakeShareable(new FightingAbilityGiveStats());
-	/*} else if (Type == "Give ability") {
+	} else if (Type == "Give ability") {
 		AbilityBuilt = MakeShareable(new FightingAbilityGiveAbility());
-	*/
 	} else {
 		// throw "FightingAbility::Build got unexpected Type: " + Type + " (ID: " + ID + ")";
 		UE_LOG(LogTemp, Error, TEXT("ERROR UNKNOWN ABILITY TYPE %s (FightingAbility::Build)"), *Type);
@@ -179,17 +173,15 @@ TSharedPtr<FightingAbility> FightingAbility::Build(TSharedPtr<FJsonObject> Build
 	AbilityBuilt->AdditionalArguments = BuildArguments;
 
 	FString WhenStr;
-	if (!AbilityBuilt->AdditionalArguments->TryGetStringField("when", WhenStr)) {
-		if (!AbilityBuilt->Arguments->TryGetStringField("when", WhenStr)) WhenStr = "";
-	}
-	if (WhenStr == "Invocation" || WhenStr == "spell_cast") { // TODO IMPORTANT
+	if (!AbilityBuilt->AdditionalArguments->TryGetStringField("when", WhenStr))
+		if (!AbilityBuilt->Arguments->TryGetStringField("when", WhenStr))
+			WhenStr = "";
+	if (WhenStr == "Invocation" || WhenStr == "spell_cast") {
 		AbilityBuilt->When.insert(WHEN::INVOCATION);
 	} else if (WhenStr == "on_attack") {
 		AbilityBuilt->When.insert(WHEN::ON_ATTACK);
-	//} else if (WhenStr == "spell_cast") {
-	//	AbilityBuilt->When = SPELL_CAST;
 	} else {
-		//AbilityBuilt->When = ALWAYS;
+		UE_LOG(LogTemp, Error, TEXT("ERROR UNKNOWN WHEN s (FightingAbility::Build)"), *WhenStr);
 	}
 
 	if (AbilityBuilt->AdditionalArguments->HasField("condition") || AbilityBuilt->Arguments->HasField("condition")) {
