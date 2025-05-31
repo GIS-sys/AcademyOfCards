@@ -7,6 +7,7 @@
 #include "FightingAbilityJump.h"
 #include "FightingAbilityGetStats.h"
 #include "FightingAbilityGiveStats.h"
+#include "FightingAbilitySpellDeath.h"
 #include "BActorFightingField.h"
 #include "UMyGameInstance.h"
 
@@ -133,6 +134,16 @@ FightingAbility::FightingAbility(TSharedPtr<FJsonObject> data, UUMyGameInstance*
 	Arguments = data->GetObjectField("Arguments");
 }
 
+TSharedPtr<FightingAbility> FightingAbility::FactoryBuildSpellDeath() {
+	TSharedPtr<FightingAbility> AbilityBuilt = MakeShareable(new FightingAbilitySpellDeath());
+
+	AbilityBuilt->ID = AbilityBuilt->Type;
+	AbilityBuilt->Type = "__FightingAbilitySpellDeath";
+	AbilityBuilt->When.insert(WHEN::INVOCATION);
+
+	return AbilityBuilt;
+}
+
 TSharedPtr<FightingAbility> FightingAbility::Build(TSharedPtr<FJsonObject> BuildArguments) const
 {
 	TSharedPtr<FightingAbility> AbilityBuilt = nullptr;
@@ -163,7 +174,7 @@ TSharedPtr<FightingAbility> FightingAbility::Build(TSharedPtr<FJsonObject> Build
 	if (!AbilityBuilt->AdditionalArguments->TryGetStringField("when", WhenStr)) {
 		if (!AbilityBuilt->Arguments->TryGetStringField("when", WhenStr)) WhenStr = "";
 	}
-	if (WhenStr == "Invocation") { // TODO IMPORTANT
+	if (WhenStr == "Invocation" || WhenStr == "spell_cast") { // TODO IMPORTANT
 		AbilityBuilt->When.insert(WHEN::INVOCATION);
 	} else if (WhenStr == "on_attack") {
 		AbilityBuilt->When.insert(WHEN::ON_ATTACK);

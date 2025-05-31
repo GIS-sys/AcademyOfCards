@@ -25,6 +25,7 @@ void FightingTriggersDispatcher::Tick(float DeltaTime)
 
     if (Field->UIManager.IsTriggerWaitingPlayerResponse() || all_events.empty()) return;
 
+    UE_LOG(LogTemp, Warning, TEXT("Event is triggering: %s / %d"), *all_events[0].ToDebugString(), all_events.size());
     TriggersDispatcherTrigger* trigger = CheckTriggers();
     if (trigger && triggered < MAX_TRIGGERS_PER_EVENT) {
         ++triggered;
@@ -45,9 +46,13 @@ void FightingTriggersDispatcher::Tick(float DeltaTime)
 TriggersDispatcherTrigger* FightingTriggersDispatcher::CheckTriggers()
 {
     int i = 0;
-    UE_LOG(LogTemp, Warning, TEXT("Checking triggers (total %d)"), all_triggers.size());
+    UE_LOG(LogTemp, Warning, TEXT("Checking triggers (total %d triggered %d)"), all_triggers.size(), triggered);
     for (auto& trigger : all_triggers) {
-        if (i < triggered) continue;
+        if (i < triggered) {
+            ++i;
+            continue;
+        }
+        UE_LOG(LogTemp, Warning, TEXT("Checking triggers (current %d %s)"), i, *all_events[0].ToDebugString());
         if (trigger.Check(Field, all_events[0])) return &trigger;
         ++i;
     }

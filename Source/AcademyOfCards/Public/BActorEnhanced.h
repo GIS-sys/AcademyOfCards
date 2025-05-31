@@ -47,8 +47,13 @@ public:
 	FVector ScaleOriginal{ 1, 1, 1 };
 
 	// Highlighting
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Highlight")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "State")
 	bool IsHighlighted = true;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "State")
+	bool IsDisplacedOutOfView = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Highlight")
+	FVector DISPLACEMENT_OUT_OF_VIEW{ 1000, 1000, 1000 };
+
 	int TicksNotHighlighted = 1;
 
 	void AnimateHighlight();

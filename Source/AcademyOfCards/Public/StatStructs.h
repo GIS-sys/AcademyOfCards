@@ -126,6 +126,11 @@ class ACADEMYOFCARDS_API UStatStructs : public UObject
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintCallable, Category = "Util")
+	static FString TYPE_SPELL() {
+		return "Magic";
+	}
+
 	static FUnitParameters FactoryCreateNotUnit() {
 		FUnitParameters param;
 		param.IsUnit = false;

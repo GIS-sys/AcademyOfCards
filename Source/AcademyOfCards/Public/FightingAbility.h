@@ -19,6 +19,7 @@ enum WHEN : int { // TODO IMPORTANT
 	NONE = 0,
 	INVOCATION,
 	ON_ATTACK,
+	ON_DEATH,
 	//SPELL_CAST,
 	//ON_MOVE,
 	//ON_TURN_END,
@@ -57,6 +58,8 @@ public:
 	FightingAbility(TSharedPtr<FJsonObject> data, UUMyGameInstance* MyGameInstance);
 	virtual ~FightingAbility() = default;
 
+	static TSharedPtr<FightingAbility> FactoryBuildSpellDeath();
+
 	FString ID;
     FString Type;
     FString Description;
@@ -92,6 +95,13 @@ public:
 			if (Event.type != TriggersDispatcherEvent::Type::EVENT || Event.event != TriggersDispatcherEvent_EnumEvent::ATTACKED) return false;
 			// Only react to attacking by yourself
 			ABActorFightingUnitBase* TargetUnit = std::any_cast<ABActorFightingUnitBase*>(Event.event_args["attacker"]);
+			if (TargetUnit != OwnerUnit) return false;
+			return true;
+		} else if (when == WHEN::ON_DEATH) {
+			// Only react to event UNIT_DIED
+			if (Event.type != TriggersDispatcherEvent::Type::EVENT || Event.event != TriggersDispatcherEvent_EnumEvent::UNIT_DIED) return false;
+			// Only react to death by yourself
+			ABActorFightingUnitBase* TargetUnit = std::any_cast<ABActorFightingUnitBase*>(Event.event_args["unit"]);
 			if (TargetUnit != OwnerUnit) return false;
 			return true;
 		} else {

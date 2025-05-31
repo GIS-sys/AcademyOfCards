@@ -296,7 +296,7 @@ FString ABActorFightingField::DeleteUnit(ABActorFightingUnitBase* Unit) {
         this->TriggersDispatcher.DeleteTriggerAbility(Unit, ability);
     }
     if (!Unit->IsPlayer) {
-        Unit->Destroy();
+        Unit->SetDiedDuringGame();
     }
     else {
         IsFinished = true;

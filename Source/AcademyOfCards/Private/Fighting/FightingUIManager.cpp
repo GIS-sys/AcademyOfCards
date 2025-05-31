@@ -198,14 +198,14 @@ FString Regular_PlayCardOrMoveUnit(FCT cbt, FightingUIManager* uim, ABActorFight
 FString Regular_WhereToPlayCard(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
     ABActorFightingCard* ChosenCard = std::any_cast<ABActorFightingCard*>(uim->state["card"]);
     if (cbt == FCT::OnCell) {
-        if (!ChosenCard->CanTargetCell()) return "Please target Cell with this card";
+        if (!ChosenCard->CanTargetCell()) return "Please don't target Cell with this card";
         uim->Field->PlayCardWithEvent(ChosenCard, cell);
         ChosenCard->ResetPermanentHighlight();
         uim->LetActionsRegular();
         return "";
     }
     if (cbt == FCT::OnUnit) {
-        if (!ChosenCard->CanTargetUnit()) return "Please target Unit with this card";
+        if (!ChosenCard->CanTargetUnit()) return "Please don't target Unit with this card";
         uim->Field->PlayCardWithEvent(ChosenCard, unit->CurrentCell);
         ChosenCard->ResetPermanentHighlight();
         uim->LetActionsRegular();

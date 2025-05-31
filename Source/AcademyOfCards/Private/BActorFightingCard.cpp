@@ -4,6 +4,7 @@
 #include "BActorFightingCard.h"
 #include <BActorFightingCellBase.h>
 #include "BActorFightingField.h"
+#include "StatStructs.h"
 
 ABActorFightingUnitBase* ABActorFightingCard::SpawnUnit(ABActorFightingField* Field, ABActorFightingCellBase* Cell, TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit)
 {
@@ -23,6 +24,7 @@ ABActorFightingUnitBase* ABActorFightingCard::SpawnUnit(ABActorFightingField* Fi
     NewActor->IsControlledByPlayer = IsControlledByPlayer;
     NewActor->MainMaterial = UnitMaterial;
     NewActor->SetActorRotation({ 0, 0, 0, 0 });
+    NewActor->IsASpell = (Type == UStatStructs::TYPE_SPELL());
 
     NewActor->InitUnit();
     return NewActor;

@@ -19,10 +19,13 @@ class ACADEMYOFCARDS_API ABActorFightingUnitBase : public ABActorEnhanced
 	
 public:
 	float MOVING_TIME = 1.0;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	bool IsControlledByPlayer = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	bool IsPlayer = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	bool IsASpell = false;
 
 	ABActorFightingCellBase* CurrentCell;
 
@@ -31,6 +34,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 	UMaterialInterface* MainMaterial;
+
+	void SetDiedDuringGame() {
+		IsDisplacedOutOfView = true;
+	}
 
 	void Move(ABActorFightingField* Field, ABActorFightingCellBase* Cell, int MoveCost = -1);
 
