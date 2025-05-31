@@ -27,17 +27,18 @@ void FightingAbilityTarget::With(
 		if (event.type == event.EVENT && event.event == TriggersDispatcherEvent_EnumEvent::ATTACKED) {
 			ABActorFightingUnitBase* Unit = std::any_cast<ABActorFightingUnitBase*>(event.event_args[FString("victim")]);
 			args["unit"] = Unit;
+			// TODO IMPORTANT check range and zone
 			Callback(args, Field, Event, OwnerUnit);
 			return;
 		}
-	} else if (Type == "select_enemy") {
+	} else if (Type == "select_enemy" || Type == "select_ally") {
 		FightingUIManagerClickType WhatToChoose;
 		WhatToChoose = FightingUIManagerClickType::OnUnit;
 
 		Field->UIManager
 			.Clear()
 			->RegisterCallback(
-				[this, Field, &Event, OwnerUnit, Callback, WhatToChoose](FightingUIManagerClickType cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
+				[this, Field, &Event, OwnerUnit, Callback, WhatToChoose, Type](FightingUIManagerClickType cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
 					// Dont choose anything - no callback
 					if (cbt == FightingUIManagerClickType::OnOutside) {
 						Field->UIManager.TriggerDoesntNeedInput();
@@ -48,15 +49,16 @@ void FightingAbilityTarget::With(
 					std::map<FString, std::any> args;
 					if (WhatToChoose == FightingUIManagerClickType::OnUnit) { // TODO IMPORTANT
 						// Check type
-						if (Data->HasField("type")) {
-							FString Type = Data->GetStringField("type");
-							if (Type == "select_enemy") {
-								if (OwnerUnit->IsControlledByPlayer == unit->IsControlledByPlayer) {
-									return FString("Choose Enemy unit");
-								}
-							} else {
-								UE_LOG(LogTemp, Error, TEXT("FightingAbilityTarget::With got unknown type %s"), *Type);
+						if (Type == "select_enemy") {
+							if (OwnerUnit->IsControlledByPlayer == unit->IsControlledByPlayer) {
+								return FString("Choose Enemy unit");
 							}
+						} else if (Type == "select_ally") {
+							if (OwnerUnit->IsControlledByPlayer != unit->IsControlledByPlayer) {
+								return FString("Choose Ally unit");
+							}
+						} else {
+							UE_LOG(LogTemp, Error, TEXT("FightingAbilityTarget::With got unknown type %s"), *Type);
 						}
 						// Check zone
 						if (Data->HasField("zone")) {
@@ -65,6 +67,7 @@ void FightingAbilityTarget::With(
 								if (!ABActorFightingCellBase::AreOnTheLine(OwnerUnit->CurrentCell, unit->CurrentCell)) {
 									return FString("Choose unit on the line");
 								}
+							} else if (Zone == "any") {
 							} else {
 								UE_LOG(LogTemp, Error, TEXT("FightingAbilityTarget::With got unknown zone %s"), *Zone);
 							}
