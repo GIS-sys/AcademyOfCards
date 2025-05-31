@@ -38,6 +38,7 @@ struct FightingAbilityCondition {
 };
 
 struct FightingAbilityTarget {
+	static std::map<FString, std::any> previous_args;
 	TSharedPtr<FJsonObject> Data;
 
 	void With(

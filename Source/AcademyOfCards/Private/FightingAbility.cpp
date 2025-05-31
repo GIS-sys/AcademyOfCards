@@ -11,6 +11,7 @@
 #include "BActorFightingField.h"
 #include "UMyGameInstance.h"
 
+std::map<FString, std::any> FightingAbilityTarget::previous_args = {};
 
 void FightingAbilityTarget::With(
 	ABActorFightingField* Field,
@@ -29,9 +30,12 @@ void FightingAbilityTarget::With(
 			ABActorFightingUnitBase* Unit = std::any_cast<ABActorFightingUnitBase*>(event.event_args[FString("victim")]);
 			args["unit"] = Unit;
 			// TODO IMPORTANT check range and zone
+			previous_args = args;
 			Callback(args, Field, Event, OwnerUnit);
 			return;
 		}
+	} else if (Type == "as_previous") {
+		Callback(previous_args, Field, Event, OwnerUnit);
 	} else if (Type == "select_enemy" || Type == "select_ally" || Type == "select_unit") {
 		FightingUIManagerClickType WhatToChoose;
 		WhatToChoose = FightingUIManagerClickType::OnUnit;
@@ -44,6 +48,7 @@ void FightingAbilityTarget::With(
 					if (cbt == FightingUIManagerClickType::OnOutside) {
 						Field->UIManager.TriggerDoesntNeedInput();
 						Field->UIManager.LetActionsRegular();
+						previous_args = {};
 						return FString();
 					}
 					// Chose unit - check things and apply damage
@@ -83,6 +88,7 @@ void FightingAbilityTarget::With(
 						}
 						args["unit"] = unit;
 					}
+					previous_args = args;
 					Callback(args, Field, Event, OwnerUnit);
 					Field->UIManager.TriggerDoesntNeedInput();
 					Field->UIManager.LetActionsRegular();
@@ -91,6 +97,7 @@ void FightingAbilityTarget::With(
 			)
 			->TriggerNeedsInput();
 	} else {
+		previous_args = {};
 		UE_LOG(LogTemp, Error, TEXT("FightingAbilityTarget::With got unknown type %s"), *Type);
 	}
 }
