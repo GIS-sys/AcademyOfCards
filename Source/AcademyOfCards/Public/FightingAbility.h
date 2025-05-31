@@ -15,10 +15,10 @@ class ABActorFightingField;
  * 
  */
 
-enum WHEN : int {
+enum WHEN : int { // TODO IMPORTANT
 	NONE = 0,
 	INVOCATION,
-	//ON_ATTACK, // TODO IMPORTANT
+	ON_ATTACK,
 	//SPELL_CAST,
 	//ON_MOVE,
 	//ON_TURN_END,
@@ -87,8 +87,14 @@ public:
 			ABActorFightingUnitBase* TargetUnit = std::any_cast<ABActorFightingUnitBase*>(Event.event_args["created_unit"]);
 			if (TargetUnit != OwnerUnit) return false;
 			return true;
-		}
-		else {
+		} else if (when == WHEN::ON_ATTACK) {
+			// Only react to event ATTACKED
+			if (Event.type != TriggersDispatcherEvent::Type::EVENT || Event.event != TriggersDispatcherEvent_EnumEvent::ATTACKED) return false;
+			// Only react to attacking by yourself
+			ABActorFightingUnitBase* TargetUnit = std::any_cast<ABActorFightingUnitBase*>(Event.event_args["attacker"]);
+			if (TargetUnit != OwnerUnit) return false;
+			return true;
+		} else {
 			UE_LOG(LogTemp, Error, TEXT("ERROR UNKNOWN WHEN TYPE %d (CheckIsWhenApplicable)"), (int)when);
 			return false;
 		}

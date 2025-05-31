@@ -6,7 +6,7 @@ To add new Fighting card:
 
 - add ability type parsing in FightingAbility::Build if new ability type (FightingAbility.cpp) and add new class, derived from FightingAbility
 
-- add when parsing in FightingAbility::Build if new When type (FightingAbility.cpp)
+- add when parsing in FightingAbility::Build and CheckIsWhenApplicable if new When type (FightingAbility.cpp and FightingAbility.h)
 
 - add target type FightingAbilityTarget::With if new target (FightingAbility.cpp)
 

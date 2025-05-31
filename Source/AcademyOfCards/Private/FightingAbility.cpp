@@ -17,60 +17,77 @@ void FightingAbilityTarget::With(
 	ABActorFightingUnitBase* OwnerUnit,
 	std::function<void(const std::map<FString, std::any>&, ABActorFightingField*, TriggersDispatcherEvent&, ABActorFightingUnitBase*)> Callback
 ) const {
-	FightingUIManagerClickType WhatToChoose;
-	WhatToChoose = FightingUIManagerClickType::OnUnit; // TODO IMPORTANT
+	FString Type;
+	if (Data->HasField("type"))
+		Type = Data->GetStringField("type");
 
-	Field->UIManager
-		.Clear()
-		->RegisterCallback(
-			[this, Field, &Event, OwnerUnit, Callback, WhatToChoose](FightingUIManagerClickType cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
-				// Dont choose anything - no callback
-				if (cbt == FightingUIManagerClickType::OnOutside) {
+	if (Type == "attack_target") {
+		std::map<FString, std::any> args;
+		auto& event = Field->TriggersDispatcher.all_events[0];
+		if (event.type == event.EVENT && event.event == TriggersDispatcherEvent_EnumEvent::ATTACKED) {
+			ABActorFightingUnitBase* Unit = std::any_cast<ABActorFightingUnitBase*>(event.event_args[FString("victim")]);
+			args["unit"] = Unit;
+			Callback(args, Field, Event, OwnerUnit);
+			return;
+		}
+	} else if (Type == "select_enemy") {
+		FightingUIManagerClickType WhatToChoose;
+		WhatToChoose = FightingUIManagerClickType::OnUnit;
+
+		Field->UIManager
+			.Clear()
+			->RegisterCallback(
+				[this, Field, &Event, OwnerUnit, Callback, WhatToChoose](FightingUIManagerClickType cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
+					// Dont choose anything - no callback
+					if (cbt == FightingUIManagerClickType::OnOutside) {
+						Field->UIManager.TriggerDoesntNeedInput();
+						Field->UIManager.LetActionsRegular();
+						return FString();
+					}
+					// Chose unit - check things and apply damage
+					std::map<FString, std::any> args;
+					if (WhatToChoose == FightingUIManagerClickType::OnUnit) { // TODO IMPORTANT
+						// Check type
+						if (Data->HasField("type")) {
+							FString Type = Data->GetStringField("type");
+							if (Type == "select_enemy") {
+								if (OwnerUnit->IsControlledByPlayer == unit->IsControlledByPlayer) {
+									return FString("Choose Enemy unit");
+								}
+							} else {
+								UE_LOG(LogTemp, Error, TEXT("FightingAbilityTarget::With got unknown type %s"), *Type);
+							}
+						}
+						// Check zone
+						if (Data->HasField("zone")) {
+							FString Zone = Data->GetStringField("zone");
+							if (Zone == "line") {
+								if (!ABActorFightingCellBase::AreOnTheLine(OwnerUnit->CurrentCell, unit->CurrentCell)) {
+									return FString("Choose unit on the line");
+								}
+							} else {
+								UE_LOG(LogTemp, Error, TEXT("FightingAbilityTarget::With got unknown zone %s"), *Zone);
+							}
+						}
+						// Check range
+						if (Data->HasField("range")) {
+							int Range = (int)(Data->GetNumberField("range") + 0.5);
+							if (ABActorFightingCellBase::Distance(OwnerUnit->CurrentCell, unit->CurrentCell) > Range) {
+								return FString("Choose proper distance");
+							}
+						}
+						args["unit"] = unit;
+					}
+					Callback(args, Field, Event, OwnerUnit);
 					Field->UIManager.TriggerDoesntNeedInput();
 					Field->UIManager.LetActionsRegular();
 					return FString();
-				}
-				// Chose unit - check things and apply damage
-				std::map<FString, std::any> args;
-				if (WhatToChoose == FightingUIManagerClickType::OnUnit) { // TODO IMPORTANT
-					// Check type
-					if (Data->HasField("type")) {
-						FString Type = Data->GetStringField("type");
-						if (Type == "select_enemy") {
-							if (OwnerUnit->IsControlledByPlayer == unit->IsControlledByPlayer) {
-								return FString("Choose Enemy unit");
-							}
-						} else {
-							UE_LOG(LogTemp, Error, TEXT("FightingAbilityTarget::With got unknown type %s"), *Type);
-						}
-					}
-					// Check zone
-					if (Data->HasField("zone")) {
-						FString Zone = Data->GetStringField("zone");
-						if (Zone == "line") {
-							if (!ABActorFightingCellBase::AreOnTheLine(OwnerUnit->CurrentCell, unit->CurrentCell)) {
-								return FString("Choose unit on the line");
-							}
-						} else {
-							UE_LOG(LogTemp, Error, TEXT("FightingAbilityTarget::With got unknown zone %s"), *Zone);
-						}
-					}
-					// Check range
-					if (Data->HasField("range")) {
-						int Range = (int)(Data->GetNumberField("range") + 0.5);
-						if (ABActorFightingCellBase::Distance(OwnerUnit->CurrentCell, unit->CurrentCell) > Range) {
-							return FString("Choose proper distance");
-						}
-					}
-					args["unit"] = unit;
-				}
-				Callback(args, Field, Event, OwnerUnit);
-				Field->UIManager.TriggerDoesntNeedInput();
-				Field->UIManager.LetActionsRegular();
-				return FString();
-			}, { WhatToChoose, FightingUIManagerClickType::OnOutside }
-		)
-		->TriggerNeedsInput();
+				}, { WhatToChoose, FightingUIManagerClickType::OnOutside }
+			)
+			->TriggerNeedsInput();
+	} else {
+		UE_LOG(LogTemp, Error, TEXT("FightingAbilityTarget::With got unknown type %s"), *Type);
+	}
 }
 
 
@@ -122,10 +139,11 @@ TSharedPtr<FightingAbility> FightingAbility::Build(TSharedPtr<FJsonObject> Build
 		AbilityBuilt = MakeShareable(new FightingAbilityGetStats());
 	} else if (Type == "Deal_damage") {
 		AbilityBuilt = MakeShareable(new FightingAbilityDealDamage());
+	} else if (Type == "Give stats") {
+		AbilityBuilt = MakeShareable(new FightingAbilityGiveStats());
 	/*} else if (Type == "Give ability") {
 		AbilityBuilt = MakeShareable(new FightingAbilityGiveAbility());
-	} else if (Type == "Give stats") {
-		AbilityBuilt = MakeShareable(new FightingAbilityGiveStats());*/
+	*/
 	} else {
 		// throw "FightingAbility::Build got unexpected Type: " + Type + " (ID: " + ID + ")";
 		UE_LOG(LogTemp, Error, TEXT("ERROR UNKNOWN ABILITY TYPE %s (FightingAbility::Build)"), *Type);
@@ -143,9 +161,9 @@ TSharedPtr<FightingAbility> FightingAbility::Build(TSharedPtr<FJsonObject> Build
 		if (!AbilityBuilt->Arguments->TryGetStringField("when", WhenStr)) WhenStr = "";
 	}
 	if (WhenStr == "Invocation") { // TODO IMPORTANT
-		AbilityBuilt->When.insert(INVOCATION);
-	//} else if (WhenStr == "on_attack") {
-	//	AbilityBuilt->When = ON_ATTACK;
+		AbilityBuilt->When.insert(WHEN::INVOCATION);
+	} else if (WhenStr == "on_attack") {
+		AbilityBuilt->When.insert(WHEN::ON_ATTACK);
 	//} else if (WhenStr == "spell_cast") {
 	//	AbilityBuilt->When = SPELL_CAST;
 	} else {
