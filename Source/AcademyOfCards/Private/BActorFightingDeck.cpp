@@ -17,6 +17,7 @@ void ABActorFightingDeck::BeginPlay()
         CardIDs = MyGameInstance->LoadedFightingDecks->GetDeckIDsCurrentPlayer();
     else
         CardIDs = MyGameInstance->LoadedFightingDecks->GetDeckIDsByName(Field->OpponentName);
+    if (!DebugCardIDs.IsEmpty()) CardIDs = DebugCardIDs;
 }
 
 void ABActorFightingDeck::DealCards()

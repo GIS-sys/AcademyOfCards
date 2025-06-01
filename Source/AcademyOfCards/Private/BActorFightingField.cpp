@@ -702,7 +702,7 @@ void AI::Act(ABActorFightingField* FightingField)
     }
 
     if (AttackUnitAttacker) {
-        UE_LOG(LogTemp, Error, TEXT("AI acting by attacking %s with %s"), *AttackUnitVictim->UnitParameters->Name, *AttackUnitAttacker->UnitParameters->Name);
+        UE_LOG(LogTemp, Warning, TEXT("AI acting by attacking %s with %s"), *AttackUnitVictim->UnitParameters->Name, *AttackUnitAttacker->UnitParameters->Name);
         FightingField->AttackUnitWithEvent(AttackUnitAttacker, AttackUnitVictim);
 
         NeedLoop |= true;
