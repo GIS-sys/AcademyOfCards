@@ -4,6 +4,8 @@
 #include "DeckLists.h"
 
 
+const char* DeckLists::START_DECK = "Start_deck";
+
 void DeckLists::Load() {
 	FString JsonString;
 	if (!FFileHelper::LoadFileToString(JsonString, *Path)) {
@@ -20,8 +22,21 @@ void DeckLists::Load() {
 				for (const auto& raw_id : raw_ids->AsArray()) {
 					ids.Add(raw_id->AsString());
 				}
-				LoadedDecks.Add(name, ids);
+				LoadedDecksIDs[name] = ids;
 			}
 		}
 	}
+
+	CurrentPlayerDeckIDs = GetDeckIDsByName(START_DECK);
+}
+
+TArray<FString> DeckLists::GetDeckIDsByName(FString Name) {
+	if (LoadedDecksIDs.find(Name) != LoadedDecksIDs.end()) {
+		return LoadedDecksIDs.find(Name)->second;
+	}
+	return TArray<FString>();
+}
+
+TArray<FString> DeckLists::GetDeckIDsCurrentPlayer() {
+	return CurrentPlayerDeckIDs;
 }

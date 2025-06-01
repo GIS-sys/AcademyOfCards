@@ -56,4 +56,26 @@ public:
 	TSharedPtr<DeckLists> LoadedWalkingDecks;
 	TSharedPtr<DeckLists> LoadedFightingDecks;
 	virtual void Init() override;
+
+	UFUNCTION(BlueprintCallable, Category = "Decks")
+	TArray<FString> GetCurrentPlayerWalkingDeckIDs() const { return LoadedWalkingDecks->GetDeckIDsCurrentPlayer(); }
+	UFUNCTION(BlueprintCallable, Category = "Decks")
+	TArray<FString> GetCurrentPlayerFightingDeckIDs() const { return LoadedFightingDecks->GetDeckIDsCurrentPlayer(); }
+	UFUNCTION(BlueprintCallable, Category = "Decks")
+	TArray<FString> GetFightingDeckIDsByName(FString Name) const { return LoadedWalkingDecks->GetDeckIDsByName(Name); }
+
+	UFUNCTION(BlueprintCallable, Category = "Decks")
+	TArray<FString> GetCurrentPlayerFightingDeckNames() const {
+		TArray<FString> Names;
+		for (FString ID : GetCurrentPlayerFightingDeckIDs())
+			Names.Add(LoadedFightingConfigs->GetCardByID(ID)->Name);
+		return Names;
+	}
+	UFUNCTION(BlueprintCallable, Category = "Decks")
+	TArray<FString> GetFightingDeckNamesByName(FString Name) const {
+		TArray<FString> Names;
+		for (FString ID : GetFightingDeckIDsByName(Name))
+			Names.Add(LoadedFightingConfigs->GetCardByID(ID)->Name);
+		return Names;
+	}
 };

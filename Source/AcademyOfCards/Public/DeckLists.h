@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <map>
 #include "CoreMinimal.h"
 
 /**
@@ -10,9 +11,12 @@
 class ACADEMYOFCARDS_API DeckLists
 {
 protected:
-	TMap<FString, TArray<FString>> LoadedDecks;
+	std::map<FString, TArray<FString>> LoadedDecksIDs;
+	TArray<FString> CurrentPlayerDeckIDs;
 
 public:
+	static const char* START_DECK;
+
 	enum TYPE : uint8 {
 		WALKING = 0,
 		FIGHTING,
@@ -32,4 +36,7 @@ public:
 	}
 
 	void Load();
+
+	TArray<FString> GetDeckIDsByName(FString Name);
+	TArray<FString> GetDeckIDsCurrentPlayer();
 };
