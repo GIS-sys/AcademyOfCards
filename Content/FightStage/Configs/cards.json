@@ -389,7 +389,7 @@
                 "when": "Invocation",
                 "amount": 2,
                 "condition": {
-                  "Previous succed": {}
+                  "Previous succed": { "value": true }
                 }
               }
             }
@@ -518,7 +518,7 @@
 
   {
     "ID": "c015",
-    "Name": "The Imp overlord, Beelzebub",
+    "Name": "The Imp overlord Beelzebub",
     "Cardtext": "When your familiar dies on your turn, 'Saturation: 1 dark' gets +2/+2 and restore 1 health to your hero",
     "Type": "Demon",
     "Rarity": "Legendary",
@@ -946,7 +946,7 @@
 
   {
     "ID": "c023",
-    "Name": "Fairy hero, Sunflower",
+    "Name": "Fairy hero Sunflower",
     "Cardtext": "Invocation: 'Saturation: 2 light' gets +1/+1 for every allied familiar",
     "Type": "Fairy",
     "Rarity": "Legendary",
@@ -1221,6 +1221,617 @@
                 "condition": {
 
                 }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "ID": "c028",
+    "Name": "Zombie",
+    "Cardtext": "Requiem: you get 1 dark essence",
+    "Type": "Undead",
+    "Rarity": "Common",
+    "AlignmentKind": "Dark",
+    "ManaCost": {
+      "General": 3,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "UnitParameters": {
+      "Health": 3,
+      "Power": 3,
+      "Range": 1
+    },
+    "Abilities": [
+      {
+        "ID": "ab017",
+        "Arguments": {
+          "when": "Requiem",
+          "target": {
+            "type": "as_previous",
+            "zone": "any",
+            "range": 7
+          },
+          "mana": {
+            "General": 0,
+            "Light": 0,
+            "Dark": 1,
+            "Fire": 0,
+            "Ice": 0
+          },
+          "condition": {
+
+          },
+          "result": [
+
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "ID": "c029",
+    "Name": "Reckless skeleton",
+    "Cardtext": "Requiem: 'Saturation 1 dark' summon Reckless skeleton",
+    "Type": "Undead",
+    "Rarity": "Rare",
+    "AlignmentKind": "Dark",
+    "ManaCost": {
+      "General": 4,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "UnitParameters": {
+      "Health": 1,
+      "Power": 1,
+      "Range": 1
+    },
+    "Abilities": [
+      {
+        "ID": "ab016",
+        "Arguments": {
+          "when": "Requiem",
+          "mana": {
+            "General": 0,
+            "Light": 0,
+            "Dark": 1,
+            "Fire": 0,
+            "Ice": 0
+          },
+          "condition": {
+
+          },
+          "result": [
+            {
+              "ID": "ab012",
+              "Arguments": {
+                "unit_id": "c029",
+                "when": "Requiem",
+                "target": {
+                  "type": "self",
+                  "zone": "self_location",
+                  "range": 7
+                },
+                "condition": {
+
+                },
+                "result": [
+
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "ID": "c030",
+    "Name": "Gargantua",
+    "Cardtext": "At the end of your turn 'Saturation 3 dark' summon Zombie",
+    "Type": "Undead",
+    "Rarity": "Legendary",
+    "AlignmentKind": "Dark",
+    "ManaCost": {
+      "General": 9,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "UnitParameters": {
+      "Health": 6,
+      "Power": 6,
+      "Range": 1
+    },
+    "Abilities": [
+      {
+        "ID": "ab016",
+        "Arguments": {
+          "when": "owner_turn_end",
+          "mana": {
+            "General": 0,
+            "Light": 0,
+            "Dark": 3,
+            "Fire": 0,
+            "Ice": 0
+          },
+          "condition": {
+
+          },
+          "result": [
+            {
+              "ID": "ab012",
+              "Arguments": {
+                "unit_id": "c028",
+                "when": "owner_turn_end",
+                "target": {
+                  "type": "self",
+                  "zone": "ring",
+                  "range": 1
+                },
+                "condition": {
+
+                },
+                "result": [
+
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "ID": "c031",
+    "Name": "Flash of flame",
+    "Cardtext": "Deal 3 damage to all familiars adjacent to your hero",
+    "Type": "Magic",
+    "Rarity": "Common",
+    "AlignmentKind": "Fire",
+    "ManaCost": {
+      "General": 5,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "Abilities": [
+      {
+        "ID": "ab010",
+        "Arguments": {
+          "when": "this_spell_cast",
+          "target": {
+            "type": "Player",
+            "zone": "any",
+            "range": 7
+          },
+          "radius": 1,
+          "damage": 3,
+          "ally_immune": 0,
+          "condition": {
+
+          }
+        }
+      }
+    ]
+  },
+  {
+    "ID": "c032",
+    "Name": "Enraged imp",
+    "Cardtext": "Invocation: Deal 3 damage to your hero",
+    "Type": "Demon",
+    "Rarity": "Rare",
+    "AlignmentKind": "Fire",
+    "ManaCost": {
+      "General": 0,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "UnitParameters": {
+      "Health": 2,
+      "Power": 2,
+      "Range": 1
+    },
+    "Abilities": [
+      {
+        "ID": "ab001",
+        "Arguments": {
+          "when": "Invocation",
+          "target": {
+            "type": "player",
+            "zone": "any",
+            "range": 7
+          },
+          "damage": 3,
+          "condition": {
+
+          },
+          "result": [
+
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "ID": "c033",
+    "Name": "Sparkling machine",
+    "Cardtext": "'Ranged', when it attacks, 'Saturation: 2 fire' summon Spark near the target",
+    "Type": "Golem",
+    "Rarity": "Legendary",
+    "AlignmentKind": "Fire",
+    "ManaCost": {
+      "General": 6,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "UnitParameters": {
+      "Health": 2,
+      "Power": 5,
+      "Range": 1
+    },
+    "Abilities": [
+      {
+        "ID": "ab016",
+        "Arguments": {
+          "when": "on_attack",
+          "mana": {
+            "General": 0,
+            "Light": 0,
+            "Dark": 0,
+            "Fire": 2,
+            "Ice": 0
+          },
+          "condition": {
+
+          },
+          "result": [
+            {
+              "ID": "ab012",
+              "Arguments": {
+                "unit_id": "c017",
+                "when": "on_attack",
+                "target": {
+                  "type": "attack_target",
+                  "zone": "any",
+                  "range": 7
+                },
+                "condition": {
+
+                },
+                "result": [
+
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "ID": "c034",
+    "Name": "Fairy healer Сhamomile",
+    "Cardtext": "Invocation: Restore 4 health to a chosen familiar",
+    "Type": "Fairy",
+    "Rarity": "Common",
+    "AlignmentKind": "Light",
+    "ManaCost": {
+      "General": 5,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "UnitParameters": {
+      "Health": 4,
+      "Power": 4,
+      "Range": 1
+    },
+    "Abilities": [
+      {
+        "ID": "ab008",
+        "Arguments": {
+          "when": "Invocation",
+          "target": {
+            "type": "ally_familiar",
+            "zone": "any",
+            "range": 7
+          },
+          "heal": 4,
+          "condition": {
+
+          },
+          "result": [
+
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "ID": "c035",
+    "Name": "Call to arms",
+    "Cardtext": "'Refresh' familiar",
+    "Type": "Magic",
+    "Rarity": "Rare",
+    "AlignmentKind": "Light",
+    "ManaCost": {
+      "General": 3,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "Abilities": [
+      {
+        "ID": "ab011",
+        "Arguments": {
+          "when": "this_spell_cast",
+          "target": {
+            "type": "familiar",
+            "zone": "any",
+            "range": 7
+          },
+          "condition": {
+
+          },
+          "result": [
+
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "ID": "c036",
+    "Name": "Guardian angel",
+    "Cardtext": "'Guardian', whenever this familiar takes damage, restore 1 health to your hero",
+    "Type": "Anomaly",
+    "Rarity": "Legendary",
+    "AlignmentKind": "Light",
+    "ManaCost": {
+      "General": 8,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "UnitParameters": {
+      "Health": 1,
+      "Power": 10,
+      "Range": 1
+    },
+    "Abilities": [
+      {
+        "ID": "ab005",
+        "Arguments": {
+          "condition": {
+
+          },
+          "result": [
+
+          ]
+        }
+      },
+      {
+        "ID": "ab008",
+        "Arguments": {
+          "when": "on_damage_taken",
+          "target": {
+            "type": "player",
+            "zone": "any",
+            "range": 7
+          },
+          "heal": 1,
+          "condition": {
+
+          }
+        }
+      }
+    ]
+  },
+  {
+    "ID": "c037",
+    "Name": "Fairy guard Snowdrop",
+    "Cardtext": "'Guardian'",
+    "Type": "Fairy",
+    "Rarity": "Common",
+    "AlignmentKind": "Ice",
+    "ManaCost": {
+      "General": 2,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "UnitParameters": {
+      "Health": 1,
+      "Power": 5,
+      "Range": 1
+    },
+    "Abilities": [
+      {
+        "ID": "ab005",
+        "Arguments": {
+          "condition": {
+
+          },
+          "result": [
+
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "ID": "c038",
+    "Name": "Snowflake",
+    "Cardtext": "Invocation: 'Saturation: 2 ice' freeze chosen familiar",
+    "Type": "Spirit",
+    "Rarity": "Rare",
+    "AlignmentKind": "Ice",
+    "ManaCost": {
+      "General": 2,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "UnitParameters": {
+      "Health": 3,
+      "Power": 3,
+      "Range": 1
+    },
+    "Abilities": [
+      {
+        "ID": "ab016",
+        "Arguments": {
+          "when": "Invocation",
+          "mana": {
+            "General": 0,
+            "Light": 0,
+            "Dark": 0,
+            "Fire": 0,
+            "Ice": 2
+          },
+          "condition": {
+
+          },
+          "result": [
+            {
+              "ID": "ab013",
+              "Arguments": {
+                "when": "Invocation",
+                "target": {
+                  "type": "familiar",
+                  "zone": "any",
+                  "range": 7
+                },
+                "duration": 1,
+                "condition": {
+
+                },
+                "result": [
+
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "ID": "c039",
+    "Name": "Icebreaker",
+    "Cardtext": "'Ranged', whenever this attacks frozen familiar, destroy it",
+    "Type": "Golem",
+    "Rarity": "Legendary",
+    "AlignmentKind": "Ice",
+    "ManaCost": {
+      "General": 6,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "UnitParameters": {
+      "Health": 5,
+      "Power": 2,
+      "Range": 7
+    },
+    "Abilities": [
+      {
+        "ID": "ab006",
+        "Arguments": {
+          "when": "on_attack",
+          "target": {
+            "type": "attack_target",
+            "zone": "any",
+            "range": 7
+          },
+          "condition": {
+            "Attack_target_is_frozen": { "value": true }
+          },
+          "result": [
+
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "ID": "c040",
+    "Name": "The Protector",
+    "Cardtext": "'Guardian', invocation: 'Saturation: 1 each' this familiar get +5/5",
+    "Type": "Golem",
+    "Rarity": "Legendary",
+    "AlignmentKind": "Neutral",
+    "ManaCost": {
+      "General": 6,
+      "Light": 0,
+      "Dark": 0,
+      "Fire": 0,
+      "Ice": 0
+    },
+    "UnitParameters": {
+      "Health": 5,
+      "Power": 5,
+      "Range": 1
+    },
+    "Abilities": [
+      {
+        "ID": "ab005",
+        "Arguments": {
+          "condition": {
+
+          },
+          "result": [
+
+          ]
+        }
+      },
+      {
+        "ID": "ab016",
+        "Arguments": {
+          "when": "Invocation",
+          "mana": {
+            "General": 0,
+            "Light": 1,
+            "Dark": 1,
+            "Fire": 1,
+            "Ice": 1
+          },
+          "condition": {
+
+          },
+          "result": [
+            {
+              "ID": "ab003",
+              "Arguments": {
+                "Health": 5,
+                "Power": 5,
+                "when": "Invocation",
+                "condition": {
+
+                },
+                "result": [
+
+                ]
               }
             }
           ]

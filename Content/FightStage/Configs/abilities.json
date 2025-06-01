@@ -1,5 +1,4 @@
 [
-
   {
     "ID": "ab000",
     "Type": "Give ability",
@@ -224,7 +223,7 @@
   {
     "ID": "ab012",
     "Type": "Call",
-    "Description": "call a unit by the same rules as playing it, but it is called from the target as origin, not always from player",
+    "Description": "call a unit by the same rules as playing it, but it is called from the target as origin, not always from player, also not trigger invocation",
     "Arguments": {
       "unit_id": "",
       "when": "",
@@ -312,6 +311,33 @@
     "ID": "ab016",
     "Type": "Saturation",
     "Description": "Spend different types of mana",
+    "Arguments": {
+      "when": "",
+      "target": {
+        "type": "as_previous",
+        "zone": "any",
+        "range": 7
+      },
+      "mana": {
+        "General": 0,
+        "Light": 0,
+        "Dark": 0,
+        "Fire": 0,
+        "Ice": 0
+      },
+      "condition": {
+
+      },
+      "result": [
+
+      ]
+    }
+  },
+
+  {
+    "ID": "ab017",
+    "Type": "Get mana",
+    "Description": "give player mana",
     "Arguments": {
       "when": "",
       "target": {
