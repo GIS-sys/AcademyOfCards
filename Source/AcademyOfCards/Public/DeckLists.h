@@ -16,6 +16,7 @@ protected:
 
 public:
 	static const char* START_DECK;
+	static const char* DEFAULT_NAME;
 
 	enum TYPE : uint8 {
 		WALKING = 0,

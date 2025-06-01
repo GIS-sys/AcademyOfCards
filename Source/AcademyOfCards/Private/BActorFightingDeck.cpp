@@ -4,11 +4,19 @@
 #include "BActorFightingDeck.h"
 #include <BActorFightingField.h>
 #include <UMyGameInstance.h>
+#include <Kismet/GameplayStatics.h>
 
 void ABActorFightingDeck::BeginPlay()
 {
     Super::BeginPlay();
     MyGameInstance = Cast<UUMyGameInstance>(GetGameInstance());
+    AActor* FieldRaw = UGameplayStatics::GetActorOfClass(GetWorld(), ABActorFightingField::StaticClass());
+    ABActorFightingField* Field = Cast<ABActorFightingField>(FieldRaw);
+
+    if (IsControlledByPlayer)
+        CardIDs = MyGameInstance->LoadedFightingDecks->GetDeckIDsCurrentPlayer();
+    else
+        CardIDs = MyGameInstance->LoadedFightingDecks->GetDeckIDsByName(Field->OpponentName);
 }
 
 void ABActorFightingDeck::DealCards()

@@ -5,6 +5,7 @@
 
 
 const char* DeckLists::START_DECK = "Start_deck";
+const char* DeckLists::DEFAULT_NAME = "Basic_opponent";
 
 void DeckLists::Load() {
 	FString JsonString;
@@ -33,6 +34,9 @@ void DeckLists::Load() {
 TArray<FString> DeckLists::GetDeckIDsByName(FString Name) {
 	if (LoadedDecksIDs.find(Name) != LoadedDecksIDs.end()) {
 		return LoadedDecksIDs.find(Name)->second;
+	}
+	if (LoadedDecksIDs.find(DEFAULT_NAME) != LoadedDecksIDs.end()) {
+		return LoadedDecksIDs.find(DEFAULT_NAME)->second;
 	}
 	return TArray<FString>();
 }
