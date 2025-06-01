@@ -25,6 +25,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	const int ENERGY_PER_MOVE = 1;
+	const int HEALTH_PER_MOVE = 10;
 	const float MOVING_TIME = 0.5;
 
 	int CurrentBoardPositionX = -1;

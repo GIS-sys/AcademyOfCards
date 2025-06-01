@@ -18,6 +18,8 @@ UCLASS()
 class ACADEMYOFCARDS_API ABActorFightingCard : public ABActorEnhanced
 {
 	GENERATED_BODY()
+
+	const FString MAGIC_TYPE = "Magic";
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
@@ -47,6 +49,10 @@ public:
 	UMaterialInterface* MainMaterial;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 	UMaterialInterface* UnitMaterial;
+
+	bool CanTargetCell();
+	bool CanTargetUnit();
+	bool CanBePlayed(ABActorFightingField* Field, ABActorFightingCellBase* Cell);
 
 	ABActorFightingUnitBase* SpawnUnit(ABActorFightingField* Field, ABActorFightingCellBase* Cell, TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit);
 

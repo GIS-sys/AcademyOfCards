@@ -12,12 +12,10 @@ class ACADEMYOFCARDS_API FightingAbilityGiveStats : public FightingAbility
 {
 	// TODOIMPORTANT
 protected:
-	int DeltaHealth;
-	int DeltaPower;
-
-	FString TargetType;
-	int TargetRange;
+	int DeltaHealth = 0;
+	int DeltaPower = 0;
 
 	virtual void _Build() override;
-	virtual void _OnAnything(ABActorFightingField* Field, ABActorFightingUnitBase* OwnerUnit) override;
+
+	virtual void ExecEvent(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) override;
 };

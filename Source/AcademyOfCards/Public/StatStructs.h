@@ -13,6 +13,9 @@ struct FUnitParameters
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	bool IsUnit = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int Movement = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
@@ -124,6 +127,17 @@ class ACADEMYOFCARDS_API UStatStructs : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Util")
+	static FString TYPE_SPELL() {
+		return "Magic";
+	}
+
+	static FUnitParameters FactoryCreateNotUnit() {
+		FUnitParameters param;
+		param.IsUnit = false;
+		return param;
+	}
+
+	UFUNCTION(BlueprintCallable, Category = "Util")
 	static FString ToString(const FMana& Mana) {
 		return FString::Printf(TEXT("%d LD%d-%d FI%d-%d"), Mana.General, Mana.Light, Mana.Dark, Mana.Fire, Mana.Ice);
 	}
@@ -169,16 +183,17 @@ public:
 
 	static FMana FManaConstructor(TSharedPtr<FJsonObject> data) {
 		return FMana{
-			.General = (int)(data->GetNumberField("General")),
-			.Light = (int)(data->GetNumberField("Light")),
-			.Dark = (int)(data->GetNumberField("Dark")),
-			.Fire = (int)(data->GetNumberField("Fire")),
-			.Ice = (int)(data->GetNumberField("Ice"))
+			.General = (int)(data->GetNumberField(FString("General"))),
+			.Light = (int)(data->GetNumberField(FString("Light"))),
+			.Dark = (int)(data->GetNumberField(FString("Dark"))),
+			.Fire = (int)(data->GetNumberField(FString("Fire"))),
+			.Ice = (int)(data->GetNumberField(FString("Ice")))
 		};
 	}
 
 	static FUnitParameters FUnitParametersConstructor(const FUnitParameters& other) {
 		FUnitParameters created;
+		created.IsUnit = created.IsUnit;
 		created.Movement = other.Movement;
 		created.Health = other.Health;
 		created.Power = other.Power;
@@ -189,20 +204,21 @@ public:
 	}
 
 	static FUnitParameters FUnitParametersConstructor(TSharedPtr<FJsonObject> data) {
+		if (!data || data->Values.Num() == 0) return FactoryCreateNotUnit();
 		FUnitParameters created;
-		if (!data->TryGetNumberField("Movement", created.Movement)) {
+		if (!data->TryGetNumberField(FString("Movement"), created.Movement)) {
 			created.Movement = 1;
 		}
-		if (!data->TryGetNumberField("Health", created.Health)) {
+		if (!data->TryGetNumberField(FString("Health"), created.Health)) {
 			created.Health = 1;
 		}
-		if (!data->TryGetNumberField("Power", created.Power)) {
+		if (!data->TryGetNumberField(FString("Power"), created.Power)) {
 			created.Power = 1;
 		}
-		if (!data->TryGetNumberField("Attacks", created.Attacks)) {
+		if (!data->TryGetNumberField(FString("Attacks"), created.Attacks)) {
 			created.Attacks = 1;
 		}
-		if (!data->TryGetNumberField("Range", created.Range)) {
+		if (!data->TryGetNumberField(FString("Range"), created.Range)) {
 			created.Range = 1;
 		}
 		return created;

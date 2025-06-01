@@ -10,5 +10,9 @@
  */
 class ACADEMYOFCARDS_API FightingAbilityGiveAbility : public FightingAbility
 {
-	// TODOIMPORTANT
+	FString InnerAbilityID;
+
+	virtual void _Build() override;
+
+	virtual void ExecEvent(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) override;
 };

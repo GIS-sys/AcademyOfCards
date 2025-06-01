@@ -19,10 +19,13 @@ class ACADEMYOFCARDS_API ABActorFightingUnitBase : public ABActorEnhanced
 	
 public:
 	float MOVING_TIME = 1.0;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	bool IsControlledByPlayer = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	bool IsPlayer = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	bool IsASpell = false;
 
 	ABActorFightingCellBase* CurrentCell;
 
@@ -32,13 +35,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 	UMaterialInterface* MainMaterial;
 
-	bool Move(ABActorFightingField* Field, ABActorFightingCellBase* Cell);
+	void SetDiedDuringGame() {
+		IsDisplacedOutOfView = true;
+	}
 
-	void OnSpawn(ABActorFightingField* Field);
-	void OnTurnEnd(ABActorFightingField* Field, bool TurnEndedIsThisOwner);
-	void OnAttackUnit(ABActorFightingField* Field, ABActorFightingUnitBase* Victim);
-	void OnGetAttacked(ABActorFightingField* Field, ABActorFightingUnitBase* Attacker);
+	void Move(ABActorFightingField* Field, ABActorFightingCellBase* Cell, int MoveCost = -1);
+
+	void InitUnit();
+	void ResetOnTurnEnd(bool TurnEndedIsThisOwner);
+	void TakeDamage(int Damage);
 
 	void InitPlayerMy(ABActorFightingField* Field, ABActorFightingCellBase* Cell, const FPlayerStats* Stats);
 	void InitPlayerOpponent(ABActorFightingField* Field, FString OpponentName, ABActorFightingCellBase* Cell, FPlayerStats* Stats);
+
+	bool CanMove(ABActorFightingField* Field, ABActorFightingCellBase* Cell);
+	bool CanAttack(ABActorFightingField* Field, ABActorFightingUnitBase* Victim);
+	bool IsDead(ABActorFightingField* Field);
 };

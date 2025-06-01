@@ -24,7 +24,7 @@ void ABActorFightingDeck::DealCards()
     }
 }
 
-void ABActorFightingDeck::DrawCard()
+ABActorFightingCard* ABActorFightingDeck::DrawCard()
 {
     FActorSpawnParameters SpawnParams;
     SpawnParams.Owner = this;
@@ -40,7 +40,8 @@ void ABActorFightingDeck::DrawCard()
     NewActor->WhenHighlightedLocationDelta = WhenHighlightedLocationDelta;
     NewActor->SetActorLocation(GetActorLocation());
 
-    NewActor->FromConfig(MyGameInstance->LoadedFightingConfigs->GetCardByID(GetRandomCardId()));
+    FString RandomCardId = GetRandomCardId();
+    NewActor->FromConfig(MyGameInstance->LoadedFightingConfigs->GetCardByID(RandomCardId));
 
     // set material
     int i = 0;
@@ -56,6 +57,7 @@ void ABActorFightingDeck::DrawCard()
     CardActors.Add(NewActor);
 
     RearrangeCardsInHand();
+    return NewActor;
 }
 
 void VectorClamp(FVector& VOriginal, const FVector& VMin, const FVector& VMax)

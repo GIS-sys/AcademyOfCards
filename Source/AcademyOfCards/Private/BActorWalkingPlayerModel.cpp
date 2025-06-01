@@ -35,7 +35,10 @@ bool ABActorWalkingPlayerModel::Move(FVector LocationTo, int BoardPositionX, int
 	}
 	// spend energy
 	if (!DealerPtr->CardsDealt.IsEmpty() && !DealerPtr->CardsDealt[TPair<int, int>(BoardPositionX, BoardPositionY)]->IsDiscovered) {
-		PlayerStats.Energy -= ENERGY_PER_MOVE;
+		if (PlayerStats.Energy >= ENERGY_PER_MOVE)
+			PlayerStats.Energy -= ENERGY_PER_MOVE;
+		else
+			PlayerStats.Health -= HEALTH_PER_MOVE;
 	}
 	// rotate model
 	float RotationDeg = 0;

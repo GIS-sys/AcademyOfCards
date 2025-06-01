@@ -21,7 +21,19 @@ class ACADEMYOFCARDS_API ABActorFightingDeck : public ABActorEnhanced
 
 public:
 	UUMyGameInstance* MyGameInstance;
-	TArray<FString> CardIDs = { "c001", "c002", "c003", "c004", "c005", "c006", "c007", "c008", "c009", "c010" };
+	TArray<FString> CardIDs = {
+		"c010",
+		/*"c001", "c002", "c003", "c004", "c005", "c006", "c007", "c008", "c009", "c010",
+		"c011", "c012", "c013", "c014", "c015", "c016", "c017", "c018", "c019", "c020",
+		"c021", "c022", "c023", "c024", "c025", "c026", "c027",*/
+	};
+	//TArray<FString> CardIDs = { "c006" };
+	// c005 - died
+	// c006 - deal damage, random enemy, invocation
+	// c007 - on attack, reduce power (current and absolute) by X (min 0)
+	// c008 - invocation, random your, +stats
+	// c009 - spell, random enemy, damage
+	// c010 - spell, random your, +stats, ONATTACHABILITY???
 
 	virtual void BeginPlay() override;
 
@@ -50,7 +62,7 @@ public:
 	TSubclassOf<ABActorFightingCard> ActorToSpawnCard;
 
 	UFUNCTION(BlueprintCallable, Category = "Base")
-	void DrawCard();
+	ABActorFightingCard* DrawCard();
 
 	UFUNCTION(BlueprintCallable, Category = "Base")
 	ABActorFightingUnitBase* PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell);

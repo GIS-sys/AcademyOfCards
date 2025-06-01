@@ -9,7 +9,11 @@
 #include <BActorFightingCellBase.h>
 #include <BActorFightingDeck.h>
 #include "StatStructs.h"
+#include "Fighting/FightingUIManager.h"
+#include "Fighting/FightingTriggersDispatcher.h"
+#include <map>
 #include "BActorFightingField.generated.h"
+
 
 class ABActorFightingField;
 
@@ -130,17 +134,11 @@ public:
 	ABActorFightingDeck* DeckMy;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	ABActorFightingDeck* DeckOpponent;
-	UFUNCTION(BlueprintCallable, Category = "Spawning")
-	bool PlayCard(ABActorFightingCard* Card, ABActorFightingCellBase* Cell);
 
 	TArray<ABActorFightingUnitBase*> ArrayUnits;
 	void InitUnits();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	TSubclassOf<ABActorFightingUnitBase> ActorToSpawnUnit;
-	UFUNCTION(BlueprintCallable, Category = "Spawning")
-	bool MoveUnit(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell);
-	UFUNCTION(BlueprintCallable, Category = "Spawning")
-	bool AttackUnit(ABActorFightingUnitBase* Attacker, ABActorFightingUnitBase* Victim);
 
 	const int RADIUS = 4;
 	TArray<TArray<TArray<ABActorFightingCellBase*>>> ArrayCells;
@@ -149,25 +147,60 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	class USceneComponent* SceneComponentCells;
 	void InitCells();
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	float COLUMN_SHOW_HEIGHT = 20.0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	float COLUMN_SHOW_HEIGHT = 160.0;
 
 	UFUNCTION(BlueprintCallable, Category = "Base")
 	void Init();
 
-	UFUNCTION(BlueprintCallable, Category = "Abilities")
-	FString AbilityDrawCard();
-	FString AbilityGetMana(int& Mana);
-	UFUNCTION(BlueprintCallable, Category = "Abilities")
-	FString AbilityGetManaLight();
-	UFUNCTION(BlueprintCallable, Category = "Abilities")
-	FString AbilityGetManaDark();
-	UFUNCTION(BlueprintCallable, Category = "Abilities")
-	FString AbilityGetManaFire();
-	UFUNCTION(BlueprintCallable, Category = "Abilities")
-	FString AbilityGetManaIce();
-	UFUNCTION(BlueprintCallable, Category = "Abilities")
-	FString PassTurn();
+	FString AbilityDrawCardWithEvent();
+	FString AbilityGetManaWithEvent(TriggersDispatcherEvent_EnumAbility ManaType);
+	FString AbilityGetManaLightWithEvent();
+	FString AbilityGetManaDarkWithEvent();
+	FString AbilityGetManaFireWithEvent();
+	FString AbilityGetManaIceWithEvent();
+	FString PassTurnWithEvent(bool DoEvent = true);
+
+	FString MoveUnitWithEvent(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell);
+	FString DealDamageWithEvent(ABActorFightingUnitBase* Attacker, ABActorFightingUnitBase* Victim, int Damage);
+	FString AttackUnitWithEvent(ABActorFightingUnitBase* Attacker, ABActorFightingUnitBase* Victim);
+	FString PlayCardWithEvent(ABActorFightingCard* Card, ABActorFightingCellBase* Cell);
+
+	FString DeleteUnit(ABActorFightingUnitBase* Unit);
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	FString ClickedOnCell(ABActorFightingCellBase* target);
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	FString ClickedOnUnit(ABActorFightingUnitBase* target);
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	FString ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target);
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	FString ClickedOnCard(ABActorFightingCard* target);
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	FString ClickedOnPassTurn();
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	FString ClickedOnOutside();
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool CanClickOnCell();
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool CanClickOnUnit();
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool CanClickOnAbility();
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool CanClickOnCard();
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool CanClickOnPassTurn();
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool CanClickOnOutside();
+
+	FightingTriggersDispatcher TriggersDispatcher;
+	FightingUIManager UIManager;
 
 	AI AIOpponent;
 };

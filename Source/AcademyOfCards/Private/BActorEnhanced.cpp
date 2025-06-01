@@ -44,7 +44,7 @@ void ABActorEnhanced::Tick(float DeltaTime)
 		SetActorLocation(LocationOriginal);
 	}
 
-	SetActorLocation(LocationOriginal + LocationDelta);
+	SetActorLocation(LocationOriginal + LocationDelta + (IsDisplacedOutOfView ? DISPLACEMENT_OUT_OF_VIEW : FVector{0, 0, 0}));
 	SetActorRelativeScale3D(ScaleOriginal * ScaleRelative);
 }
 
@@ -89,7 +89,7 @@ void ABActorEnhanced::PermanentlyHighlight()
 
 void ABActorEnhanced::ResetPermanentHighlight()
 {
-	TicksNotHighlighted = 0;
+	TicksNotHighlighted = 2;
 }
 
 void ABActorEnhanced::OnHighlight()
