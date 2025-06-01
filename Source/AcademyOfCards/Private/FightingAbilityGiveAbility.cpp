@@ -13,7 +13,11 @@ void FightingAbilityGiveAbility::_Build() {
 
 void FightingAbilityGiveAbility::ExecEvent(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) {
 	Target.With(Field, Event, OwnerUnit, [&](const std::map<FString, std::any>& args, ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) {
-		if (args.find("unit") == args.end()) throw std::exception("FightingAbilityGiveAbility needs a unit as a target");
+		if (args.find("unit") == args.end()) {
+			UE_LOG(LogTemp, Error, TEXT("FightingAbilityGiveAbility::ExecEvent need a unit"));
+			// throw std::exception("FightingAbilityGiveStats needs a unit as a target");
+			return;
+		}
 		ABActorFightingUnitBase* ChosenUnit = std::any_cast<ABActorFightingUnitBase*>(args.find("unit")->second);
 
 		UUMyGameInstance* MyGameInstance = Cast<UUMyGameInstance>(Field->GetGameInstance());

@@ -33,6 +33,8 @@ void FightingAbilityTarget::With(
 			previous_args = args;
 			Callback(args, Field, Event, OwnerUnit);
 			return;
+		} else {
+			// Callback(args, Field, Event, OwnerUnit);
 		}
 	} else if (Type == "as_previous") {
 		Callback(previous_args, Field, Event, OwnerUnit);
@@ -46,9 +48,11 @@ void FightingAbilityTarget::With(
 				[this, Field, &Event, OwnerUnit, Callback, WhatToChoose, Type](FightingUIManagerClickType cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
 					// Dont choose anything - no callback
 					if (cbt == FightingUIManagerClickType::OnOutside) {
+						// Callback(args, Field, Event, OwnerUnit);
 						Field->UIManager.TriggerDoesntNeedInput();
 						Field->UIManager.LetActionsRegular();
 						previous_args = {};
+						std::map<FString, std::any> args;
 						return FString();
 					}
 					// Chose unit - check things and apply damage
@@ -100,6 +104,8 @@ void FightingAbilityTarget::With(
 	} else {
 		previous_args = {};
 		UE_LOG(LogTemp, Error, TEXT("FightingAbilityTarget::With got unknown type %s"), *Type);
+		std::map<FString, std::any> args;
+		Callback(args, Field, Event, OwnerUnit);
 	}
 }
 

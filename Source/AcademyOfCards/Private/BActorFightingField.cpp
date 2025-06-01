@@ -588,7 +588,13 @@ void AI::InitNextTurn(ABActorFightingField* FightingField)
 
 void AI::Think(ABActorFightingField* FightingField)
 {
-    FPlatformProcess::Sleep(0.5f);
+    NeedLoop = false;
+    FPlatformProcess::Sleep(0.1f);
+
+    if (FightingField->UIManager.IsTriggerWaitingPlayerResponse()) {
+        FightingField->UIManager.ClickedOnOutside(true);
+        return;
+    }
 
     TTuple<int, int, int> CurrentCoordinates = FightingField->PlayerUnitOpponent->CurrentCell->GetCoordinates();
     TArray<TTuple<int, int, int>> NeighboursCoordinates = FightingField->PlayerUnitOpponent->CurrentCell->GetNeighboursCoordinates(FightingField->RADIUS);
@@ -598,8 +604,6 @@ void AI::Think(ABActorFightingField* FightingField)
             FreeNeighboursCoordinates.Add(coordinates);
         }
     }
-    
-    NeedLoop = false;
 
     // Play card
     if (!FightingField->DeckOpponent->CardActors.IsEmpty() && !FreeNeighboursCoordinates.IsEmpty()) {
@@ -630,6 +634,7 @@ void AI::Think(ABActorFightingField* FightingField)
     for (ABActorFightingUnitBase* unit : FightingField->ArrayUnits) {
         if (unit->IsControlledByPlayer) continue;
         if (unit->UnitParameters->CurrentMovement <= 0) continue;
+        if (unit->IsPlayer) continue;
 
         TArray<TTuple<int, int, int>> UnitNeighboursCoordinates = unit->CurrentCell->GetNeighboursCoordinates(FightingField->RADIUS);
         TArray<TTuple<int, int, int>> UnitFreeNeighboursCoordinates;
@@ -661,7 +666,6 @@ void AI::Think(ABActorFightingField* FightingField)
                 UnitVictims.Add(unit_potential_victim);
             }
             if (UnitVictims.Num() == 0) continue;
-
             AttackUnitAttacker = unit_potential_attacker;
             int UnitRandomVictimIndex = FMath::RandRange(0, UnitVictims.Num() - 1);
             AttackUnitVictim = UnitVictims[UnitRandomVictimIndex];
@@ -672,35 +676,37 @@ void AI::Think(ABActorFightingField* FightingField)
 
 void AI::Act(ABActorFightingField* FightingField)
 {
-    // TODO
-    /*if (CardToPlay) {
+    // TODO IMPORTANT
+    if (CardToPlay) {
         int x = PlayCardCoordinates.Get<0>(); int y = PlayCardCoordinates.Get<1>(); int z = PlayCardCoordinates.Get<2>();
-        UE_LOG(LogTemp, Warning, TEXT("AI acting by playing card to %d %d %d"), x, y, z);
-        FightingField->PlayCard(CardToPlay, FightingField->ArrayCells[x][y][z]);
+        UE_LOG(LogTemp, Warning, TEXT("AI acting by playing card %s to %d %d %d"), *CardToPlay->Name, x, y, z);
+        FightingField->PlayCardWithEvent(CardToPlay, FightingField->ArrayCells[x][y][z]);
 
-        NeedLoop = true;
+        NeedLoop |= true;
     }
     
     if (MovingPlayerCoordinates != TTuple<int, int, int>({ -1, -1, -1 })) {
         int x = MovingPlayerCoordinates.Get<0>(); int y = MovingPlayerCoordinates.Get<1>(); int z = MovingPlayerCoordinates.Get<2>();
         UE_LOG(LogTemp, Warning, TEXT("AI acting by walking to %d %d %d"), x, y, z);
-        FightingField->MoveUnit(FightingField->PlayerUnitOpponent, FightingField->ArrayCells[x][y][z]);
+        FightingField->MoveUnitWithEvent(FightingField->PlayerUnitOpponent, FightingField->ArrayCells[x][y][z]);
 
         NeedLoop |= (FightingField->PlayerUnitOpponent->UnitParameters->CurrentMovement != 0);
     }
 
     if (MoveUnit) {
         int x = MoveUnitCoordinates.Get<0>(); int y = MoveUnitCoordinates.Get<1>(); int z = MoveUnitCoordinates.Get<2>();
-        UE_LOG(LogTemp, Warning, TEXT("AI acting by moving unit to %d %d %d"), x, y, z);
-        bool res = FightingField->MoveUnit(MoveUnit, FightingField->ArrayCells[x][y][z]);
+        UE_LOG(LogTemp, Warning, TEXT("AI acting by moving unit %s to %d %d %d"), *MoveUnit->UnitParameters->Name, x, y, z);
+        FString res = FightingField->MoveUnitWithEvent(MoveUnit, FightingField->ArrayCells[x][y][z]);
 
-        NeedLoop |= res;
+        NeedLoop |= res.IsEmpty();
     }
 
     if (AttackUnitAttacker) {
-        UE_LOG(LogTemp, Warning, TEXT("AI acting by attacking"));
-        FightingField->AttackUnit(AttackUnitAttacker, AttackUnitVictim);
-    }*/
+        UE_LOG(LogTemp, Error, TEXT("AI acting by attacking %s with %s"), *AttackUnitVictim->UnitParameters->Name, *AttackUnitAttacker->UnitParameters->Name);
+        FightingField->AttackUnitWithEvent(AttackUnitAttacker, AttackUnitVictim);
+
+        NeedLoop |= true;
+    }
 }
 
 bool AI::HasFinishedTurn(ABActorFightingField* FightingField)
