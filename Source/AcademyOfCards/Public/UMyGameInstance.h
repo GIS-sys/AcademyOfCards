@@ -7,6 +7,7 @@
 #include <LevelSaver.h>
 #include "WalkingConfigs.h"
 #include <FightingConfigs.h>
+#include <DeckLists.h>
 #include "UMyGameInstance.generated.h"
 
 class WalkingDeck;
@@ -52,5 +53,7 @@ public:
 	// Configs
 	TSharedPtr<WalkingConfigs> LoadedWalkingConfigs;
 	TSharedPtr<FightingConfigs> LoadedFightingConfigs;
+	TSharedPtr<DeckLists> LoadedWalkingDecks;
+	TSharedPtr<DeckLists> LoadedFightingDecks;
 	virtual void Init() override;
 };
