@@ -63,37 +63,37 @@ bool FightingUIManager::CheckCanClickNow() const {
 
 FString FightingUIManager::ClickedOnCell(ABActorFightingCellBase* target) {
     if (!CheckCanClickNow()) return "Can't click now, please wait";
-    if (Callbacks.find(FCT::OnCell) == Callbacks.end()) return "Press on something else";
+    if (Callbacks.find(FCT::OnCell) == Callbacks.end()) return "You can only interact with things listed in the top";
     return Callbacks[FCT::OnCell](FCT::OnCell, this, target, nullptr, TriggersDispatcherEvent_EnumAbility::NONE, nullptr);
 }
 
 FString FightingUIManager::ClickedOnUnit(ABActorFightingUnitBase* target) {
     if (!CheckCanClickNow()) return "Can't click now, please wait";
-    if (Callbacks.find(FCT::OnUnit) == Callbacks.end()) return "Press on something else";
+    if (Callbacks.find(FCT::OnUnit) == Callbacks.end()) return "You can only interact with things listed in the top";
     return Callbacks[FCT::OnUnit](FCT::OnUnit, this, nullptr, target, TriggersDispatcherEvent_EnumAbility::NONE, nullptr);
 }
 
 FString FightingUIManager::ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target) {
     if (!CheckCanClickNow()) return "Can't click now, please wait";
-    if (Callbacks.find(FCT::OnAbility) == Callbacks.end()) return "Press on something else";
+    if (Callbacks.find(FCT::OnAbility) == Callbacks.end()) return "You can only interact with things listed in the top";
     return Callbacks[FCT::OnAbility](FCT::OnAbility, this, nullptr, nullptr, target, nullptr);
 }
 
 FString FightingUIManager::ClickedOnCard(ABActorFightingCard* target) {
     if (!CheckCanClickNow()) return "Can't click now, please wait";
-    if (Callbacks.find(FCT::OnCard) == Callbacks.end()) return "Press on something else";
+    if (Callbacks.find(FCT::OnCard) == Callbacks.end()) return "You can only interact with things listed in the top";
     return Callbacks[FCT::OnCard](FCT::OnCard, this, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::NONE, target);
 }
 
 FString FightingUIManager::ClickedOnPassTurn() {
     if (!CheckCanClickNow()) return "Can't click now, please wait";
-    if (Callbacks.find(FCT::OnPassTurn) == Callbacks.end()) return "Press on something else";
+    if (Callbacks.find(FCT::OnPassTurn) == Callbacks.end()) return "You can only interact with things listed in the top";
     return Callbacks[FCT::OnPassTurn](FCT::OnPassTurn, this, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::NONE, nullptr);
 }
 
 FString FightingUIManager::ClickedOnOutside() {
     if (!CheckCanClickNow()) return "Can't click now, please wait";
-    if (Callbacks.find(FCT::OnOutside) == Callbacks.end()) return "Press on something else";
+    if (Callbacks.find(FCT::OnOutside) == Callbacks.end()) return "You can only interact with things listed in the top";
     return Callbacks[FCT::OnOutside](FCT::OnOutside, this, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::NONE, nullptr);
 }
 
