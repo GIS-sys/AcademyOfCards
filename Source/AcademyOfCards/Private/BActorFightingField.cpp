@@ -164,8 +164,8 @@ void ABActorFightingField::Tick(float DeltaTime)
 
 FString ABActorFightingField::MoveUnitWithEvent(ABActorFightingUnitBase* Unit, ABActorFightingCellBase* Cell)
 {
-    bool res = Unit->CanMove(this, Cell);
-    if (!res) return "Can't move";
+    FString res = Unit->CanMove(this, Cell);
+    if (!res.IsEmpty()) return res;
 
     TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(
         TriggersDispatcherEvent_EnumEvent::MOVE,
@@ -251,8 +251,8 @@ FString ABActorFightingField::DealDamageWithEvent(ABActorFightingUnitBase* Attac
 
 FString ABActorFightingField::AttackUnitWithEvent(ABActorFightingUnitBase* Attacker, ABActorFightingUnitBase* Victim)
 {
-    bool res = Attacker->CanAttack(this, Victim);
-    if (!res) return "Can't attack";
+    FString res = Attacker->CanAttack(this, Victim);
+    if (!res.IsEmpty()) return res;
 
     TriggersDispatcher.AddEvent(TriggersDispatcherEvent::MakeEvent(
         TriggersDispatcherEvent_EnumEvent::ATTACK,
