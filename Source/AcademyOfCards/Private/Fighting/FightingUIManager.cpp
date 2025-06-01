@@ -231,10 +231,10 @@ FString Regular_WhereToPlayCard(FCT cbt, FightingUIManager* uim, ABActorFighting
 FString Regular_WhereToMoveUnit(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
     ABActorFightingUnitBase* ChosenUnit = std::any_cast<ABActorFightingUnitBase*>(uim->state["unit"]);
     if (cbt == FCT::OnCell) {
-        uim->Field->MoveUnitWithEvent(ChosenUnit, cell);
+        FString res = uim->Field->MoveUnitWithEvent(ChosenUnit, cell);
         ChosenUnit->ResetPermanentHighlight();
         uim->LetActionsRegular();
-        return "";
+        return res;
     }
     if (cbt == FCT::OnUnit) {
         if (unit == ChosenUnit) {
@@ -242,10 +242,10 @@ FString Regular_WhereToMoveUnit(FCT cbt, FightingUIManager* uim, ABActorFighting
             uim->LetActionsRegular();
             return "";
         }
-        uim->Field->AttackUnitWithEvent(ChosenUnit, unit);
+        FString res = uim->Field->AttackUnitWithEvent(ChosenUnit, unit);
         ChosenUnit->ResetPermanentHighlight();
         uim->LetActionsRegular();
-        return "";
+        return res;
     }
     return "";
 }
