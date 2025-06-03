@@ -65,5 +65,5 @@ public:
 
 	TArray<TSharedPtr<FightingAbility>> Abilities;
 
-	void ResetCurrent(bool full = false);
+	void ResetCurrent(bool on_spawn = false);
 };

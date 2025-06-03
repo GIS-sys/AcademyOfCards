@@ -5,11 +5,13 @@
 
 void UFightingUnitParameters::ResetCurrent(bool on_spawn)
 {
-	if (full) {
-		CurrentHealth = Health;
-	}
 	CurrentPower = Power;
 	CurrentMovement = Movement;
 	CurrentAttacks = Attacks;
 	CurrentRange = Range;
+	if (on_spawn) {
+		CurrentHealth = Health;
+		CurrentMovement = 0;
+		CurrentAttacks = 0;
+	}
 }
