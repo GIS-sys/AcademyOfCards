@@ -26,6 +26,30 @@
     ]
   },
   {
+    "id": "004u",
+    "conditions": [
+      {
+        "id": "004ub"
+      }
+    ]
+  },
+  {
+    "id": "005u",
+    "conditions": [
+      {
+        "id": "005ub"
+      }
+    ]
+  },
+  {
+    "id": "006u",
+    "conditions": [
+      {
+        "id": "006ub"
+      }
+    ]
+  },
+  {
     "id": "001c",
     "conditions": [
       {
@@ -45,6 +69,29 @@
       },
       {
         "id": "002cb"
+      }
+    ]
+  },
+  {
+    "id": "003c",
+    "conditions": [
+      {
+        "id": "003cb"
+      }
+    ]
+  },
+
+  {
+    "id": "004c",
+    "conditions": [
+      {
+        "condition": {
+          "dark": { "bigger": 5 }
+        },
+        "id": "004cd"
+      },
+      {
+        "id": "004cb"
       }
     ]
   }
