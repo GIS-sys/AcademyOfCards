@@ -26,18 +26,24 @@ void ABActorFightingUnitBase::InitPlayerOpponent(ABActorFightingField* Field, FS
 	CurrentCell = Cell;
 	IsControlledByPlayer = false;
 	UnitParameters = NewObject<UFightingUnitParameters>(this, UFightingUnitParameters::StaticClass());
-	if (OpponentName == "acolyte_easy") { // TODO opponent stats
-		UnitParameters->Attacks = 1;
-		UnitParameters->Health = 5;
-		UnitParameters->Movement = 2;
+	UnitParameters->Range = 1;
+	UnitParameters->Attacks = 1;
+	UnitParameters->Movement = 1;
+	if (OpponentName == "Acolyte_easy") {
 		UnitParameters->Power = 1;
-		UnitParameters->Range = 1;
-	} else {
-		UnitParameters->Attacks = 3;
-		UnitParameters->Health = 1;
-		UnitParameters->Movement = 2;
+		UnitParameters->Health = 20;
+	} else if (OpponentName == "Goblins") {
 		UnitParameters->Power = 5;
-		UnitParameters->Range = 3;
+		UnitParameters->Health = 20;
+	} else if (OpponentName == "Zombie") {
+		UnitParameters->Power = 2;
+		UnitParameters->Health = 30;
+	} else if (OpponentName == "Werewolf") {
+		UnitParameters->Power = 5;
+		UnitParameters->Health = 50;
+	} else {
+		UnitParameters->Power = 2;
+		UnitParameters->Health = 20;
 	}
 	InitUnit();
 }
