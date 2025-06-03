@@ -48,6 +48,12 @@ WalkingResultCard::WalkingResultCard(TSharedPtr<FJsonObject> data)
 			From_Pool.Add(card->AsString());
 		}
 	}
+
+	if (data->HasField("result")) {
+		for (auto& [x, y] : data->GetObjectField("result")->Values) {
+			Results.Add(WalkingResult::FactoryCreate(x, y->AsObject()));
+		}
+	}
 }
 
 WalkingResultCard::~WalkingResultCard()
@@ -92,6 +98,7 @@ void WalkingResultCard::Execute(UBUIWalkingEvent* walking_event, ABActorWalkingP
 		for (CardType card : ChosenCards) {
 			TArray<TSharedPtr<WalkingResult>> ResultAddSingleCard;
 			ResultAddSingleCard.Add(FactoryCreateSingleCard(card));
+			ResultAddSingleCard.Append(Results);
 			// ResultAddSingleCard.Add(WalkingResult::FactoryCreate("__close__", nullptr));
 			walking_event->ButtonsFromResult.Add(std::make_pair(card, ResultAddSingleCard));
 		}

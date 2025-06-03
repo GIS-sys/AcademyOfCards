@@ -27,4 +27,5 @@ protected:
 	int How_Amount = 0;
 	FString From_Type;
 	TArray<FString> From_Pool;
+	TArray<TSharedPtr<WalkingResult>> Results;
 };
