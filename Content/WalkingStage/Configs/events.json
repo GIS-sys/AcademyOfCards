@@ -411,6 +411,8 @@
                   "type": "tag",
                   "tags": [ "legendary" ]
                 }
+              },
+              "win": {
               }
             }
           }

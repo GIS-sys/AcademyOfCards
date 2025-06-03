@@ -13,6 +13,7 @@
 #include <WalkingResultSpecialClose.h>
 #include <WalkingResultStats.h>
 #include <WalkingResultArtifact.h>
+#include <WalkingResultWin.h>
 
 WalkingResult::WalkingResult()
 {
@@ -44,6 +45,9 @@ TSharedPtr<WalkingResult> WalkingResult::FactoryCreate(FString name, TSharedPtr<
 	}
 	if (name == "artifact") { // ABActorWalkingPlayerModel -> Artifacts?
 		return MakeShareable(new WalkingResultArtifact(data));
+	}
+	if (name == "win") {
+		return MakeShareable(new WalkingResultWin(data));
 	}
 	if (name == "__close__") { // UBUIWalkingEvent -> NewEventPopup_Clear()
 		return MakeShareable(new WalkingResultSpecialClose(data));
