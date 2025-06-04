@@ -22,6 +22,7 @@ public:
     FString Cardtext;
     FString Type;
     FString AlignmentKind;
+    FString Rarity;
     FMana ManaCost;
     FUnitParameters UnitParameters;
 };

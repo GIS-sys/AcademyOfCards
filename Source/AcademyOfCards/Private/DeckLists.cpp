@@ -44,3 +44,7 @@ TArray<FString> DeckLists::GetDeckIDsByName(FString Name) {
 TArray<FString> DeckLists::GetDeckIDsCurrentPlayer() {
 	return CurrentPlayerDeckIDs;
 }
+
+void DeckLists::AddToCurrentDeck(const FString& id) {
+	CurrentPlayerDeckIDs.Add(id);
+}

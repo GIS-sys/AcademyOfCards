@@ -40,4 +40,6 @@ public:
 
 	TArray<FString> GetDeckIDsByName(FString Name);
 	TArray<FString> GetDeckIDsCurrentPlayer();
+
+	void AddToCurrentDeck(const FString& id);
 };

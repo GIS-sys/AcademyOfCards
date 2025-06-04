@@ -53,3 +53,27 @@ TSharedPtr<FightingAbility> FightingConfigs::GetAbilityByID(FString ID) const {
 	}
 	return nullptr;
 }
+
+TArray<FString> FightingConfigs::PullIdsByTags(const TArray<FString>& Tags) const {
+	TArray<FString> IDs;
+	for (FString tag : Tags) {
+		for (const auto& card : FightingCards) {
+			if (card->AlignmentKind == "Fire" && tag == "fire")
+				IDs.Add(card->ID);
+			else if (card->AlignmentKind == "Ice" && tag == "ice")
+				IDs.Add(card->ID);
+			else if (card->AlignmentKind == "Light" && tag == "light")
+				IDs.Add(card->ID);
+			else if (card->AlignmentKind == "Dark" && tag == "dark")
+				IDs.Add(card->ID);
+			else if ((card->Rarity == "Common" || card->Rarity == "") && tag == "common")
+				IDs.Add(card->ID);
+			else if (card->Rarity == "Rare" && tag == "rare")
+				IDs.Add(card->ID);
+			else if (card->Rarity == "Legendary" && tag == "legendary")
+				IDs.Add(card->ID);
+			// TODO IMPORTANT
+		}
+	}
+	return IDs;
+}

@@ -23,4 +23,6 @@ public:
 
 	TSharedPtr<FightingCard> GetCardByID(FString ID) const;
 	TSharedPtr<FightingAbility> GetAbilityByID(FString ID) const;
+
+	TArray<FString> PullIdsByTags(const TArray<FString>& Tags) const;
 };

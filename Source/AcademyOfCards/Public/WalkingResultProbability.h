@@ -20,6 +20,8 @@ public:
 		FString Name;
 		FString Probability;
 		TArray<TSharedPtr<WalkingResult>> Results;
+
+		float Evaluate(ABActorWalkingPlayerModel* player_model) const;
 	};
 
 	virtual void Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model);

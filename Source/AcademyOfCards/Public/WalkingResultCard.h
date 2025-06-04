@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include <WalkingResult.h>
+class UUMyGameInstance;
 class UBUIWalkingEvent;
 class ABActorWalkingPlayerModel;
-
-using CardType = FString;
+class FightingCard;
 
 /**
  * 
@@ -19,7 +19,7 @@ public:
 	~WalkingResultCard();
 
 	virtual void Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model);
-	static TSharedPtr<WalkingResultCard> FactoryCreateSingleCard(CardType Card);
+	static TSharedPtr<WalkingResultCard> FactoryCreateSingleCard(TSharedPtr<FightingCard> Card, UUMyGameInstance* MyGameInstance);
 
 protected:
 	bool IsGiveChoice = false;
