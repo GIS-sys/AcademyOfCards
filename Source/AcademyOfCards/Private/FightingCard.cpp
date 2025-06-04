@@ -12,6 +12,7 @@ FightingCard::FightingCard(TSharedPtr<FJsonObject> data, UUMyGameInstance* MyGam
     Cardtext = data->GetStringField("Cardtext");
     Type = data->GetStringField("Type");
     AlignmentKind = data->GetStringField("AlignmentKind");
+    Rarity = data->GetStringField("Rarity");
     ManaCost = UStatStructs::FManaConstructor(data->GetObjectField("ManaCost"));
     UnitParameters = UStatStructs::FUnitParametersConstructor(data->GetObjectField("UnitParameters"));
 

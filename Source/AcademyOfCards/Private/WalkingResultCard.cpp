@@ -4,6 +4,7 @@
 #include "WalkingResultCard.h"
 #include "BUIWalkingEvent.h"
 #include "BActorWalkingPlayerModel.h"
+#include "UMyGameInstance.h"
 #include <vector>
 
 template <typename T>
@@ -24,16 +25,16 @@ WalkingResultCard::WalkingResultCard(TSharedPtr<FJsonObject> data)
 {
 	IsGiveChoice = data->GetBoolField("give_choice");
 
-	if (data->GetObjectField("how")->GetStringField("type") == "random") {
-		How_Type = "random";
-		How_Amount = data->GetObjectField("how")->GetNumberField("amount");
-	}
 	if (data->GetObjectField("how")->GetStringField("type") == "random_different") {
 		How_Type = "random_different";
 		How_Amount = data->GetObjectField("how")->GetNumberField("amount");
-	}
-	if (data->GetObjectField("how")->GetStringField("type") == "all") {
+	} else if (data->GetObjectField("how")->GetStringField("type") == "random") {
+		How_Type = "random";
+		How_Amount = data->GetObjectField("how")->GetNumberField("amount");
+	} else if (data->GetObjectField("how")->GetStringField("type") == "all") {
 		How_Type = "all";
+	} else {
+		throw "Exception WalkingResultCard: no such how type " + data->GetObjectField("how")->GetStringField("type");
 	}
 
 	if (data->GetObjectField("from")->GetStringField("type") == "tag") {
@@ -41,11 +42,18 @@ WalkingResultCard::WalkingResultCard(TSharedPtr<FJsonObject> data)
 		for (TSharedPtr<FJsonValue> card : data->GetObjectField("from")->GetArrayField("tags")) {
 			From_Pool.Add(card->AsString());
 		}
-	}
-	if (data->GetObjectField("from")->GetStringField("type") == "specific") {
+	} else if (data->GetObjectField("from")->GetStringField("type") == "specific") {
 		From_Type = "specific";
 		for (TSharedPtr<FJsonValue> card : data->GetObjectField("from")->GetArrayField("ids")) {
 			From_Pool.Add(card->AsString());
+		}
+	} else {
+		throw "Exception WalkingResultCard: no such from type " + data->GetObjectField("from")->GetStringField("type");
+	}
+
+	if (data->HasField("result")) {
+		for (auto& [x, y] : data->GetObjectField("result")->Values) {
+			Results.Add(WalkingResult::FactoryCreate(x, y->AsObject()));
 		}
 	}
 }
@@ -56,62 +64,60 @@ WalkingResultCard::~WalkingResultCard()
 
 void WalkingResultCard::Execute(UBUIWalkingEvent* walking_event, ABActorWalkingPlayerModel* player_model)
 {
-	// TODO card result
-	TArray<FString> Chosen;
+	UUMyGameInstance* MyGameInstance = Cast<UUMyGameInstance>(player_model->GetGameInstance());
 
+	TArray<FString> From_Pool_IDs;
+	if (From_Type == "specific") {
+		From_Pool_IDs = From_Pool;
+	} else if (From_Type == "tag") {
+		From_Pool_IDs = MyGameInstance->LoadedFightingConfigs->PullIdsByTags(From_Pool);
+	}
+
+	TArray<FString> ChosenIDs;
 	if (How_Type == "random") {
 		for (int i = 0; i < How_Amount; ++i) {
-			Chosen.Add(From_Pool[rand() % From_Pool.Num()]);
+			ChosenIDs.Add(From_Pool_IDs[rand() % From_Pool_IDs.Num()]);
 		}
-	}
-	if (How_Type == "random_different") {
-		From_Pool = shuffle(From_Pool);
-		for (int i = 0; i < How_Amount && i < From_Pool.Num(); ++i) {
-			Chosen.Add(From_Pool[i]);
+	} else if (How_Type == "random_different") {
+		From_Pool_IDs = shuffle(From_Pool_IDs);
+		for (int i = 0; i < How_Amount && i < From_Pool_IDs.Num(); ++i) {
+			ChosenIDs.Add(From_Pool_IDs[i]);
 		}
-	}
-	if (How_Type == "all") {
-		Chosen = From_Pool;
+	} else if (How_Type == "all") {
+		ChosenIDs = From_Pool_IDs;
 	}
 
-	TArray<CardType> ChosenCards;
-
-	if (From_Type == "tag") {
-		for (FString tag : Chosen) {
-			ChosenCards.Add("(tag:" + tag + ")");
-		}
-	}
-	if (From_Type == "specific") {
-		for (FString id : Chosen) {
-			ChosenCards.Add("(id:" + id + ")");
-		}
+	TArray<TSharedPtr<FightingCard>> ChosenCards;
+	for (FString id : ChosenIDs) {
+		ChosenCards.Add(MyGameInstance->LoadedFightingConfigs->GetCardByID(id));
 	}
 
 	if (IsGiveChoice) {
 		walking_event->TextFromResult += "Choose a card from the list below\n";
-		for (CardType card : ChosenCards) {
+		for (TSharedPtr<FightingCard> card : ChosenCards) {
 			TArray<TSharedPtr<WalkingResult>> ResultAddSingleCard;
-			ResultAddSingleCard.Add(FactoryCreateSingleCard(card));
-			// ResultAddSingleCard.Add(WalkingResult::FactoryCreate("__close__", nullptr));
-			walking_event->ButtonsFromResult.Add(std::make_pair(card, ResultAddSingleCard));
+			ResultAddSingleCard.Add(FactoryCreateSingleCard(card, MyGameInstance));
+			ResultAddSingleCard.Append(Results);
+			walking_event->ButtonsFromResult.Add(std::make_pair("(" + card->ID + ") " + card->Name, ResultAddSingleCard));
 		}
 	} else {
-		for (FString card : ChosenCards) {
-			walking_event->TextFromResult += "Random card: " + card + "\n";
+		for (TSharedPtr<FightingCard> card : ChosenCards) {
+			walking_event->TextFromResult += "You got a random card: (" + card->ID + ") " + card->Name + "\n";
+			MyGameInstance->LoadedFightingDecks->AddToCurrentDeck(card->ID);
 		}
 	}
 }
 
-TSharedPtr<WalkingResultCard> WalkingResultCard::FactoryCreateSingleCard(CardType Card)
+TSharedPtr<WalkingResultCard> WalkingResultCard::FactoryCreateSingleCard(TSharedPtr<FightingCard> Card, UUMyGameInstance* MyGameInstance)
 {
 	TSharedPtr<FJsonObject> data = MakeShareable(new FJsonObject());
 	data->SetBoolField("give_choice", false);
 	data->SetObjectField("how", MakeShareable(new FJsonObject()));
 	data->GetObjectField("how")->SetStringField("type", "all");
 	data->SetObjectField("from", MakeShareable(new FJsonObject()));
-	data->GetObjectField("from")->SetStringField("type", "tag");
+	data->GetObjectField("from")->SetStringField("type", "specific");
 	TArray<TSharedPtr<FJsonValue>> tags;
-	tags.Add(MakeShareable(new FJsonValueString(Card)));
-	data->GetObjectField("from")->SetArrayField("tags", tags);
+	tags.Add(MakeShareable(new FJsonValueString(Card->ID)));
+	data->GetObjectField("from")->SetArrayField("ids", tags);
 	return MakeShareable(new WalkingResultCard(data));
 }

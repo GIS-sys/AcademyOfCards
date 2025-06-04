@@ -48,10 +48,10 @@ struct FPlayerStats
 	int32 Gold = 50;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float AlignmentLight = 0.5;
+	float AlignmentLight = 0.0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float AlignmentDark = 0.5;
+	float AlignmentDark = 0.0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float AlignmentFire = 0.0;

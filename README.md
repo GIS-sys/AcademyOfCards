@@ -11,3 +11,9 @@ To add new Fighting card:
 - add target type FightingAbilityTarget::With if new target (FightingAbility.cpp)
 
 - implement new Ability class
+
+
+
+After creating a package:
+
+- go to <folder>\AcademyOfCards\Content and create 2 directories: FightingStage/Configs and WalkingStage/Configs, add there all 6 necessary configs

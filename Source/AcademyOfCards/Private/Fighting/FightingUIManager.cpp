@@ -57,43 +57,43 @@ FightingUIManager* FightingUIManager::Clear() {
     return this;
 }
 
-bool FightingUIManager::CheckCanClickNow() const {
-    return Field->IsPlayerTurn && (IsTriggerWaitingPlayerResponse() || Field->TriggersDispatcher.all_events.empty());
+bool FightingUIManager::CheckCanClickNow(bool is_ai) const {
+    return (Field->IsPlayerTurn == !is_ai) && (IsTriggerWaitingPlayerResponse() || Field->TriggersDispatcher.all_events.empty());
 }
 
-FString FightingUIManager::ClickedOnCell(ABActorFightingCellBase* target) {
-    if (!CheckCanClickNow()) return "Can't click now, please wait";
-    if (Callbacks.find(FCT::OnCell) == Callbacks.end()) return "Press on something else";
+FString FightingUIManager::ClickedOnCell(ABActorFightingCellBase* target, bool is_ai) {
+    if (!CheckCanClickNow(is_ai)) return "Can't click now, please wait";
+    if (Callbacks.find(FCT::OnCell) == Callbacks.end()) return "You can only interact with things listed in the top";
     return Callbacks[FCT::OnCell](FCT::OnCell, this, target, nullptr, TriggersDispatcherEvent_EnumAbility::NONE, nullptr);
 }
 
-FString FightingUIManager::ClickedOnUnit(ABActorFightingUnitBase* target) {
-    if (!CheckCanClickNow()) return "Can't click now, please wait";
-    if (Callbacks.find(FCT::OnUnit) == Callbacks.end()) return "Press on something else";
+FString FightingUIManager::ClickedOnUnit(ABActorFightingUnitBase* target, bool is_ai) {
+    if (!CheckCanClickNow(is_ai)) return "Can't click now, please wait";
+    if (Callbacks.find(FCT::OnUnit) == Callbacks.end()) return "You can only interact with things listed in the top";
     return Callbacks[FCT::OnUnit](FCT::OnUnit, this, nullptr, target, TriggersDispatcherEvent_EnumAbility::NONE, nullptr);
 }
 
-FString FightingUIManager::ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target) {
-    if (!CheckCanClickNow()) return "Can't click now, please wait";
-    if (Callbacks.find(FCT::OnAbility) == Callbacks.end()) return "Press on something else";
+FString FightingUIManager::ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target, bool is_ai) {
+    if (!CheckCanClickNow(is_ai)) return "Can't click now, please wait";
+    if (Callbacks.find(FCT::OnAbility) == Callbacks.end()) return "You can only interact with things listed in the top";
     return Callbacks[FCT::OnAbility](FCT::OnAbility, this, nullptr, nullptr, target, nullptr);
 }
 
-FString FightingUIManager::ClickedOnCard(ABActorFightingCard* target) {
-    if (!CheckCanClickNow()) return "Can't click now, please wait";
-    if (Callbacks.find(FCT::OnCard) == Callbacks.end()) return "Press on something else";
+FString FightingUIManager::ClickedOnCard(ABActorFightingCard* target, bool is_ai) {
+    if (!CheckCanClickNow(is_ai)) return "Can't click now, please wait";
+    if (Callbacks.find(FCT::OnCard) == Callbacks.end()) return "You can only interact with things listed in the top";
     return Callbacks[FCT::OnCard](FCT::OnCard, this, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::NONE, target);
 }
 
-FString FightingUIManager::ClickedOnPassTurn() {
-    if (!CheckCanClickNow()) return "Can't click now, please wait";
-    if (Callbacks.find(FCT::OnPassTurn) == Callbacks.end()) return "Press on something else";
+FString FightingUIManager::ClickedOnPassTurn(bool is_ai) {
+    if (!CheckCanClickNow(is_ai)) return "Can't click now, please wait";
+    if (Callbacks.find(FCT::OnPassTurn) == Callbacks.end()) return "You can only interact with things listed in the top";
     return Callbacks[FCT::OnPassTurn](FCT::OnPassTurn, this, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::NONE, nullptr);
 }
 
-FString FightingUIManager::ClickedOnOutside() {
-    if (!CheckCanClickNow()) return "Can't click now, please wait";
-    if (Callbacks.find(FCT::OnOutside) == Callbacks.end()) return "Press on something else";
+FString FightingUIManager::ClickedOnOutside(bool is_ai) {
+    if (!CheckCanClickNow(is_ai)) return "Can't click now, please wait";
+    if (Callbacks.find(FCT::OnOutside) == Callbacks.end()) return "You can only interact with things listed in the top";
     return Callbacks[FCT::OnOutside](FCT::OnOutside, this, nullptr, nullptr, TriggersDispatcherEvent_EnumAbility::NONE, nullptr);
 }
 
@@ -231,10 +231,10 @@ FString Regular_WhereToPlayCard(FCT cbt, FightingUIManager* uim, ABActorFighting
 FString Regular_WhereToMoveUnit(FCT cbt, FightingUIManager* uim, ABActorFightingCellBase* cell, ABActorFightingUnitBase* unit, TriggersDispatcherEvent_EnumAbility ability, ABActorFightingCard* card) {
     ABActorFightingUnitBase* ChosenUnit = std::any_cast<ABActorFightingUnitBase*>(uim->state["unit"]);
     if (cbt == FCT::OnCell) {
-        uim->Field->MoveUnitWithEvent(ChosenUnit, cell);
+        FString res = uim->Field->MoveUnitWithEvent(ChosenUnit, cell);
         ChosenUnit->ResetPermanentHighlight();
         uim->LetActionsRegular();
-        return "";
+        return res;
     }
     if (cbt == FCT::OnUnit) {
         if (unit == ChosenUnit) {
@@ -242,10 +242,10 @@ FString Regular_WhereToMoveUnit(FCT cbt, FightingUIManager* uim, ABActorFighting
             uim->LetActionsRegular();
             return "";
         }
-        uim->Field->AttackUnitWithEvent(ChosenUnit, unit);
+        FString res = uim->Field->AttackUnitWithEvent(ChosenUnit, unit);
         ChosenUnit->ResetPermanentHighlight();
         uim->LetActionsRegular();
-        return "";
+        return res;
     }
     return "";
 }

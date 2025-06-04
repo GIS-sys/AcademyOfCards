@@ -48,7 +48,7 @@ public:
 	void InitPlayerMy(ABActorFightingField* Field, ABActorFightingCellBase* Cell, const FPlayerStats* Stats);
 	void InitPlayerOpponent(ABActorFightingField* Field, FString OpponentName, ABActorFightingCellBase* Cell, FPlayerStats* Stats);
 
-	bool CanMove(ABActorFightingField* Field, ABActorFightingCellBase* Cell);
-	bool CanAttack(ABActorFightingField* Field, ABActorFightingUnitBase* Victim);
+	FString CanMove(ABActorFightingField* Field, ABActorFightingCellBase* Cell);
+	FString CanAttack(ABActorFightingField* Field, ABActorFightingUnitBase* Victim);
 	bool IsDead(ABActorFightingField* Field);
 };

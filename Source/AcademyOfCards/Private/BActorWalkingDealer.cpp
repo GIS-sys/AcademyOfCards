@@ -351,7 +351,6 @@ LevelSaveInstance ABActorWalkingDealer::Save() {
 
 void ABActorWalkingDealer::Load(LevelSaveInstance* SaveInstance) {
 	// Load cards dealt
-	// TODO MAYBE CREATE CARDS BEFORE LOADING?
 	auto SavedCardsDealt = SaveInstance->GetAsCopy<TArray<TPair<TPair<int, int>, LevelSaveInstance>>>("CardsDealt");
 	for (const auto& card_info : SavedCardsDealt) {
 		TPair<int, int> CardPos = card_info.Get<0>();

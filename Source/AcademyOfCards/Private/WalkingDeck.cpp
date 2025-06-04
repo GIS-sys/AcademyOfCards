@@ -7,7 +7,7 @@
 
 WalkingDeck::WalkingDeck(UUMyGameInstance* GameInstance) : MyGameInstance(GameInstance)
 {
-	CardIDs = { "001u", "002u", "003u", "001c", "002c" };
+	CardIDs = GameInstance->LoadedWalkingDecks->GetDeckIDsCurrentPlayer();
 }
 
 WalkingDeck::~WalkingDeck()

@@ -78,7 +78,7 @@ public:
 
 
 
-	bool CheckIsWhenApplicable(const WHEN& when, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) { // TODO IMPORTANT
+	bool CheckIsWhenApplicable(const WHEN& when, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) {
 		if (when == WHEN::INVOCATION) {
 			// Only react to event PLAYED
 			if (Event.type != TriggersDispatcherEvent::Type::EVENT || Event.event != TriggersDispatcherEvent_EnumEvent::PLAYED_CARD) return false;
@@ -106,7 +106,7 @@ public:
 		}
 	}
 
-	bool ChecWhens(TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) { // TODO IMPORTANT
+	bool ChecWhens(TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) {
 		bool applicable = false;
 		for (const auto& when : When) {
 			applicable = CheckIsWhenApplicable(when, Event, OwnerUnit);
@@ -115,7 +115,7 @@ public:
 		return applicable;
 	}
 
-	bool CheckConditions(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) { // TODO IMPORTANT
+	bool CheckConditions(ABActorFightingField* Field, TriggersDispatcherEvent& Event, ABActorFightingUnitBase* OwnerUnit) {
 		bool applicable = true;
 		for (const auto& condition : Conditions) {
 			applicable = condition.second.Check(Field, Event, OwnerUnit);

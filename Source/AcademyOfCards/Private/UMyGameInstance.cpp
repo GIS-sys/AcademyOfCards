@@ -21,4 +21,10 @@ void UUMyGameInstance::Init()
 	LoadedFightingConfigs = MakeShareable(new FightingConfigs());
 	LoadedFightingConfigs->LoadConfigAbilities(this);
 	LoadedFightingConfigs->LoadConfigCards(this);
+
+	LoadedWalkingDecks = MakeShareable(new DeckLists(DeckLists::TYPE::WALKING));
+	LoadedWalkingDecks->Load();
+
+	LoadedFightingDecks = MakeShareable(new DeckLists(DeckLists::TYPE::FIGHTING));
+	LoadedFightingDecks->Load();
 }

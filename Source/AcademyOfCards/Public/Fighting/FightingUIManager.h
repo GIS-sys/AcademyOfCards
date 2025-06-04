@@ -37,7 +37,7 @@ class ACADEMYOFCARDS_API FightingUIManager
 	std::map<FightingUIManagerClickType, CallbackType> Callbacks;
 	bool trigger_needs_input = false;
 
-	bool CheckCanClickNow() const;
+	bool CheckCanClickNow(bool is_ai) const;
 
 public:
 	std::map<FString, std::any> state;
@@ -57,12 +57,12 @@ public:
 	bool CheckIfCallbackExists(FightingUIManagerClickType click_type) const;
 
 
-	FString ClickedOnCell(ABActorFightingCellBase* target);
-	FString ClickedOnUnit(ABActorFightingUnitBase* target);
-	FString ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target);
-	FString ClickedOnCard(ABActorFightingCard* target);
-	FString ClickedOnPassTurn();
-	FString ClickedOnOutside();
+	FString ClickedOnCell(ABActorFightingCellBase* target, bool is_ai = false);
+	FString ClickedOnUnit(ABActorFightingUnitBase* target, bool is_ai = false);
+	FString ClickedOnAbility(TriggersDispatcherEvent_EnumAbility target, bool is_ai = false);
+	FString ClickedOnCard(ABActorFightingCard* target, bool is_ai = false);
+	FString ClickedOnPassTurn(bool is_ai = false);
+	FString ClickedOnOutside(bool is_ai = false);
 
 	FightingUIManager* Clear();
 
